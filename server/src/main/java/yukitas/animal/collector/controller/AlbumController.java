@@ -1,0 +1,46 @@
+package yukitas.animal.collector.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.UUID;
+
+import javax.validation.Valid;
+
+import yukitas.animal.collector.controller.dto.CreateAlbumRequest;
+import yukitas.animal.collector.model.Album;
+import yukitas.animal.collector.service.AlbumService;
+import yukitas.animal.collector.service.CategoryService;
+
+@RestController
+public class AlbumController {
+    private final AlbumService albumService;
+    private final CategoryService categoryService;
+
+    @Autowired
+    public AlbumController(AlbumService albumService, CategoryService categoryService) {
+        this.albumService = albumService;
+        this.categoryService = categoryService;
+    }
+
+    @GetMapping("/categories/{cat_id}/albums")
+    public ResponseEntity<List<Album>> getAlbums(@PathVariable("cat_id") UUID categoryId) {
+        return new ResponseEntity<>(albumService.getAlbumsByCategory(categoryId), HttpStatus.OK);
+    }
+
+    @PostMapping("/categories/{cat_id}/albums")
+    public ResponseEntity<Album> createAlbum(@PathVariable("cat_id") UUID categoryId,
+            @Valid @RequestBody CreateAlbumRequest createAlbumRequest) {
+        return new ResponseEntity<>(albumService.createAlbum(CreateAlbumRequest.builder()
+                .setName(createAlbumRequest.getName())
+                .setCategory(categoryService.getCategory(categoryId))
+                .build()), HttpStatus.CREATED);
+    }
+}
