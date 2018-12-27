@@ -22,7 +22,7 @@ import yukitas.animal.collector.service.PhotoService;
 
 @Service
 public class PhotoServiceImpl implements PhotoService {
-    private static final Logger LOG = LogManager.getLogger(PhotoServiceImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(PhotoServiceImpl.class);
 
     private final PhotoRepository photoRepository;
     private final AlbumService albumService;
@@ -57,6 +57,10 @@ public class PhotoServiceImpl implements PhotoService {
                 .setDescription(description)
                 .setLocation(location)
                 .build());
+
+        LOGGER.debug("Created photo for animals [{}] and albums [{}]",
+                photo.getAnimals().stream().map(Animal::getName).collect(Collectors.joining(",")),
+                photo.getAlbums().stream().map(Album::getName).collect(Collectors.joining(",")));
 
         animals.forEach(animal -> animal.addPhoto(photo));
         albums.forEach(album -> album.addPhoto(photo));
