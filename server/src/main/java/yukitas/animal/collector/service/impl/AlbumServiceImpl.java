@@ -36,4 +36,9 @@ public class AlbumServiceImpl implements AlbumService {
     public Album createAlbum(Album album) {
         return albumRepository.save(album);
     }
+
+    @Override
+    public void deleteAlbum(UUID id) {
+        albumRepository.deleteById(id);
+    }
 }

@@ -45,4 +45,10 @@ public class PhotoController {
     public ResponseEntity<Photo> getPhoto(@PathVariable("id") UUID photoId) {
         return new ResponseEntity<>(photoService.getPhoto(photoId), HttpStatus.OK);
     }
+
+    @DeleteMapping("/photos/{id}")
+    public ResponseEntity<Void> deletePhoto(@PathVariable("id") UUID photoId) {
+        photoService.deletePhoto(photoId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

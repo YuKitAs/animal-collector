@@ -75,4 +75,9 @@ public class PhotoServiceImpl implements PhotoService {
 
         return photo;
     }
+
+    @Override
+    public void deletePhoto(UUID id) {
+        photoRepository.deleteById(id);
+    }
 }

@@ -11,4 +11,6 @@ public interface AlbumService {
     Album getAlbum(UUID id);
 
     Album createAlbum(Album album);
+
+    void deleteAlbum(UUID id);
 }
