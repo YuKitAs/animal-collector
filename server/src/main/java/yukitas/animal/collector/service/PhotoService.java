@@ -12,6 +12,8 @@ public interface PhotoService {
 
     List<Photo> getPhotosByAnimal(UUID animalId);
 
+    Photo getPhoto(UUID id);
+
     Photo createPhoto(Photo.Builder builder, Set<UUID> animalIds, Set<UUID> albumIds, byte[] content,
             String description, Location location);
 }

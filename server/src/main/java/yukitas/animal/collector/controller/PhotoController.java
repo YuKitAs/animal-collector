@@ -40,4 +40,9 @@ public class PhotoController {
     public ResponseEntity<List<Photo>> getPhotosByAnimal(@PathVariable("animal_id") UUID animalId) {
         return new ResponseEntity<>(photoService.getPhotosByAnimal(animalId), HttpStatus.OK);
     }
+
+    @GetMapping("/photos/{id}")
+    public ResponseEntity<Photo> getPhoto(@PathVariable("id") UUID photoId) {
+        return new ResponseEntity<>(photoService.getPhoto(photoId), HttpStatus.OK);
+    }
 }

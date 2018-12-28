@@ -35,6 +35,11 @@ public class AlbumController {
         return new ResponseEntity<>(albumService.getAlbumsByCategory(categoryId), HttpStatus.OK);
     }
 
+    @GetMapping("/albums/{id}")
+    public ResponseEntity<Album> getAlbum(@PathVariable("id") UUID albumId) {
+        return new ResponseEntity<>(albumService.getAlbum(albumId), HttpStatus.OK);
+    }
+
     @PostMapping("/categories/{cat_id}/albums")
     public ResponseEntity<Album> createAlbum(@PathVariable("cat_id") UUID categoryId,
             @Valid @RequestBody CreateAlbumRequest createAlbumRequest) {

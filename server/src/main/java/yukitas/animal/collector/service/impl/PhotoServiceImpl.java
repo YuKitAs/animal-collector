@@ -19,6 +19,7 @@ import yukitas.animal.collector.repository.PhotoRepository;
 import yukitas.animal.collector.service.AlbumService;
 import yukitas.animal.collector.service.AnimalService;
 import yukitas.animal.collector.service.PhotoService;
+import yukitas.animal.collector.service.exception.EntityNotFoundException;
 
 @Service
 public class PhotoServiceImpl implements PhotoService {
@@ -43,6 +44,13 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public List<Photo> getPhotosByAnimal(UUID animalId) {
         return new ArrayList<>(animalService.getAnimal(animalId).getPhotos());
+    }
+
+    @Override
+    public Photo getPhoto(UUID id) {
+        return photoRepository.findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(String.format("Photo not found by id=%s", id.toString())));
     }
 
     @Override

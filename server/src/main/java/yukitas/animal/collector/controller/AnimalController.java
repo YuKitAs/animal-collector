@@ -36,6 +36,11 @@ public class AnimalController {
         return new ResponseEntity<>(animalService.getAnimalsByCategory(categoryId), HttpStatus.OK);
     }
 
+    @GetMapping("/animals/{id}")
+    public ResponseEntity<Animal> getAnimal(@PathVariable("id") UUID animalId) {
+        return new ResponseEntity<>(animalService.getAnimal(animalId), HttpStatus.OK);
+    }
+
     @PostMapping("/categories/{cat_id}/animals")
     public ResponseEntity<Animal> createAnimal(@PathVariable("cat_id") UUID categoryId,
             @Valid @RequestBody CreateAnimalRequest createAnimalRequest) {
