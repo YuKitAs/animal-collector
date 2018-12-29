@@ -29,21 +29,24 @@ public class AbstractControllerTest {
     static final String CATEGORY_HAMSTER_NAME = "hamster";
 
     static final UUID ALBUM_CAT_1_ID = UUID.fromString("00000000-0001-0000-0000-000000000000");
-    static final UUID ALBUM_DOG_ID = UUID.fromString("00000000-0001-0000-0000-000000000002");
+    static final UUID ALBUM_DOG_ID = UUID.fromString("00000000-0001-0000-0000-000000000001");
     static final String ALBUM_CAT_1_NAME = "album-cat-1";
     static final String ALBUM_CAT_2_NAME = "album-cat-2";
     static final String ALBUM_DOG_NAME = "album-dog";
 
     static final UUID ANIMAL_CAT_1_ID = UUID.fromString("00000000-0000-0001-0000-000000000000");
-    static final UUID ANIMAL_DOG_ID = UUID.fromString("00000000-0000-0001-0000-000000000002");
+    static final UUID ANIMAL_DOG_ID = UUID.fromString("00000000-0000-0001-0000-000000000001");
     static final String ANIMAL_CAT_1_NAME = "animal-cat-1";
     static final String ANIMAL_CAT_2_NAME = "animal-cat-2";
     static final String ANIMAL_DOG_NAME = "animal-dog";
     static final String[] ANIMAL_CAT_2_TAGS = {"kawaii", "kakkoii", "sugoii"};
 
     static final UUID PHOTO_CAT_1_ID = UUID.fromString("00000000-0000-0000-0001-000000000000");
-    static final String PHOTO_CAT_1_DESCRIPTION = "This photo contains animal-1 and exists in album-1 and album-2";
-    static final String PHOTO_CAT_12_DESCRIPTION = "This photo contains animal-1 and animal-2 and exists in album-2";
+    static final UUID PHOTO_DOG_ID = UUID.fromString("00000000-0000-0000-0001-000000000001");
+    static final String PHOTO_CAT_1_DESCRIPTION = "This photo contains animal-cat-1 and exists in album-cat-1";
+    static final String PHOTO_CAT_1_DOG_DESCRIPTION = "This photo contains animal-cat-1, animal-dog and exists in " +
+            "album-cat-1, album-dog";
+    static final String PHOTO_DOG_DESCRIPTION = "This photo contains animal-dog and exists in album-dog";
 
     TestRestTemplate getTestRestTemplate() {
         return testRestTemplate;
