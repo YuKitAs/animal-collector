@@ -15,42 +15,42 @@ import yukitas.animal.collector.model.Album;
 import yukitas.animal.collector.model.Animal;
 import yukitas.animal.collector.model.Location;
 import yukitas.animal.collector.model.Photo;
+import yukitas.animal.collector.repository.AlbumRepository;
+import yukitas.animal.collector.repository.AnimalRepository;
 import yukitas.animal.collector.repository.PhotoRepository;
-import yukitas.animal.collector.service.AlbumService;
-import yukitas.animal.collector.service.AnimalService;
 import yukitas.animal.collector.service.PhotoService;
 import yukitas.animal.collector.service.exception.EntityNotFoundException;
 
 @Service
 public class PhotoServiceImpl implements PhotoService {
     private static final Logger LOGGER = LogManager.getLogger(PhotoServiceImpl.class);
+    private static final String ENTITY_NAME = "photo";
 
     private final PhotoRepository photoRepository;
-    private final AlbumService albumService;
-    private final AnimalService animalService;
+    private final AnimalRepository animalRepository;
+    private final AlbumRepository albumRepository;
 
     @Autowired
-    public PhotoServiceImpl(PhotoRepository photoRepository, AlbumService albumService, AnimalService animalService) {
+    public PhotoServiceImpl(PhotoRepository photoRepository, AnimalRepository animalRepository,
+            AlbumRepository albumRepository) {
         this.photoRepository = photoRepository;
-        this.albumService = albumService;
-        this.animalService = animalService;
+        this.animalRepository = animalRepository;
+        this.albumRepository = albumRepository;
     }
 
     @Override
     public List<Photo> getPhotosByAlbum(UUID albumId) {
-        return new ArrayList<>(albumService.getAlbum(albumId).getPhotos());
+        return new ArrayList<>(findAlbumById(albumId).getPhotos());
     }
 
     @Override
     public List<Photo> getPhotosByAnimal(UUID animalId) {
-        return new ArrayList<>(animalService.getAnimal(animalId).getPhotos());
+        return new ArrayList<>(findAnimalById(animalId).getPhotos());
     }
 
     @Override
     public Photo getPhoto(UUID id) {
-        return photoRepository.findById(id)
-                .orElseThrow(
-                        () -> new EntityNotFoundException(String.format("Photo not found by id=%s", id.toString())));
+        return findPhotoById(id);
     }
 
     @Override
@@ -78,9 +78,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public Photo updatePhoto(UUID id, Set<UUID> animalIds, Set<UUID> albumIds, String description) {
-        Photo photo = photoRepository.findById(id)
-                .orElseThrow(
-                        () -> new EntityNotFoundException(String.format("Photo not found by id=%s", id.toString())));
+        Photo photo = photoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ENTITY_NAME, id));
 
         Set<Animal> animals = getAnimalsById(animalIds);
         Set<Album> albums = getAlbumsById(albumIds);
@@ -106,14 +104,28 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public void deletePhoto(UUID id) {
+        findPhotoById(id);
+
         photoRepository.deleteById(id);
     }
 
     private Set<Animal> getAnimalsById(Set<UUID> animalIds) {
-        return animalIds == null ? null : animalIds.stream().map(animalService::getAnimal).collect(Collectors.toSet());
+        return animalIds == null ? null : animalIds.stream().map(this::findAnimalById).collect(Collectors.toSet());
     }
 
     private Set<Album> getAlbumsById(Set<UUID> albumIds) {
-        return albumIds == null ? null : albumIds.stream().map(albumService::getAlbum).collect(Collectors.toSet());
+        return albumIds == null ? null : albumIds.stream().map(this::findAlbumById).collect(Collectors.toSet());
+    }
+
+    private Animal findAnimalById(UUID id) {
+        return animalRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("animal", id));
+    }
+
+    private Album findAlbumById(UUID id) {
+        return albumRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("album", id));
+    }
+
+    private Photo findPhotoById(UUID id) {
+        return photoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ENTITY_NAME, id));
     }
 }

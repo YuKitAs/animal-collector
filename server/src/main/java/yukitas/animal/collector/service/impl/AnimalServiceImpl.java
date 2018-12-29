@@ -10,16 +10,21 @@ import java.util.stream.StreamSupport;
 
 import yukitas.animal.collector.model.Animal;
 import yukitas.animal.collector.repository.AnimalRepository;
+import yukitas.animal.collector.repository.CategoryRepository;
 import yukitas.animal.collector.service.AnimalService;
 import yukitas.animal.collector.service.exception.EntityNotFoundException;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {
+    private static final String ENTITY_NAME = "animal";
+
     private final AnimalRepository animalRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public AnimalServiceImpl(AnimalRepository animalRepository) {
+    public AnimalServiceImpl(AnimalRepository animalRepository, CategoryRepository categoryRepository) {
         this.animalRepository = animalRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -29,6 +34,8 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public List<Animal> getAnimalsByCategory(UUID categoryId) {
+        categoryRepository.findById(categoryId).orElseThrow(() -> new EntityNotFoundException("category", categoryId));
+
         return getAllAnimals().stream()
                 .filter(animal -> animal.getCategory().getId().equals(categoryId))
                 .collect(Collectors.toList());
@@ -36,9 +43,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public Animal getAnimal(UUID id) {
-        return animalRepository.findById(id)
-                .orElseThrow(
-                        () -> new EntityNotFoundException(String.format("Animal not found by id=%s", id.toString())));
+        return findAnimalById(id);
     }
 
     @Override
@@ -48,9 +53,7 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public Animal updateAnimal(UUID id, String name, String[] tags) {
-        Animal animal = animalRepository.findById(id)
-                .orElseThrow(
-                        () -> new EntityNotFoundException(String.format("Animal not found by id=%s", id.toString())));
+        Animal animal = findAnimalById(id);
 
         if (name != null) {
             animal.setName(name);
@@ -61,5 +64,9 @@ public class AnimalServiceImpl implements AnimalService {
         }
 
         return animalRepository.save(animal);
+    }
+
+    private Animal findAnimalById(UUID id) {
+        return animalRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ENTITY_NAME, id));
     }
 }

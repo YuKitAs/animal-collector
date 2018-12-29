@@ -1,7 +1,5 @@
 package yukitas.animal.collector.service.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +15,7 @@ import yukitas.animal.collector.service.exception.EntityNotFoundException;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    private static final Logger LOGGER = LogManager.getLogger(CategoryServiceImpl.class);
+    private static final String ENTITY_NAME = "category";
 
     private final CategoryRepository categoryRepository;
 
@@ -33,9 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategory(UUID id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(
-                        () -> new EntityNotFoundException(String.format("Category not found by id=%s", id.toString())));
+        return findCategoryById(id);
     }
 
     @Override
@@ -45,9 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category updateCategory(UUID id, String name) {
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(
-                        () -> new EntityNotFoundException(String.format("Category not found by id=%s", id.toString())));
+        Category category = findCategoryById(id);
 
         if (name != null) {
             category.setName(name);
@@ -58,6 +52,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(UUID id) {
+        findCategoryById(id);
+
         categoryRepository.deleteById(id);
+    }
+
+    private Category findCategoryById(UUID id) {
+        return categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ENTITY_NAME, id));
     }
 }
