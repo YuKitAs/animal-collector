@@ -1,0 +1,55 @@
+package yukitas.animal.collector.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlGroup;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.io.File;
+import java.util.UUID;
+
+@RunWith(SpringRunner.class)
+@ActiveProfiles("test")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SqlGroup(@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:before_test_script.sql"))
+public class AbstractControllerTest {
+    @Autowired
+    private TestRestTemplate testRestTemplate;
+
+    static final UUID CATEGORY_CAT_ID = UUID.fromString("00000001-0000-0000-0000-000000000000");
+    static final UUID CATEGORY_DOG_ID = UUID.fromString("00000001-0000-0000-0000-000000000001");
+    static final String CATEGORY_CAT_NAME = "cat";
+    static final String CATEGORY_DOG_NAME = "dog";
+    static final String CATEGORY_HAMSTER_NAME = "hamster";
+
+    static final UUID ALBUM_CAT_1_ID = UUID.fromString("00000000-0001-0000-0000-000000000000");
+    static final UUID ALBUM_DOG_ID = UUID.fromString("00000000-0001-0000-0000-000000000002");
+    static final String ALBUM_CAT_1_NAME = "album-cat-1";
+    static final String ALBUM_CAT_2_NAME = "album-cat-2";
+    static final String ALBUM_DOG_NAME = "album-dog";
+
+    static final UUID ANIMAL_CAT_1_ID = UUID.fromString("00000000-0000-0001-0000-000000000000");
+    static final UUID ANIMAL_DOG_ID = UUID.fromString("00000000-0000-0001-0000-000000000002");
+    static final String ANIMAL_CAT_1_NAME = "animal-cat-1";
+    static final String ANIMAL_CAT_2_NAME = "animal-cat-2";
+    static final String ANIMAL_DOG_NAME = "animal-dog";
+    static final String[] ANIMAL_CAT_2_TAGS = {"kawaii", "kakkoii", "sugoii"};
+
+    static final UUID PHOTO_CAT_1_ID = UUID.fromString("00000000-0000-0000-0001-000000000000");
+    static final String PHOTO_CAT_1_DESCRIPTION = "This photo contains animal-1 and exists in album-1 and album-2";
+    static final String PHOTO_CAT_12_DESCRIPTION = "This photo contains animal-1 and animal-2 and exists in album-2";
+
+    TestRestTemplate getTestRestTemplate() {
+        return testRestTemplate;
+    }
+
+    static <T> T getFixture(String filePath, Class<T> objectClass) throws Exception {
+        return new ObjectMapper().readValue(new File("src/test/resources/fixtures/" + filePath), objectClass);
+    }
+}

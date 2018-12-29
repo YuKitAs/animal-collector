@@ -1,0 +1,15 @@
+{
+  "animalIds": [
+    "00000000-0000-0001-0000-000000000000",
+    "00000000-0000-0001-0000-000000000001"
+  ],
+  "albumIds": [
+    "00000000-0001-0000-0000-000000000001"
+  ],
+  "content": "00000001",
+  "description": "This photo contains animal-1 and animal-2 and exists in album-2",
+  "location": {
+    "latitude": 1,
+    "longitude": 1
+  }
+}
