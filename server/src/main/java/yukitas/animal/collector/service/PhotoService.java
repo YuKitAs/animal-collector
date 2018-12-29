@@ -17,5 +17,7 @@ public interface PhotoService {
     Photo createPhoto(Photo.Builder builder, Set<UUID> animalIds, Set<UUID> albumIds, byte[] content,
             String description, Location location);
 
+    Photo updatePhoto(UUID id, Set<UUID> animalIds, Set<UUID> albumIds, String description);
+
     void deletePhoto(UUID id);
 }

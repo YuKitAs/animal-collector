@@ -34,7 +34,7 @@ public class Photo {
 
     private byte[] content;
 
-    @Size(max = 250)
+    @Size(max = 255)
     private String description;
 
     private Instant createdAt;
@@ -63,8 +63,16 @@ public class Photo {
         return animals;
     }
 
+    public void setAnimals(Set<Animal> animals) {
+        this.animals = animals;
+    }
+
     public Set<Album> getAlbums() {
         return albums;
+    }
+
+    public void setAlbums(Set<Album> albums) {
+        this.albums = albums;
     }
 
     public byte[] getContent() {
@@ -81,6 +89,10 @@ public class Photo {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public static class Builder {

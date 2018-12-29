@@ -50,4 +50,12 @@ public class AnimalController {
                 .setCategory(categoryService.getCategory(categoryId))
                 .build()), HttpStatus.CREATED);
     }
+
+    @PutMapping("/animals/{id}")
+    public ResponseEntity<Animal> updateAnimal(@PathVariable("id") UUID animalId,
+            @RequestBody CreateAnimalRequest createAnimalRequest) {
+        return new ResponseEntity<>(
+                animalService.updateAnimal(animalId, createAnimalRequest.getName(), createAnimalRequest.getTags()),
+                HttpStatus.OK);
+    }
 }

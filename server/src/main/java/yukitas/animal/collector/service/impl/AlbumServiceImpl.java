@@ -1,5 +1,7 @@
 package yukitas.animal.collector.service.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import yukitas.animal.collector.service.exception.EntityNotFoundException;
 
 @Service
 public class AlbumServiceImpl implements AlbumService {
+    private static final Logger LOGGER = LogManager.getLogger(AlbumServiceImpl.class);
+
     private final AlbumRepository albumRepository;
 
     @Autowired
@@ -34,6 +38,19 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     public Album createAlbum(Album album) {
+        return albumRepository.save(album);
+    }
+
+    @Override
+    public Album updateAlbum(UUID id, String name) {
+        Album album = albumRepository.findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(String.format("Album not found by id=%s", id.toString())));
+
+        if (name != null) {
+            album.setName(name);
+        }
+
         return albumRepository.save(album);
     }
 

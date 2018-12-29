@@ -45,4 +45,21 @@ public class AnimalServiceImpl implements AnimalService {
     public Animal createAnimal(Animal animal) {
         return animalRepository.save(animal);
     }
+
+    @Override
+    public Animal updateAnimal(UUID id, String name, String[] tags) {
+        Animal animal = animalRepository.findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(String.format("Animal not found by id=%s", id.toString())));
+
+        if (name != null) {
+            animal.setName(name);
+        }
+
+        if (tags != null) {
+            animal.setTags(tags);
+        }
+
+        return animalRepository.save(animal);
+    }
 }

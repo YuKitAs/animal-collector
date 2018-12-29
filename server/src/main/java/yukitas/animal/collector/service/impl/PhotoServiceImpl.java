@@ -56,8 +56,8 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public Photo createPhoto(Photo.Builder builder, Set<UUID> animalIds, Set<UUID> albumIds, byte[] content,
             String description, Location location) {
-        Set<Animal> animals = animalIds.stream().map(animalService::getAnimal).collect(Collectors.toSet());
-        Set<Album> albums = albumIds.stream().map(albumService::getAlbum).collect(Collectors.toSet());
+        Set<Animal> animals = getAnimalsById(animalIds);
+        Set<Album> albums = getAlbumsById(albumIds);
 
         Photo photo = photoRepository.save(builder.setAnimals(animals)
                 .setAlbums(albums)
@@ -66,7 +66,7 @@ public class PhotoServiceImpl implements PhotoService {
                 .setLocation(location)
                 .build());
 
-        LOGGER.debug("Created photo for animals [{}] and albums [{}]",
+        LOGGER.debug("Created photo (id={}) for animals [{}] and albums [{}]", photo.getId(),
                 photo.getAnimals().stream().map(Animal::getName).collect(Collectors.joining(",")),
                 photo.getAlbums().stream().map(Album::getName).collect(Collectors.joining(",")));
 
@@ -77,7 +77,43 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
+    public Photo updatePhoto(UUID id, Set<UUID> animalIds, Set<UUID> albumIds, String description) {
+        Photo photo = photoRepository.findById(id)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(String.format("Photo not found by id=%s", id.toString())));
+
+        Set<Animal> animals = getAnimalsById(animalIds);
+        Set<Album> albums = getAlbumsById(albumIds);
+
+        if (animals != null) {
+            photo.setAnimals(animals);
+        }
+
+        if (albums != null) {
+            photo.setAlbums(albums);
+        }
+
+        if (description != null) {
+            photo.setDescription(description);
+        }
+
+        LOGGER.debug("Updated photo (id={}) for animals [{}] and albums [{}]", photo.getId(),
+                photo.getAnimals().stream().map(Animal::getName).collect(Collectors.joining(",")),
+                photo.getAlbums().stream().map(Album::getName).collect(Collectors.joining(",")));
+
+        return photoRepository.save(photo);
+    }
+
+    @Override
     public void deletePhoto(UUID id) {
         photoRepository.deleteById(id);
+    }
+
+    private Set<Animal> getAnimalsById(Set<UUID> animalIds) {
+        return animalIds == null ? null : animalIds.stream().map(animalService::getAnimal).collect(Collectors.toSet());
+    }
+
+    private Set<Album> getAlbumsById(Set<UUID> albumIds) {
+        return albumIds == null ? null : albumIds.stream().map(albumService::getAlbum).collect(Collectors.toSet());
     }
 }

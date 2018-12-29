@@ -54,6 +54,10 @@ public class Album {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Set<Photo> getPhotos() {
         return photos;
     }

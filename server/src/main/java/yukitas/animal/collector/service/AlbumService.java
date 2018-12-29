@@ -12,5 +12,7 @@ public interface AlbumService {
 
     Album createAlbum(Album album);
 
+    Album updateAlbum(UUID id, String name);
+
     void deleteAlbum(UUID id);
 }

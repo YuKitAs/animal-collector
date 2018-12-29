@@ -13,4 +13,6 @@ public interface AnimalService {
     Animal getAnimal(UUID id);
 
     Animal createAnimal(Animal animal);
+
+    Animal updateAnimal(UUID id, String name, String[] tags);
 }

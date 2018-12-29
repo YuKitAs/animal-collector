@@ -35,6 +35,13 @@ public class CategoryController {
                 CreateCategoryRequest.builder().setName(createCategoryRequest.getName()).build()), HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> updateCategory(@PathVariable("id") UUID categoryId,
+            @Valid @RequestBody CreateCategoryRequest createCategoryRequest) {
+        return new ResponseEntity<>(categoryService.updateCategory(categoryId, createCategoryRequest.getName()),
+                HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable("id") UUID categoryId) {
         categoryService.deleteCategory(categoryId);

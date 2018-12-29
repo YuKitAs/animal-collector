@@ -45,6 +45,12 @@ public class AlbumController {
                 .build()), HttpStatus.CREATED);
     }
 
+    @PutMapping("/albums/{id}")
+    public ResponseEntity<Album> updateAlbum(@PathVariable("id") UUID albumId,
+            @Valid @RequestBody CreateAlbumRequest createAlbumRequest) {
+        return new ResponseEntity<>(albumService.updateAlbum(albumId, createAlbumRequest.getName()), HttpStatus.OK);
+    }
+
     @DeleteMapping("/albums/{id}")
     public ResponseEntity<Void> deleteAlbum(@PathVariable("id") UUID albumId) {
         albumService.deleteAlbum(albumId);
