@@ -18,7 +18,7 @@ import java.util.UUID;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @SqlGroup(@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:before_test_script.sql"))
-public class AbstractControllerTest {
+public abstract class AbstractControllerTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
@@ -44,8 +44,8 @@ public class AbstractControllerTest {
     static final UUID PHOTO_CAT_1_ID = UUID.fromString("00000000-0000-0000-0001-000000000000");
     static final UUID PHOTO_DOG_ID = UUID.fromString("00000000-0000-0000-0001-000000000001");
     static final String PHOTO_CAT_1_DESCRIPTION = "This photo contains animal-cat-1 and exists in album-cat-1";
-    static final String PHOTO_CAT_1_DOG_DESCRIPTION = "This photo contains animal-cat-1, animal-dog and exists in " +
-            "album-cat-1, album-dog";
+    static final String PHOTO_CAT_1_DOG_DESCRIPTION =
+            "This photo contains animal-cat-1, animal-dog and exists in " + "album-cat-1, album-dog";
     static final String PHOTO_DOG_DESCRIPTION = "This photo contains animal-dog and exists in album-dog";
 
     TestRestTemplate getTestRestTemplate() {

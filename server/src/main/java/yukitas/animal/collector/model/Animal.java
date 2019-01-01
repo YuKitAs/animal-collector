@@ -21,7 +21,7 @@ public class Animal {
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
@@ -33,7 +33,8 @@ public class Animal {
 
     private String[] tags;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "animals")
+    @ManyToMany(mappedBy = "animals")
+    @OrderBy("created_at")
     private Set<Photo> photos = new HashSet<>();
 
     public Animal() {
@@ -74,7 +75,7 @@ public class Animal {
     }
 
     public void addPhoto(Photo photo) {
-        this.photos.add(photo);
+        photos.add(photo);
     }
 
     public static class Builder {

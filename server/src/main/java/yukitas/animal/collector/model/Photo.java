@@ -20,15 +20,17 @@ public class Photo {
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "photo_animal", joinColumns = {@JoinColumn(name = "photo_id")}, inverseJoinColumns =
             {@JoinColumn(name = "animal_id")})
+    @OrderBy("name")
     @JsonIgnore
     private Set<Animal> animals = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "photo_album", joinColumns = {@JoinColumn(name = "photo_id")}, inverseJoinColumns =
-            {@JoinColumn(name = "album_id")})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "photo_album", joinColumns = @JoinColumn(name = "photo_id"), inverseJoinColumns =
+    @JoinColumn(name = "album_id"))
+    @OrderBy("name")
     @JsonIgnore
     private Set<Album> albums = new HashSet<>();
 
@@ -67,12 +69,20 @@ public class Photo {
         this.animals = animals;
     }
 
+    public void removeAnimal(Animal animal) {
+        animals.remove(animal);
+    }
+
     public Set<Album> getAlbums() {
         return albums;
     }
 
     public void setAlbums(Set<Album> albums) {
         this.albums = albums;
+    }
+
+    public void removeAlbum(Album album) {
+        albums.remove(album);
     }
 
     public byte[] getContent() {

@@ -1,6 +1,7 @@
 package yukitas.animal.collector.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotBlank;
 
@@ -11,7 +12,7 @@ public final class CreateAlbumRequest {
     private String name;
 
     @JsonCreator
-    public CreateAlbumRequest(String name) {
+    public CreateAlbumRequest(@JsonProperty("name") String name) {
         this.name = name;
     }
 

@@ -30,7 +30,7 @@ INSERT INTO animals (id, name, tags, category_id)
 VALUES
 ('00000000-0000-0001-0000-000000000000',
 'animal-cat-1',
-'{}',
+null,
 '00000001-0000-0000-0000-000000000000')
 ON CONFLICT (id)
 DO NOTHING;
@@ -39,7 +39,7 @@ INSERT INTO animals (id, name, tags, category_id)
 VALUES
 ('00000000-0000-0001-0000-000000000001',
 'animal-dog',
-'{}',
+null,
 '00000001-0000-0000-0000-000000000001')
 ON CONFLICT (id)
 DO NOTHING;

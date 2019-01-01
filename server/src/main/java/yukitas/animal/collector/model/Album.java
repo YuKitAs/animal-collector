@@ -21,7 +21,7 @@ public class Album {
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
@@ -31,7 +31,8 @@ public class Album {
     @Column(unique = true)
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "albums")
+    @ManyToMany(mappedBy = "albums")
+    @OrderBy("created_at")
     private Set<Photo> photos = new HashSet<>();
 
     public Album() {
@@ -63,7 +64,7 @@ public class Album {
     }
 
     public void addPhoto(Photo photo) {
-        this.photos.add(photo);
+        photos.add(photo);
     }
 
     public static class Builder {

@@ -1,6 +1,7 @@
 package yukitas.animal.collector.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotBlank;
 
@@ -13,7 +14,7 @@ public final class CreateAnimalRequest {
     private String[] tags;
 
     @JsonCreator
-    public CreateAnimalRequest(String name, String[] tags) {
+    public CreateAnimalRequest(@JsonProperty("name") String name, @JsonProperty("tags") String[] tags) {
         this.name = name;
         this.tags = tags;
     }

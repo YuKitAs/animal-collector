@@ -1,8 +1,7 @@
 package yukitas.animal.collector.controller;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Test;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -12,7 +11,6 @@ import yukitas.animal.collector.model.Category;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CategoryControllerTest extends AbstractControllerTest {
-    private static final Logger LOGGER = LogManager.getLogger(CategoryControllerTest.class);
 
     @Test
     public void getAllCategories() {
@@ -34,9 +32,21 @@ public class CategoryControllerTest extends AbstractControllerTest {
                 getFixture("create-category.json", CreateCategoryRequest.class), Category.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).satisfies(categories -> {
-            assertThat(categories.getId()).isNotNull();
-            assertThat(categories.getName()).isEqualTo(CATEGORY_HAMSTER_NAME);
+        assertThat(response.getBody()).satisfies(category -> {
+            assertThat(category.getId()).isNotNull();
+            assertThat(category.getName()).isEqualTo(CATEGORY_HAMSTER_NAME);
         });
+    }
+
+    @Test
+    public void updateCategory() {
+    }
+
+    @Test
+    public void deleteCategory() {
+        ResponseEntity<Void> response = getTestRestTemplate().exchange("/categories/" + CATEGORY_DOG_ID,
+                HttpMethod.DELETE, null, Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 }

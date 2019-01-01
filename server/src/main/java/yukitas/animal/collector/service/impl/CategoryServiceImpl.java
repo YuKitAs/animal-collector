@@ -1,32 +1,40 @@
 package yukitas.animal.collector.service.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import yukitas.animal.collector.model.Category;
 import yukitas.animal.collector.repository.CategoryRepository;
+import yukitas.animal.collector.service.AlbumService;
+import yukitas.animal.collector.service.AnimalService;
 import yukitas.animal.collector.service.CategoryService;
 import yukitas.animal.collector.service.exception.EntityNotFoundException;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
+    private static final Logger LOGGER = LogManager.getLogger(CategoryServiceImpl.class);
     private static final String ENTITY_NAME = "category";
 
     private final CategoryRepository categoryRepository;
+    private final AlbumService albumService;
+    private final AnimalService animalService;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, AlbumService albumService,
+            AnimalService animalService) {
         this.categoryRepository = categoryRepository;
+        this.albumService = albumService;
+        this.animalService = animalService;
     }
 
     @Override
     public List<Category> getAllCategories() {
-        return StreamSupport.stream(categoryRepository.findAll().spliterator(), false).collect(Collectors.toList());
+        return categoryRepository.findAll();
     }
 
     @Override
@@ -52,8 +60,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(UUID id) {
-        findCategoryById(id);
+        Category category = findCategoryById(id);
 
+        albumService.getAlbumsByCategory(id).forEach(album -> albumService.deleteAlbum(album.getId()));
+        animalService.getAnimalsByCategory(id).forEach(animal -> animalService.deleteAnimal(animal.getId()));
+
+        LOGGER.debug("Delete category [id={}, name='{}']", id, category.getName());
         categoryRepository.deleteById(id);
     }
 
