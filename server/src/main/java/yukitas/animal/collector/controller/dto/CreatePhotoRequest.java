@@ -1,6 +1,7 @@
 package yukitas.animal.collector.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Set;
 import java.util.UUID;
@@ -24,8 +25,9 @@ public final class CreatePhotoRequest {
     private final Location location;
 
     @JsonCreator
-    public CreatePhotoRequest(@NotNull Set<UUID> animalIds, @NotNull Set<UUID> albumIds, byte[] content,
-            String description, Location location) {
+    public CreatePhotoRequest(@JsonProperty("animalIds") Set<UUID> animalIds,
+            @JsonProperty("albumIds") Set<UUID> albumIds, @JsonProperty("content") byte[] content,
+            @JsonProperty("description") String description, @JsonProperty("location") Location location) {
         this.animalIds = animalIds;
         this.albumIds = albumIds;
         this.content = content;
