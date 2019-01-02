@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Base64;
+import java.util.Objects;
 
 import yukitas.animal.collector.controller.dto.CreatePhotoRequest;
 import yukitas.animal.collector.model.Photo;
@@ -25,6 +26,43 @@ public class PhotoControllerTest extends AbstractControllerTest {
             assertThat(Base64.getEncoder().encode(photo.getContent())).isEqualTo(PHOTO_CAT_1_DOG_CONTENT);
             assertThat(photo.getDescription()).isEqualTo(PHOTO_CAT_1_DOG_DESCRIPTION);
         });
+
+        photoAddedForAlbumCat1();
+        photoAddedForAlbumDog();
+        photoAddedForCat1();
+        photoAddedForDog();
+    }
+
+    private void photoAddedForAlbumCat1() {
+        ResponseEntity<Photo[]> albumCat1PhotosResponse = getTestRestTemplate().getForEntity(
+                String.format("/albums/%s/photos", ALBUM_CAT_1_ID), Photo[].class);
+
+        assertThat(albumCat1PhotosResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(Objects.requireNonNull(albumCat1PhotosResponse.getBody()).length).isEqualTo(2);
+    }
+
+    private void photoAddedForAlbumDog() {
+        ResponseEntity<Photo[]> albumDogPhotosResponse = getTestRestTemplate().getForEntity(
+                String.format("/albums/%s/photos", ALBUM_DOG_ID), Photo[].class);
+
+        assertThat(albumDogPhotosResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(Objects.requireNonNull(albumDogPhotosResponse.getBody()).length).isEqualTo(2);
+    }
+
+    private void photoAddedForCat1() {
+        ResponseEntity<Photo[]> animalCat1PhotosResponse = getTestRestTemplate().getForEntity(
+                String.format("/animals/%s/photos", ANIMAL_CAT_1_ID), Photo[].class);
+
+        assertThat(animalCat1PhotosResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(Objects.requireNonNull(animalCat1PhotosResponse.getBody()).length).isEqualTo(2);
+    }
+
+    private void photoAddedForDog() {
+        ResponseEntity<Photo[]> animalDogPhotosResponse = getTestRestTemplate().getForEntity(
+                String.format("/animals/%s/photos", ANIMAL_DOG_ID), Photo[].class);
+
+        assertThat(animalDogPhotosResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(Objects.requireNonNull(animalDogPhotosResponse.getBody()).length).isEqualTo(2);
     }
 
     @Test

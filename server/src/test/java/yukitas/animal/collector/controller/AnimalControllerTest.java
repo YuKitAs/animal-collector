@@ -4,11 +4,8 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Optional;
-
 import yukitas.animal.collector.controller.dto.CreateAnimalRequest;
 import yukitas.animal.collector.model.Animal;
-import yukitas.animal.collector.model.Photo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,8 +18,8 @@ public class AnimalControllerTest extends AbstractControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).satisfies(animals -> {
             assertThat(animals.length).isEqualTo(2);
-            assertThat(isAnimalCat1(animals[0])).isTrue();
-            assertThat(isAnimalDog(animals[1])).isTrue();
+            isAnimalCat1(animals[0]);
+            isAnimalDog(animals[1]);
         });
     }
 
@@ -34,7 +31,7 @@ public class AnimalControllerTest extends AbstractControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).satisfies(animals -> {
             assertThat(animals.length).isEqualTo(1);
-            assertThat(isAnimalCat1(animals[0])).isTrue();
+            isAnimalCat1(animals[0]);
         });
     }
 
@@ -43,25 +40,21 @@ public class AnimalControllerTest extends AbstractControllerTest {
         ResponseEntity<Animal> response = getTestRestTemplate().getForEntity("/animals/" + ANIMAL_DOG_ID, Animal.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).satisfies(animal -> assertThat(isAnimalDog(animal)).isTrue());
+        assertThat(response.getBody()).satisfies(this::isAnimalDog);
     }
 
-    private boolean isAnimalCat1(Animal animal) {
-        Optional<Photo> photo = animal.getPhotos().stream().findAny();
-        assert photo.isPresent();
-
-        return animal.getId().equals(ANIMAL_CAT_1_ID) && animal.getName().equals(ANIMAL_CAT_1_NAME) && photo.get()
-                .getId()
-                .equals(PHOTO_CAT_1_ID);
+    private void isAnimalCat1(Animal animal) {
+        assertThat(animal.getId()).isEqualTo(ANIMAL_CAT_1_ID);
+        assertThat(animal.getName()).isEqualTo(ANIMAL_CAT_1_NAME);
+        assert animal.getPhotos().stream().findAny().isPresent();
+        assertThat(animal.getPhotos().stream().findAny().get().getId()).isEqualTo((PHOTO_CAT_1_ID));
     }
 
-    private boolean isAnimalDog(Animal animal) {
-        Optional<Photo> photo = animal.getPhotos().stream().findAny();
-        assert photo.isPresent();
-
-        return animal.getId().equals(ANIMAL_DOG_ID) && animal.getName().equals(ANIMAL_DOG_NAME) && photo.get()
-                .getId()
-                .equals(PHOTO_DOG_ID);
+    private void isAnimalDog(Animal animal) {
+        assertThat(animal.getId()).isEqualTo(ANIMAL_DOG_ID);
+        assertThat(animal.getName()).isEqualTo(ANIMAL_DOG_NAME);
+        assert animal.getPhotos().stream().findAny().isPresent();
+        assertThat(animal.getPhotos().stream().findAny().get().getId()).isEqualTo((PHOTO_DOG_ID));
     }
 
     @Test

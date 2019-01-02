@@ -5,11 +5,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Optional;
-
 import yukitas.animal.collector.controller.dto.CreateAlbumRequest;
 import yukitas.animal.collector.model.Album;
-import yukitas.animal.collector.model.Photo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,7 +20,7 @@ public class AlbumControllerTest extends AbstractControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).satisfies(albums -> {
             assertThat(albums.length).isEqualTo(1);
-            assertThat(isAlbumCat1(albums[0])).isTrue();
+            isAlbumCat1(albums[0]);
         });
     }
 
@@ -32,25 +29,21 @@ public class AlbumControllerTest extends AbstractControllerTest {
         ResponseEntity<Album> response = getTestRestTemplate().getForEntity("/albums/" + ALBUM_DOG_ID, Album.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).satisfies(album -> assertThat(isAlbumDog(album)).isTrue());
+        assertThat(response.getBody()).satisfies(this::isAlbumDog);
     }
 
-    private boolean isAlbumCat1(Album album) {
-        Optional<Photo> photo = album.getPhotos().stream().findAny();
-        assert photo.isPresent();
-
-        return album.getId().equals(ALBUM_CAT_1_ID) && album.getName().equals(ALBUM_CAT_1_NAME) && photo.get()
-                .getId()
-                .equals(PHOTO_CAT_1_ID);
+    private void isAlbumCat1(Album album) {
+        assertThat(album.getId()).isEqualTo(ALBUM_CAT_1_ID);
+        assertThat(album.getName()).isEqualTo(ALBUM_CAT_1_NAME);
+        assert album.getPhotos().stream().findAny().isPresent();
+        assertThat(album.getPhotos().stream().findAny().get().getId()).isEqualTo((PHOTO_CAT_1_ID));
     }
 
-    private boolean isAlbumDog(Album album) {
-        Optional<Photo> photo = album.getPhotos().stream().findAny();
-        assert photo.isPresent();
-
-        return album.getId().equals(ALBUM_DOG_ID) && album.getName().equals(ALBUM_DOG_NAME) && photo.get()
-                .getId()
-                .equals(PHOTO_DOG_ID);
+    private void isAlbumDog(Album album) {
+        assertThat(album.getId()).isEqualTo(ALBUM_DOG_ID);
+        assertThat(album.getName()).isEqualTo(ALBUM_DOG_NAME);
+        assert album.getPhotos().stream().findAny().isPresent();
+        assertThat(album.getPhotos().stream().findAny().get().getId()).isEqualTo((PHOTO_DOG_ID));
     }
 
     @Test
