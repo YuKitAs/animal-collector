@@ -1,6 +1,7 @@
 package yukitas.animal.collector.controller;
 
 import org.junit.Test;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +61,16 @@ public class AlbumControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void updateAlbum() {
+    public void updateAlbum() throws Exception {
+        ResponseEntity<Album> response = getTestRestTemplate().exchange("/albums/" + ALBUM_CAT_1_ID, HttpMethod.PUT,
+                new HttpEntity<>(getFixture("create-album.json", CreateAlbumRequest.class)), Album.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assert response.getBody() != null;
+        assertThat(response.getBody()).satisfies(album -> {
+            assertThat(album.getId()).isEqualTo(ALBUM_CAT_1_ID);
+            assertThat(album.getName()).isEqualTo(ALBUM_CAT_2_NAME);
+        });
     }
 
     @Test

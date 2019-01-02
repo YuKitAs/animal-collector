@@ -1,6 +1,7 @@
 package yukitas.animal.collector.controller;
 
 import org.junit.Test;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -107,7 +108,19 @@ public class PhotoControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void updatePhoto() {
+    public void updatePhoto_ContentUnchanged() throws Exception {
+        ResponseEntity<Photo> response = getTestRestTemplate().exchange("/photos/" + PHOTO_CAT_1_ID, HttpMethod.PUT,
+                new HttpEntity<>(getFixture("create-photo.json", CreatePhotoRequest.class)), Photo.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assert response.getBody() != null;
+        assertThat(response.getBody()).satisfies(photo -> {
+            assertThat(photo.getId()).isEqualTo(PHOTO_CAT_1_ID);
+            assertThat(photo.getDescription()).isEqualTo(PHOTO_CAT_1_DOG_DESCRIPTION);
+            assertThat(photo.getContent()).isEqualTo(PHOTO_CAT_1_CONTENT);
+        });
+
+        photoAddedForDog();
     }
 
     @Test

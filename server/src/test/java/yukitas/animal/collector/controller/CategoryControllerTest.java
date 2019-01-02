@@ -1,6 +1,7 @@
 package yukitas.animal.collector.controller;
 
 import org.junit.Test;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,17 @@ public class CategoryControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void updateCategory() {
+    public void updateCategory() throws Exception {
+        ResponseEntity<Category> response = getTestRestTemplate().exchange("/categories/" + CATEGORY_CAT_ID,
+                HttpMethod.PUT, new HttpEntity<>(getFixture("create-category.json", CreateCategoryRequest.class)),
+                Category.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assert response.getBody() != null;
+        assertThat(response.getBody()).satisfies(category -> {
+            assertThat(category.getId()).isEqualTo(CATEGORY_CAT_ID);
+            assertThat(category.getName()).isEqualTo(CATEGORY_HAMSTER_NAME);
+        });
     }
 
     @Test

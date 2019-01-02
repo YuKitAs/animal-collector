@@ -1,6 +1,8 @@
 package yukitas.animal.collector.controller;
 
 import org.junit.Test;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -72,6 +74,16 @@ public class AnimalControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void updateAnimal() {
+    public void updateAnimal() throws Exception {
+        ResponseEntity<Animal> response = getTestRestTemplate().exchange("/animals/" + ANIMAL_CAT_1_ID, HttpMethod.PUT,
+                new HttpEntity<>(getFixture("create-animal.json", CreateAnimalRequest.class)), Animal.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assert response.getBody() != null;
+        assertThat(response.getBody()).satisfies(animal -> {
+            assertThat(animal.getId()).isEqualTo(ANIMAL_CAT_1_ID);
+            assertThat(animal.getName()).isEqualTo(ANIMAL_CAT_2_NAME);
+            assertThat(animal.getTags()).isEqualTo(ANIMAL_CAT_2_TAGS);
+        });
     }
 }
