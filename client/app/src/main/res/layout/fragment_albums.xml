@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gridview"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            style="?android:textAppearanceMedium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:lineSpacingMultiplier="1.2"
-            android:padding="16dp"
-            android:text="Hello world"/>
-    </ScrollView>
-
-</android.support.constraint.ConstraintLayout>
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:columnWidth="150dp"
+    android:gravity="center"
+    android:horizontalSpacing="10dp"
+    android:numColumns="auto_fit"
+    android:stretchMode="columnWidth"
+    android:verticalSpacing="24dp" />
