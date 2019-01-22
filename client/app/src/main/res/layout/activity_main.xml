@@ -21,6 +21,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/pager_category" />
+    <include layout="@layout/viewpager_category" />
 
 </LinearLayout>
