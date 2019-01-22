@@ -16,8 +16,8 @@ class AlbumsFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_albums, container, false)
-        val gridview: GridView = view.findViewById(R.id.gridview)
-        gridview.adapter = AlbumAdapter(this.context)
+        val gridView: GridView = view.findViewById(R.id.grid_albums)
+        gridView.adapter = AlbumAdapter(context)
 
         return view
     }
