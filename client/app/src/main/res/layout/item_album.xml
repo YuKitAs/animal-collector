@@ -15,10 +15,11 @@
             android:id="@+id/image_album_bg"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_centerInParent="true"
-            android:padding="5dp"
-            card_view:srcCompat="@android:color/holo_red_light"
-            android:contentDescription="@string/content_desc_album" />
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:contentDescription="@string/content_desc_album"
+            card_view:srcCompat="@android:color/holo_red_light" />
 
         <TextView
             android:id="@+id/text_album_name"
@@ -26,10 +27,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/image_album_bg"
             android:layout_centerHorizontal="true"
-            android:padding="10dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/placeholder"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp" />
 
     </RelativeLayout>
 
