@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">animal-collector</string>
     <string name="action_settings">Settings</string>
-    <string name="placeholder">Hello world!</string>
+    <string name="placeholder">Hello Bonbon!</string>
     <string name="content_desc_photo">Photo</string>
     <string name="content_desc_album">Album</string>
 </resources>
