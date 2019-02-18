@@ -16,8 +16,15 @@ class AlbumPhotosFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_album_photos, container, false)
-        val gridView: GridView = view.findViewById(R.id.grid_photos)
+        val gridView = view.findViewById<GridView>(R.id.grid_photos)
         gridView.adapter = PhotosAdapter(context)
+
+        gridView.setOnItemClickListener { _, _, _, _ ->
+            activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, PhotoDetailFragment())
+                    .addToBackStack("photos")
+                    .commit()
+        }
 
         return view
     }

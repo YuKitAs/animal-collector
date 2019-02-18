@@ -12,9 +12,10 @@ class PhotoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_photo)
         setSupportActionBar(toolbar)
 
-        val fragment = AlbumPhotosFragment()
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, fragment)
-        transaction.commit()
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, AlbumPhotosFragment())
+                    .commit()
+        }
     }
 }

@@ -3,4 +3,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="20dp"
+        android:paddingTop="20dp"
+        android:paddingRight="20dp">
+
+        <ImageView
+            android:id="@+id/photo_content"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@color/cardview_shadow_start_color"
+            android:contentDescription="@string/content_desc_photo" />
+
+        <TextView
+            android:id="@+id/photo_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/photo_content"
+            android:layout_alignStart="@+id/photo_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/placeholder"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/photo_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/photo_description"
+            android:layout_alignStart="@+id/photo_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="16dp"
+            android:text="Location: somewhere on the earth"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/photo_animals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/photo_location"
+            android:layout_alignStart="@+id/photo_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="16dp"
+            android:text="Animals: Bonbon"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>
