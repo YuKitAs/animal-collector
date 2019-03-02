@@ -1,5 +1,7 @@
-package yukitas.animal.collector.activity
+package yukitas.animal.collector.view.activity
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
@@ -7,10 +9,12 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import yukitas.animal.R
-import yukitas.animal.collector.adapter.CategoryPagerAdapter
+import yukitas.animal.collector.view.adapter.CategoryPagerAdapter
+import yukitas.animal.collector.viewmodel.CategoryViewModel
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var categoryPagerAdapter: yukitas.animal.collector.adapter.CategoryPagerAdapter
+    private lateinit var categoryViewModel: CategoryViewModel
+    private lateinit var categoryPagerAdapter: yukitas.animal.collector.view.adapter.CategoryPagerAdapter
     private lateinit var viewPager: ViewPager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,6 +23,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         categoryPagerAdapter = CategoryPagerAdapter(supportFragmentManager)
+
+        categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
+        categoryViewModel.categories.observe(this, Observer { categories ->
+            categories?.let {
+                categoryPagerAdapter.categories = it
+            }
+        })
 
         viewPager = findViewById(R.id.pager)
         viewPager.adapter = categoryPagerAdapter

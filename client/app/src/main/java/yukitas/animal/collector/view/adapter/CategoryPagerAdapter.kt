@@ -1,16 +1,22 @@
-package yukitas.animal.collector.adapter
+package yukitas.animal.collector.view.adapter
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import yukitas.animal.collector.fragment.AlbumsFragment
+import yukitas.animal.collector.model.Category
+import yukitas.animal.collector.view.fragment.AlbumsFragment
 
 private const val ARG_CATEGORY = "category"
-private const val NUM_CATEGORIES = 3
 
 class CategoryPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
-    override fun getCount(): Int = NUM_CATEGORIES
+    var categories = emptyList<Category>()
+        set(categories) {
+            field = categories
+            notifyDataSetChanged()
+        }
+
+    override fun getCount(): Int = categories.size
 
     override fun getItem(i: Int): Fragment {
         val fragment = AlbumsFragment()
@@ -21,6 +27,6 @@ class CategoryPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) 
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        return "CATEGORY " + (position + 1)
+        return categories[position].name
     }
 }
