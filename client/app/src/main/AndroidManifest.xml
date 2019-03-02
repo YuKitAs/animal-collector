@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="yukitas.animal">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="yukitas.animal.collector.activity.MainActivity"
+            android:name="yukitas.animal.collector.view.activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -21,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="yukitas.animal.collector.activity.PhotoActivity"
+            android:name="yukitas.animal.collector.view.activity.PhotoActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
