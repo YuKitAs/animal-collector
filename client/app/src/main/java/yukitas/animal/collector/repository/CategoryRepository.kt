@@ -18,7 +18,7 @@ object CategoryRepository {
         apiService.getCategories().enqueue(object : Callback<List<Category>> {
             override fun onResponse(call: Call<List<Category>>?, response: Response<List<Category>>?) {
                 if (response!!.isSuccessful) {
-                    categories.value = response.body().orEmpty()
+                    categories.value = response.body()!!
                     Log.d(TAG, "Fetched categories: ${categories.value}")
                 } else {
                     Log.e(TAG, "Response failed")
