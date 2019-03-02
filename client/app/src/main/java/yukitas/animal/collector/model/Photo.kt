@@ -1,13 +1,10 @@
 package yukitas.animal.collector.model
 
-import java.time.Instant
-import java.util.*
-
 data class Photo(
-        val id: UUID,
+        val id: String,
         val content: ByteArray,
         val description: String,
-        val createdAt: Instant,
+        val createdAt: String,
         val location: Location) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
