@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/grid_albums"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
-    android:columnWidth="150dp"
-    android:gravity="center"
-    android:horizontalSpacing="10dp"
-    android:numColumns="auto_fit"
-    android:padding="5dp"
-    android:stretchMode="columnWidth"
-    android:verticalSpacing="24dp" />
+<layout>
+
+    <data>
+
+        <variable
+            name="albumViewModel"
+            type="yukitas.animal.collector.viewmodel.AlbumViewModel" />
+    </data>
+
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/grid_albums"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:columnWidth="150dp"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
+        android:padding="5dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="24dp" />
+</layout>
