@@ -1,4 +1,4 @@
-package yukitas.animal.collector.adapter
+package yukitas.animal.collector.view.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import yukitas.animal.R
 
-class PhotosAdapter(private val context: Context) : BaseAdapter() {
-    override fun getCount(): Int = 8
+class AlbumsAdapter(private val context: Context) : BaseAdapter() {
+    override fun getCount(): Int = 12
 
     override fun getItem(position: Int): Any? = null
 
@@ -16,6 +16,6 @@ class PhotosAdapter(private val context: Context) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         return convertView
-                ?: LayoutInflater.from(context).inflate(R.layout.item_photo, parent, false)
+                ?: LayoutInflater.from(context).inflate(R.layout.item_album, parent, false)
     }
 }

@@ -1,4 +1,4 @@
-package yukitas.animal.collector.fragment
+package yukitas.animal.collector.view.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.GridView
 import yukitas.animal.R
-import yukitas.animal.collector.activity.PhotoActivity
-import yukitas.animal.collector.adapter.AlbumsAdapter
+import yukitas.animal.collector.view.activity.PhotoActivity
+import yukitas.animal.collector.view.adapter.AlbumsAdapter
 
 class AlbumsFragment : Fragment() {
     override fun onCreateView(

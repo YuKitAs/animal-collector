@@ -1,10 +1,10 @@
-package yukitas.animal.collector.activity
+package yukitas.animal.collector.view.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import yukitas.animal.R
-import yukitas.animal.collector.fragment.AlbumPhotosFragment
+import yukitas.animal.collector.view.fragment.AlbumPhotosFragment
 
 class PhotoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

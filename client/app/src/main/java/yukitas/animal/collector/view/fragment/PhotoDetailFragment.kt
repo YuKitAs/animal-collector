@@ -1,4 +1,4 @@
-package yukitas.animal.collector.fragment
+package yukitas.animal.collector.view.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
