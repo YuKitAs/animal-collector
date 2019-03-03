@@ -10,5 +10,4 @@ class AlbumViewModel(context: Application) : AndroidViewModel(context) {
     fun getAlbumsByCategory(categoryId: String): LiveData<List<Album>> {
         return AlbumRepository.fetchAlbumsByCategoryId(categoryId)
     }
-
 }

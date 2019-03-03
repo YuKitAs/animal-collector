@@ -7,6 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Category
+import yukitas.animal.collector.model.Photo
 
 interface ApiService {
     @GET("categories")
@@ -14,6 +15,9 @@ interface ApiService {
 
     @GET("categories/{categoryId}/albums")
     fun getAlbumsByCategory(@Path("categoryId") categoryId: String): Call<List<Album>>
+
+    @GET("albums/{albumId}/photos")
+    fun getPhotosByAlbum(@Path("albumId") albumId: String): Call<List<Photo>>
 
     companion object {
         fun create(): ApiService {

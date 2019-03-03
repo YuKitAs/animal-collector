@@ -6,13 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import yukitas.animal.R
+import yukitas.animal.collector.model.Photo
 
 class PhotosAdapter(private val context: Context) : BaseAdapter() {
-    override fun getCount(): Int = 8
+    var photos = emptyList<Photo>()
+        set(photos) {
+            field = photos
+            notifyDataSetChanged()
+        }
 
-    override fun getItem(position: Int): Any? = null
+    override fun getCount(): Int = photos.size
 
-    override fun getItemId(position: Int): Long = 0L
+    override fun getItem(position: Int): Any? = photos[position]
+
+    override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         return convertView
