@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.GridView
 import yukitas.animal.R
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
+import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
 import yukitas.animal.collector.view.adapter.PhotosAdapter
 import yukitas.animal.collector.viewmodel.PhotoViewModel
 
@@ -35,7 +36,11 @@ class AlbumPhotosFragment : Fragment() {
             }
         })
 
-        gridView.setOnItemClickListener { _, _, _, _ ->
+        gridView.setOnItemClickListener { _, _, position, _ ->
+            val bundle = Bundle()
+            bundle.putString(ARG_PHOTO_ID, photosAdapter.photos[position].id)
+            activity.intent.putExtras(bundle)
+
             activity.supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, PhotoDetailFragment())
                     .addToBackStack("photos")

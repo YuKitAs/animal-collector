@@ -19,6 +19,9 @@ interface ApiService {
     @GET("albums/{albumId}/photos")
     fun getPhotosByAlbum(@Path("albumId") albumId: String): Call<List<Photo>>
 
+    @GET("photos/{photoId}")
+    fun getPhotoById(@Path("photoId") id: String): Call<Photo>
+
     companion object {
         fun create(): ApiService {
             val retrofit = Retrofit.Builder()

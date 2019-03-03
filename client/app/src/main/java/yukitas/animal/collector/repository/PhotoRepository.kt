@@ -32,4 +32,24 @@ object PhotoRepository {
 
         return photos
     }
+
+    fun fetchPhotoById(id: String): LiveData<Photo> {
+        val photo: MutableLiveData<Photo> = MutableLiveData()
+        apiService.getPhotoById(id).enqueue(object : Callback<Photo> {
+            override fun onResponse(call: Call<Photo>, response: Response<Photo>?) {
+                if (response!!.isSuccessful) {
+                    photo.value = response.body()!!
+                    Log.d(TAG, "Fetched photo by id $id: ${photo.value}")
+                } else {
+                    Log.e(TAG, "Response failed")
+                }
+            }
+
+            override fun onFailure(call: Call<Photo>, t: Throwable) {
+                Log.e(TAG, "Fetching photo failed", t)
+            }
+        })
+
+        return photo
+    }
 }
