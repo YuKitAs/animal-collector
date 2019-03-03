@@ -1,5 +1,6 @@
 package yukitas.animal.collector.view.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.view.LayoutInflater
@@ -23,11 +24,13 @@ class AlbumsAdapter(private val context: Context) : BaseAdapter() {
 
     override fun getItem(position: Int): Any? = albums[position]
 
-    override fun getItemId(position: Int): Long = 0L
+    override fun getItemId(position: Int): Long = position.toLong()
 
+    @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.item_album, parent, false)
         binding.album = albums[position]
+
         return convertView ?: binding.root
     }
 }
