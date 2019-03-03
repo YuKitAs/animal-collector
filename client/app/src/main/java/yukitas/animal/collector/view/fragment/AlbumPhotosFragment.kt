@@ -9,10 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.GridView
 import yukitas.animal.R
+import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
 import yukitas.animal.collector.view.adapter.PhotosAdapter
 import yukitas.animal.collector.viewmodel.PhotoViewModel
-
-private const val ARG_ALBUM_ID = "albumId"
 
 class AlbumPhotosFragment : Fragment() {
     private lateinit var photoViewModel: PhotoViewModel

@@ -4,10 +4,9 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
+import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
 import yukitas.animal.collector.model.Category
 import yukitas.animal.collector.view.fragment.AlbumsFragment
-
-private const val ARG_CATEGORY_ID = "categoryId"
 
 class CategoryPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
     var categories = emptyList<Category>()
