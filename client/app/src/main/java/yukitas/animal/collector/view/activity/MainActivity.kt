@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import yukitas.animal.collector.R
+import yukitas.animal.collector.common.Mode
 import yukitas.animal.collector.view.adapter.CategoryPagerAdapter
 import yukitas.animal.collector.viewmodel.CategoryViewModel
 
@@ -22,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        categoryPagerAdapter = CategoryPagerAdapter(supportFragmentManager)
+        categoryPagerAdapter = CategoryPagerAdapter(supportFragmentManager, Mode.ANIMAL)
 
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
         categoryViewModel.categories.observe(this, Observer { categories ->
