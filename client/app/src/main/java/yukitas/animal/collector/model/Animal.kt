@@ -1,9 +1,7 @@
 package yukitas.animal.collector.model
 
-import java.util.*
-
 data class Animal(
-        val id: UUID,
+        val id: String,
         val name: String,
         val tags: List<String>
 )

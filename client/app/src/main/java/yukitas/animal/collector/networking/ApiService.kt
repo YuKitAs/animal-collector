@@ -6,6 +6,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import yukitas.animal.collector.model.Album
+import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.Category
 import yukitas.animal.collector.model.Photo
 
@@ -21,6 +22,9 @@ interface ApiService {
 
     @GET("photos/{photoId}")
     fun getPhotoById(@Path("photoId") id: String): Call<Photo>
+
+    @GET("categories/{categoryId}/animals")
+    fun getAnimalsByCategory(@Path("categoryId") categoryId: String): Call<List<Animal>>
 
     companion object {
         fun create(): ApiService {
