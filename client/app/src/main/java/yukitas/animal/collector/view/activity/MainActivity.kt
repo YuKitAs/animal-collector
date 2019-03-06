@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
-import yukitas.animal.R
+import yukitas.animal.collector.R
 import yukitas.animal.collector.view.adapter.CategoryPagerAdapter
 import yukitas.animal.collector.viewmodel.CategoryViewModel
 

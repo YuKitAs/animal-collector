@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import yukitas.animal.R
+import yukitas.animal.collector.R
+import yukitas.animal.collector.databinding.ItemAlbumBinding
 import yukitas.animal.collector.model.Album
-import yukitas.animal.databinding.ItemAlbumBinding
 
 class AlbumsAdapter(private val context: Context) : BaseAdapter() {
     private lateinit var binding: ItemAlbumBinding

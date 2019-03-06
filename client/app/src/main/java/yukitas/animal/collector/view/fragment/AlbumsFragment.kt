@@ -9,15 +9,16 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import yukitas.animal.R
+import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
+import yukitas.animal.collector.databinding.FragmentAlbumsBinding
 import yukitas.animal.collector.view.activity.PhotoActivity
 import yukitas.animal.collector.view.adapter.AlbumsAdapter
 import yukitas.animal.collector.viewmodel.AlbumViewModel
 
 class AlbumsFragment : Fragment() {
-    private lateinit var binding: yukitas.animal.databinding.FragmentAlbumsBinding
+    private lateinit var binding: FragmentAlbumsBinding
     private lateinit var albumViewModel: AlbumViewModel
     private lateinit var albumsAdapter: AlbumsAdapter
 
