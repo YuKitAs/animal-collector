@@ -26,7 +26,7 @@ object AlbumRepository {
             }
 
             override fun onFailure(call: Call<List<Album>>?, t: Throwable?) {
-                Log.e(TAG, "Fetching albums failed", t)
+                Log.e(TAG, "Fetching albums by category $categoryId failed", t)
             }
         })
 
