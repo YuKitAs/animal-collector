@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        viewPager = findViewById(R.id.pager)
+        viewPager = findViewById(R.id.pager_category)
         viewPager.adapter = categoryPagerAdapter
     }
 
