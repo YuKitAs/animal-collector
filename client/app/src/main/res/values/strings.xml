@@ -4,4 +4,6 @@
     <string name="placeholder">Hello Bonbon!</string>
     <string name="content_desc_photo">Photo</string>
     <string name="content_desc_album">Album</string>
+    <string name="tab_albums">Albums</string>
+    <string name="tab_animals">Animals</string>
 </resources>
