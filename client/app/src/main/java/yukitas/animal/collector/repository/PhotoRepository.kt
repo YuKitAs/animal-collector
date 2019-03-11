@@ -26,7 +26,27 @@ object PhotoRepository {
             }
 
             override fun onFailure(call: Call<List<Photo>>?, t: Throwable?) {
-                Log.e(TAG, "Fetching photos failed", t)
+                Log.e(TAG, "Fetching photos by album $albumId failed", t)
+            }
+        })
+
+        return photos
+    }
+
+    fun fetchPhotosByAnimalId(animalId: String): LiveData<List<Photo>> {
+        val photos: MutableLiveData<List<Photo>> = MutableLiveData()
+        apiService.getPhotosByAnimal(animalId).enqueue(object : Callback<List<Photo>> {
+            override fun onResponse(call: Call<List<Photo>>?, response: Response<List<Photo>>?) {
+                if (response!!.isSuccessful) {
+                    photos.value = response.body()!!
+                    Log.d(TAG, "Fetched photos by animal $animalId: ${photos.value}")
+                } else {
+                    Log.e(TAG, "Response failed")
+                }
+            }
+
+            override fun onFailure(call: Call<List<Photo>>?, t: Throwable?) {
+                Log.e(TAG, "Fetching photos by animal $animalId failed", t)
             }
         })
 

@@ -11,6 +11,10 @@ class PhotoViewModel(context: Application) : AndroidViewModel(context) {
         return PhotoRepository.fetchPhotosByAlbumId(albumId)
     }
 
+    fun getPhotosByAnimal(animalId: String): LiveData<List<Photo>> {
+        return PhotoRepository.fetchPhotosByAnimalId(animalId)
+    }
+
     fun getPhotoById(id: String): LiveData<Photo> {
         return PhotoRepository.fetchPhotoById(id)
     }

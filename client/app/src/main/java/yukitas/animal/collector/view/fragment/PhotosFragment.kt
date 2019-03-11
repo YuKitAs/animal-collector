@@ -10,31 +10,47 @@ import android.view.ViewGroup
 import android.widget.GridView
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
+import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_ID
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
+import yukitas.animal.collector.common.Mode
 import yukitas.animal.collector.view.adapter.PhotosAdapter
 import yukitas.animal.collector.viewmodel.PhotoViewModel
 
-class AlbumPhotosFragment : Fragment() {
+class PhotosFragment : Fragment() {
     private lateinit var photoViewModel: PhotoViewModel
     private lateinit var photosAdapter: PhotosAdapter
+    lateinit var mode: Mode
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {
-        val view: View = inflater.inflate(R.layout.fragment_album_photos, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_photos, container, false)
         val gridView = view.findViewById<GridView>(R.id.grid_photos)
         photosAdapter = PhotosAdapter(context)
         gridView.adapter = photosAdapter
 
         photoViewModel = ViewModelProviders.of(this).get(PhotoViewModel::class.java)
-        val albumId = activity.intent!!.extras!!.getString(ARG_ALBUM_ID)!!
-        photoViewModel.getPhotosByAlbum(albumId).observe(this, Observer { photos ->
-            photos?.let {
-                photosAdapter.photos = it
+
+        when (mode) {
+            Mode.ALBUM -> {
+                val albumId = activity.intent!!.extras!!.getString(ARG_ALBUM_ID)!!
+                photoViewModel.getPhotosByAlbum(albumId).observe(this, Observer { photos ->
+                    photos?.let {
+                        photosAdapter.photos = it
+                    }
+                })
             }
-        })
+            Mode.ANIMAL -> {
+                val animalId = activity.intent!!.extras!!.getString(ARG_ANIMAL_ID)!!
+                photoViewModel.getPhotosByAnimal(animalId).observe(this, Observer { photos ->
+                    photos?.let {
+                        photosAdapter.photos = it
+                    }
+                })
+            }
+        }
 
         gridView.setOnItemClickListener { _, _, position, _ ->
             val bundle = Bundle()
