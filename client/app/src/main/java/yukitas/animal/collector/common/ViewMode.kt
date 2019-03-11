@@ -1,5 +1,5 @@
 package yukitas.animal.collector.common
 
-enum class Mode {
+enum class ViewMode {
     ALBUM, ANIMAL
 }

@@ -12,14 +12,14 @@ import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
 import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_ID
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
-import yukitas.animal.collector.common.Mode
+import yukitas.animal.collector.common.ViewMode
 import yukitas.animal.collector.view.adapter.PhotosAdapter
 import yukitas.animal.collector.viewmodel.PhotoViewModel
 
 class PhotosFragment : Fragment() {
     private lateinit var photoViewModel: PhotoViewModel
     private lateinit var photosAdapter: PhotosAdapter
-    lateinit var mode: Mode
+    lateinit var viewMode: ViewMode
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -33,8 +33,8 @@ class PhotosFragment : Fragment() {
 
         photoViewModel = ViewModelProviders.of(this).get(PhotoViewModel::class.java)
 
-        when (mode) {
-            Mode.ALBUM -> {
+        when (viewMode) {
+            ViewMode.ALBUM -> {
                 val albumId = activity.intent!!.extras!!.getString(ARG_ALBUM_ID)!!
                 photoViewModel.getPhotosByAlbum(albumId).observe(this, Observer { photos ->
                     photos?.let {
@@ -42,7 +42,7 @@ class PhotosFragment : Fragment() {
                     }
                 })
             }
-            Mode.ANIMAL -> {
+            ViewMode.ANIMAL -> {
                 val animalId = activity.intent!!.extras!!.getString(ARG_ANIMAL_ID)!!
                 photoViewModel.getPhotosByAnimal(animalId).observe(this, Observer { photos ->
                     photos?.let {
