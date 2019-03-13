@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
+import yukitas.animal.collector.AnimalCollectorApplication
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
 import yukitas.animal.collector.common.ViewMode
 import yukitas.animal.collector.model.Category
 import yukitas.animal.collector.view.fragment.AlbumsFragment
 import yukitas.animal.collector.view.fragment.AnimalsFragment
 
-class CategoryPagerAdapter(fm: FragmentManager, private val viewMode: ViewMode) : FragmentStatePagerAdapter(fm) {
+class CategoryPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
     var categories = emptyList<Category>()
         set(categories) {
             field = categories
@@ -20,7 +21,7 @@ class CategoryPagerAdapter(fm: FragmentManager, private val viewMode: ViewMode) 
     override fun getCount(): Int = categories.size
 
     override fun getItem(i: Int): Fragment {
-        val fragment = when (viewMode) {
+        val fragment = when (AnimalCollectorApplication.viewMode) {
             ViewMode.ALBUM -> AlbumsFragment()
             ViewMode.ANIMAL -> AnimalsFragment()
         }

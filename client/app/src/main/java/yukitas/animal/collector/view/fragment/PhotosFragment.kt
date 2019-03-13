@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridView
+import yukitas.animal.collector.AnimalCollectorApplication
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
 import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_ID
@@ -19,7 +20,6 @@ import yukitas.animal.collector.viewmodel.PhotoViewModel
 class PhotosFragment : Fragment() {
     private lateinit var photoViewModel: PhotoViewModel
     private lateinit var photosAdapter: PhotosAdapter
-    lateinit var viewMode: ViewMode
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -33,7 +33,7 @@ class PhotosFragment : Fragment() {
 
         photoViewModel = ViewModelProviders.of(this).get(PhotoViewModel::class.java)
 
-        when (viewMode) {
+        when (AnimalCollectorApplication.viewMode) {
             ViewMode.ALBUM -> {
                 val albumId = activity.intent!!.extras!!.getString(ARG_ALBUM_ID)!!
                 photoViewModel.getPhotosByAlbum(albumId).observe(this, Observer { photos ->
