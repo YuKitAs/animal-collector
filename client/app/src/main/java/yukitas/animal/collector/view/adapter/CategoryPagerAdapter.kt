@@ -21,7 +21,7 @@ class CategoryPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) 
     override fun getCount(): Int = categories.size
 
     override fun getItem(i: Int): Fragment {
-        val fragment = when (AnimalCollectorApplication.viewMode) {
+        val fragment = when (AnimalCollectorApplication.currentViewMode) {
             ViewMode.ALBUM -> AlbumsFragment()
             ViewMode.ANIMAL -> AnimalsFragment()
         }

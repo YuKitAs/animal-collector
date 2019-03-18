@@ -29,28 +29,8 @@ class MainActivity : AppCompatActivity() {
         viewPager = findViewById(R.id.pager_category)
         categoryPagerAdapter = CategoryPagerAdapter(supportFragmentManager)
 
-
-        // TODO clean up listeners
         tabs = findViewById(R.id.sliding_tabs)
-        tabs.addOnTabSelectedListener(object :
-                TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                when (tab.position) {
-                    0 -> AnimalCollectorApplication.viewMode = ViewMode.ALBUM
-                    1 -> AnimalCollectorApplication.viewMode = ViewMode.ANIMAL
-                }
-
-                viewPager.adapter = categoryPagerAdapter
-                viewPager.currentItem = AnimalCollectorApplication.selectedCategory
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {
-
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab) {
-            }
-        })
+        tabs.addOnTabSelectedListener(getOnTabSelectedListener())
 
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
         categoryViewModel.categories.observe(this, Observer { categories ->
@@ -60,20 +40,40 @@ class MainActivity : AppCompatActivity() {
         })
 
         viewPager.adapter = categoryPagerAdapter
+        viewPager.addOnPageChangeListener(getOnPageChangeListener())
+    }
 
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
+    private fun getOnTabSelectedListener(): TabLayout.OnTabSelectedListener {
+        return object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                when (tab.position) {
+                    0 -> AnimalCollectorApplication.currentViewMode = ViewMode.ALBUM
+                    1 -> AnimalCollectorApplication.currentViewMode = ViewMode.ANIMAL
+                }
+
+                // reset adapter in order to invoke getItem() when position is not changed
+                viewPager.adapter = categoryPagerAdapter
+                viewPager.currentItem = AnimalCollectorApplication.currentCategoryIndex
             }
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                AnimalCollectorApplication.selectedCategory = position
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
 
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        }
+    }
+
+    private fun getOnPageChangeListener(): ViewPager.OnPageChangeListener {
+        return object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {}
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                AnimalCollectorApplication.currentCategoryIndex = position
             }
 
             override fun onPageSelected(position: Int) {
-                AnimalCollectorApplication.selectedCategory = position
+                AnimalCollectorApplication.currentCategoryIndex = position
             }
-        })
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

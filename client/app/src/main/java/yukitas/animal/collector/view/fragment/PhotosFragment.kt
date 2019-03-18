@@ -33,7 +33,7 @@ class PhotosFragment : Fragment() {
 
         photoViewModel = ViewModelProviders.of(this).get(PhotoViewModel::class.java)
 
-        when (AnimalCollectorApplication.viewMode) {
+        when (AnimalCollectorApplication.currentViewMode) {
             ViewMode.ALBUM -> {
                 val albumId = activity.intent!!.extras!!.getString(ARG_ALBUM_ID)!!
                 photoViewModel.getPhotosByAlbum(albumId).observe(this, Observer { photos ->
