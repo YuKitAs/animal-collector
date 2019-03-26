@@ -4,8 +4,10 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class Location {
-    private double latitude;
-    private double longitude;
+    private Double latitude;
+
+    private Double longitude;
+
     private String address;
 
     public Location() {
@@ -16,11 +18,11 @@ public class Location {
         this.longitude = longitude;
     }
 
-    public double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public double getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
