@@ -36,6 +36,11 @@ public class AnimalController {
         return new ResponseEntity<>(animalService.getAnimalsByCategory(categoryId), HttpStatus.OK);
     }
 
+    @GetMapping("/photos/{photo_id}/animals")
+    public ResponseEntity<List<Animal>> getAnimalsByPhoto(@PathVariable("photo_id") UUID photoId) {
+        return new ResponseEntity<>(animalService.getAnimalsByPhoto(photoId), HttpStatus.OK);
+    }
+
     @GetMapping("/animals/{id}")
     public ResponseEntity<Animal> getAnimal(@PathVariable("id") UUID animalId) {
         return new ResponseEntity<>(animalService.getAnimal(animalId), HttpStatus.OK);

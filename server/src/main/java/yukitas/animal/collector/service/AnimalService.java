@@ -10,6 +10,8 @@ public interface AnimalService {
 
     List<Animal> getAnimalsByCategory(UUID categoryId);
 
+    List<Animal> getAnimalsByPhoto(UUID photoId);
+
     Animal getAnimal(UUID id);
 
     Animal createAnimal(Animal animal);

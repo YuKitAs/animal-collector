@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import yukitas.animal.collector.model.Animal;
+import yukitas.animal.collector.model.Photo;
 import yukitas.animal.collector.repository.AnimalRepository;
 import yukitas.animal.collector.repository.CategoryRepository;
 import yukitas.animal.collector.repository.PhotoRepository;
@@ -42,6 +45,19 @@ public class AnimalServiceImpl implements AnimalService {
         categoryRepository.findById(categoryId).orElseThrow(() -> new EntityNotFoundException("category", categoryId));
 
         return animalRepository.findByCategoryId(categoryId);
+    }
+
+    @Override
+    public List<Animal> getAnimalsByPhoto(UUID photoId) {
+        Optional<Photo> photo = photoRepository.findById(photoId);
+        if (photo.isEmpty()) {
+            throw new EntityNotFoundException("photo", photoId);
+        }
+
+        return animalRepository.findAll()
+                .stream()
+                .filter(animal -> animal.getPhotos().contains(photo.get()))
+                .collect(Collectors.toList());
     }
 
     @Override

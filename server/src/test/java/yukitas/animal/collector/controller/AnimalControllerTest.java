@@ -38,6 +38,18 @@ public class AnimalControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void getAnimalsByPhoto() {
+        ResponseEntity<Animal[]> response = getTestRestTemplate().getForEntity(
+                String.format("/photos/%s/animals", PHOTO_CAT_1_ID), Animal[].class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).satisfies(animals -> {
+            assertThat(animals.length).isEqualTo(1);
+            isAnimalCat1(animals[0]);
+        });
+    }
+
+    @Test
     public void getAnimalById() {
         ResponseEntity<Animal> response = getTestRestTemplate().getForEntity("/animals/" + ANIMAL_DOG_ID, Animal.class);
 
