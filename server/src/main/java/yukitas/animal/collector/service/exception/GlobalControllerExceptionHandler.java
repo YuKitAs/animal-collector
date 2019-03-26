@@ -11,4 +11,9 @@ public class GlobalControllerExceptionHandler {
     public ResponseEntity<ExceptionResponseBody> handleEntityNotFound(EntityNotFoundException ex) {
         return new ResponseEntity<>(new ExceptionResponseBody(ex.getMessage()), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(RequiredDataNotProvidedException.class)
+    public ResponseEntity<ExceptionResponseBody> handleRequiredDataNotProvided(RequiredDataNotProvidedException ex) {
+        return new ResponseEntity<>(new ExceptionResponseBody(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 }
