@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import yukitas.animal.collector.model.Location;
 import yukitas.animal.collector.model.Photo;
 
 public interface PhotoService {
@@ -14,8 +13,7 @@ public interface PhotoService {
 
     Photo getPhoto(UUID id);
 
-    Photo createPhoto(Photo.Builder builder, Set<UUID> animalIds, Set<UUID> albumIds, byte[] content,
-            String description, Location location);
+    UUID createPhoto(Photo.Builder builder, byte[] content);
 
     Photo updatePhoto(UUID id, Set<UUID> animalIds, Set<UUID> albumIds, String description);
 

@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 
 import yukitas.animal.collector.model.Album;
 import yukitas.animal.collector.model.Animal;
-import yukitas.animal.collector.model.Location;
 import yukitas.animal.collector.model.Photo;
 import yukitas.animal.collector.repository.AlbumRepository;
 import yukitas.animal.collector.repository.AnimalRepository;
 import yukitas.animal.collector.repository.PhotoRepository;
 import yukitas.animal.collector.service.PhotoService;
 import yukitas.animal.collector.service.exception.EntityNotFoundException;
+import yukitas.animal.collector.service.exception.RequiredDataNotProvidedException;
 
 @Service
 public class PhotoServiceImpl implements PhotoService {
@@ -54,26 +54,12 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public Photo createPhoto(Photo.Builder builder, Set<UUID> animalIds, Set<UUID> albumIds, byte[] content,
-            String description, Location location) {
-        Set<Animal> animals = getAnimalsById(animalIds);
-        Set<Album> albums = getAlbumsById(albumIds);
+    public UUID createPhoto(Photo.Builder builder, byte[] content) {
+        Photo photo = photoRepository.save(builder.setContent(content).build());
 
-        Photo photo = photoRepository.save(builder.setAnimals(animals)
-                .setAlbums(albums)
-                .setContent(content)
-                .setDescription(description)
-                .setLocation(location)
-                .build());
+        LOGGER.debug("Created photo (id={})", photo.getId());
 
-        LOGGER.debug("Created photo (id={}) for animals [{}] and albums [{}]", photo.getId(),
-                photo.getAnimals().stream().map(Animal::getName).collect(Collectors.joining(",")),
-                photo.getAlbums().stream().map(Album::getName).collect(Collectors.joining(",")));
-
-        animals.forEach(animal -> animal.addPhoto(photo));
-        albums.forEach(album -> album.addPhoto(photo));
-
-        return photo;
+        return photo.getId();
     }
 
     @Override
@@ -83,12 +69,22 @@ public class PhotoServiceImpl implements PhotoService {
         Set<Animal> animals = getAnimalsById(animalIds);
         Set<Album> albums = getAlbumsById(albumIds);
 
+        if (photo.getAnimals().isEmpty() && animalIds == null) {
+            throw new RequiredDataNotProvidedException("animal_ids");
+        }
+
+        if (photo.getAlbums().isEmpty() && albumIds == null) {
+            throw new RequiredDataNotProvidedException("album_ids");
+        }
+
         if (animals != null) {
             photo.setAnimals(animals);
+            animals.forEach(animal -> animal.addPhoto(photo));
         }
 
         if (albums != null) {
             photo.setAlbums(albums);
+            albums.forEach(album -> album.addPhoto(photo));
         }
 
         if (description != null) {

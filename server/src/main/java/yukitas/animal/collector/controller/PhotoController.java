@@ -4,13 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
 
 import yukitas.animal.collector.controller.dto.CreatePhotoRequest;
+import yukitas.animal.collector.controller.dto.CreatePhotoResponse;
+import yukitas.animal.collector.controller.dto.UpdatePhotoRequest;
 import yukitas.animal.collector.model.Photo;
 import yukitas.animal.collector.service.PhotoService;
 
@@ -24,11 +28,11 @@ public class PhotoController {
     }
 
     @PostMapping("/photos")
-    public ResponseEntity<Photo> createPhoto(@Valid @RequestBody CreatePhotoRequest createPhotoRequest) {
+    public ResponseEntity<CreatePhotoResponse> createPhoto(
+            @Valid @RequestParam("content") MultipartFile content) throws IOException {
         return new ResponseEntity<>(
-                photoService.createPhoto(CreatePhotoRequest.builder(), createPhotoRequest.getAnimalIds(),
-                        createPhotoRequest.getAlbumIds(), createPhotoRequest.getContent(),
-                        createPhotoRequest.getDescription(), createPhotoRequest.getLocation()), HttpStatus.CREATED);
+                new CreatePhotoResponse(photoService.createPhoto(CreatePhotoRequest.builder(), content.getBytes())),
+                HttpStatus.CREATED);
     }
 
     @GetMapping("/albums/{album_id}/photos")
@@ -47,11 +51,11 @@ public class PhotoController {
     }
 
     @PutMapping("/photos/{id}")
-    public ResponseEntity<Photo> updatePhoto(@PathVariable("id") UUID photoId,
-            @RequestBody CreatePhotoRequest createPhotoRequest) {
-        return new ResponseEntity<>(
-                photoService.updatePhoto(photoId, createPhotoRequest.getAnimalIds(), createPhotoRequest.getAlbumIds(),
-                        createPhotoRequest.getDescription()), HttpStatus.OK);
+    public ResponseEntity<Void> updatePhoto(@PathVariable("id") UUID photoId,
+            @RequestBody UpdatePhotoRequest updatePhotoRequest) {
+        photoService.updatePhoto(photoId, updatePhotoRequest.getAnimalIds(), updatePhotoRequest.getAlbumIds(),
+                updatePhotoRequest.getDescription());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/photos/{id}")
