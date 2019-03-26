@@ -33,6 +33,7 @@ public class Album {
 
     @ManyToMany(mappedBy = "albums")
     @OrderBy("created_at")
+    @JsonIgnore
     private Set<Photo> photos = new HashSet<>();
 
     public Album() {

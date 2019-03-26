@@ -36,15 +36,11 @@ public class AlbumControllerTest extends AbstractControllerTest {
     private void isAlbumCat1(Album album) {
         assertThat(album.getId()).isEqualTo(ALBUM_CAT_1_ID);
         assertThat(album.getName()).isEqualTo(ALBUM_CAT_1_NAME);
-        assert album.getPhotos().stream().findAny().isPresent();
-        assertThat(album.getPhotos().stream().findAny().get().getId()).isEqualTo((PHOTO_CAT_1_ID));
     }
 
     private void isAlbumDog(Album album) {
         assertThat(album.getId()).isEqualTo(ALBUM_DOG_ID);
         assertThat(album.getName()).isEqualTo(ALBUM_DOG_NAME);
-        assert album.getPhotos().stream().findAny().isPresent();
-        assertThat(album.getPhotos().stream().findAny().get().getId()).isEqualTo((PHOTO_DOG_ID));
     }
 
     @Test

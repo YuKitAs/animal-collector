@@ -60,15 +60,11 @@ public class AnimalControllerTest extends AbstractControllerTest {
     private void isAnimalCat1(Animal animal) {
         assertThat(animal.getId()).isEqualTo(ANIMAL_CAT_1_ID);
         assertThat(animal.getName()).isEqualTo(ANIMAL_CAT_1_NAME);
-        assert animal.getPhotos().stream().findAny().isPresent();
-        assertThat(animal.getPhotos().stream().findAny().get().getId()).isEqualTo((PHOTO_CAT_1_ID));
     }
 
     private void isAnimalDog(Animal animal) {
         assertThat(animal.getId()).isEqualTo(ANIMAL_DOG_ID);
         assertThat(animal.getName()).isEqualTo(ANIMAL_DOG_NAME);
-        assert animal.getPhotos().stream().findAny().isPresent();
-        assertThat(animal.getPhotos().stream().findAny().get().getId()).isEqualTo((PHOTO_DOG_ID));
     }
 
     @Test

@@ -35,6 +35,7 @@ public class Animal {
 
     @ManyToMany(mappedBy = "animals")
     @OrderBy("created_at")
+    @JsonIgnore
     private Set<Photo> photos = new HashSet<>();
 
     public Animal() {
