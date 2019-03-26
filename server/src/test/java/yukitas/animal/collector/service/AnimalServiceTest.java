@@ -15,7 +15,7 @@ import yukitas.animal.collector.service.impl.AnimalServiceImpl;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
-public class AnimalServiceImplTest extends AbstractServiceTest {
+public class AnimalServiceTest extends AbstractServiceTest {
     @InjectMocks
     private AnimalServiceImpl animalService;
 

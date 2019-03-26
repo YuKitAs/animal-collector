@@ -15,7 +15,7 @@ import yukitas.animal.collector.service.impl.AlbumServiceImpl;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
-public class AlbumServiceImplTest extends AbstractServiceTest {
+public class AlbumServiceTest extends AbstractServiceTest {
     @InjectMocks
     private AlbumServiceImpl albumService;
 

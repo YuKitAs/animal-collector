@@ -47,17 +47,14 @@ public abstract class AbstractControllerTest {
     static final UUID PHOTO_DOG_ID = UUID.fromString("00000000-0000-0000-0001-000000000001");
     static final byte[] PHOTO_CAT_1_CONTENT = "00000000".getBytes();
     static final byte[] PHOTO_DOG_CONTENT = "00000001".getBytes();
-    static final byte[] PHOTO_CAT_1_DOG_CONTENT = "00000002".getBytes();
     static final String PHOTO_CAT_1_DESCRIPTION = "This photo contains animal-cat-1 and exists in album-cat-1";
     static final String PHOTO_DOG_DESCRIPTION = "This photo contains animal-dog and exists in album-dog";
-    static final String PHOTO_CAT_1_DOG_DESCRIPTION =
-            "This photo contains animal-cat-1, animal-dog and exists in " + "album-cat-1, album-dog";
 
     TestRestTemplate getTestRestTemplate() {
         return testRestTemplate;
     }
 
-    static <T> T getFixture(String filePath, Class<T> objectClass) throws Exception {
-        return new ObjectMapper().readValue(new File("src/test/resources/fixtures/" + filePath), objectClass);
+    static <T> T getFixture(String fileName, Class<T> objectClass) throws Exception {
+        return new ObjectMapper().readValue(new File("src/test/resources/fixtures/" + fileName), objectClass);
     }
 }
