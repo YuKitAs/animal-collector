@@ -13,12 +13,13 @@ import android.view.ViewGroup
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
 import yukitas.animal.collector.databinding.FragmentPhotoDetailBinding
+import yukitas.animal.collector.viewmodel.AnimalViewModel
 import yukitas.animal.collector.viewmodel.PhotoViewModel
 
 class PhotoDetailFragment : Fragment() {
     private lateinit var binding: FragmentPhotoDetailBinding
     private lateinit var photoViewModel: PhotoViewModel
-    private val photoId = activity.intent.getStringExtra(ARG_PHOTO_ID)
+    private lateinit var animalViewModel: AnimalViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -27,12 +28,21 @@ class PhotoDetailFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.fragment_photo_detail, container, false)
         photoViewModel = ViewModelProviders.of(this).get(PhotoViewModel::class.java)
+        animalViewModel = ViewModelProviders.of(this).get(AnimalViewModel::class.java)
+
+        val photoId = activity.intent.getStringExtra(ARG_PHOTO_ID)
         photoViewModel.getPhotoById(photoId).observe(this, Observer { photo ->
             photo?.let {
                 binding.photo = it
 
                 val photoContent = Base64.decode(it.content.toByteArray(), Base64.NO_WRAP)
                 binding.photoContent.setImageBitmap(BitmapFactory.decodeByteArray(photoContent, 0, photoContent.size))
+
+                animalViewModel.getAnimalsByPhoto(photoId).observe(this, Observer { animals ->
+                    animals?.let {
+                        binding.photoAnimals.text = animals.joinToString(", ") { animal -> animal.name }
+                    }
+                })
             }
         })
         return binding.root

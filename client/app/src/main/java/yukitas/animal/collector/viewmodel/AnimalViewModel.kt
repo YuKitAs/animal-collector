@@ -10,4 +10,8 @@ class AnimalViewModel(context: Application) : AndroidViewModel(context) {
     fun getAnimalsByCategory(categoryId: String): LiveData<List<Animal>> {
         return AnimalRepository.fetchAnimalsByCategory(categoryId)
     }
+
+    fun getAnimalsByPhoto(photoId: String): LiveData<List<Animal>> {
+        return AnimalRepository.fetchAnimalsByPhoto(photoId)
+    }
 }

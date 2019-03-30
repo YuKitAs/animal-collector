@@ -29,6 +29,9 @@ interface ApiService {
     @GET("categories/{categoryId}/animals")
     fun getAnimalsByCategory(@Path("categoryId") categoryId: String): Call<List<Animal>>
 
+    @GET("photos/{photoId}/animals")
+    fun getAnimalsByPhoto(@Path("photoId") photoId: String): Call<List<Animal>>
+
     companion object {
         fun create(): ApiService {
             val retrofit = Retrofit.Builder()
