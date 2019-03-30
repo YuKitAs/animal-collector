@@ -32,6 +32,6 @@ public class Location {
 
     @Override
     public String toString() {
-        return String.format("Location [lat=%.5f, long=%.5f, address='%s']", latitude, longitude, address);
+        return String.format("Location (lat=%.5f, long=%.5f, address='%s')", latitude, longitude, address);
     }
 }
