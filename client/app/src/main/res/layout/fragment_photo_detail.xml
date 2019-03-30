@@ -23,7 +23,7 @@
                 android:id="@+id/photo_content"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:background="@color/cardview_shadow_start_color"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/content_desc_photo" />
 
             <TextView
