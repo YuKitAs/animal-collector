@@ -5,14 +5,12 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import yukitas.animal.collector.model.Album;
 import yukitas.animal.collector.model.Animal;
+import yukitas.animal.collector.model.Location;
 import yukitas.animal.collector.model.Photo;
 import yukitas.animal.collector.repository.AlbumRepository;
 import yukitas.animal.collector.repository.AnimalRepository;
@@ -55,7 +53,10 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public UUID createPhoto(Photo.Builder builder, byte[] content) {
-        Photo photo = photoRepository.save(builder.setContent(content).build());
+        Photo photo = photoRepository.save(builder.setContent(content)
+                .setLocation(
+                        new Location(-90 + 180 * new Random().nextDouble(), -180 + 360 * new Random().nextDouble()))
+                .build());
 
         LOGGER.debug("Created photo (id={})", photo.getId());
 
