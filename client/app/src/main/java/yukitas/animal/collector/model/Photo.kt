@@ -5,4 +5,8 @@ data class Photo(
         val content: String,
         val description: String,
         val createdAt: String,
-        val location: Location)
+        val location: Location) {
+    override fun toString(): String {
+        return String.format("Photo (id=%s, description=%s, createdAt=%s, location=%s)", id, description, createdAt, location)
+    }
+}
