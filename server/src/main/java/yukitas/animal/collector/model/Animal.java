@@ -31,7 +31,7 @@ public class Animal {
     @Column(unique = true)
     private String name;
 
-    private String[] tags;
+    private String[] tags = new String[0];
 
     @ManyToMany(mappedBy = "animals")
     @OrderBy("created_at")
