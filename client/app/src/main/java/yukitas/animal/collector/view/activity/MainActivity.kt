@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.tab_viewmode.*
+import kotlinx.android.synthetic.main.viewpager_category.*
 import yukitas.animal.collector.AnimalCollectorApplication
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.ViewMode
@@ -26,10 +28,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        viewPager = findViewById(R.id.pager_category)
+        viewPager = pager_category
         categoryPagerAdapter = CategoryPagerAdapter(supportFragmentManager)
 
-        tabs = findViewById(R.id.sliding_tabs)
+        tabs = sliding_tabs
         tabs.addOnTabSelectedListener(getOnTabSelectedListener())
 
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
