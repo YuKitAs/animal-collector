@@ -33,6 +33,23 @@ class PhotosFragment : Fragment() {
 
         photoViewModel = ViewModelProviders.of(this).get(PhotoViewModel::class.java)
 
+        setPhotos()
+
+        gridView.setOnItemClickListener { _, _, position, _ ->
+            val bundle = Bundle()
+            bundle.putString(ARG_PHOTO_ID, photosAdapter.photos[position].id)
+            activity.intent.putExtras(bundle)
+
+            activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, PhotoDetailFragment())
+                    .addToBackStack("photos")
+                    .commit()
+        }
+
+        return view
+    }
+
+    private fun setPhotos() {
         when (AnimalCollectorApplication.currentViewMode) {
             ViewMode.ALBUM -> {
                 val albumId = activity.intent!!.extras!!.getString(ARG_ALBUM_ID)!!
@@ -51,18 +68,5 @@ class PhotosFragment : Fragment() {
                 })
             }
         }
-
-        gridView.setOnItemClickListener { _, _, position, _ ->
-            val bundle = Bundle()
-            bundle.putString(ARG_PHOTO_ID, photosAdapter.photos[position].id)
-            activity.intent.putExtras(bundle)
-
-            activity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, PhotoDetailFragment())
-                    .addToBackStack("photos")
-                    .commit()
-        }
-
-        return view
     }
 }

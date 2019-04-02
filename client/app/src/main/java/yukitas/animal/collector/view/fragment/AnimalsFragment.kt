@@ -30,6 +30,13 @@ class AnimalsFragment : Fragment() {
         binding.listAnimals.adapter = animalsAdapter
 
         animalViewModel = ViewModelProviders.of(this).get(AnimalViewModel::class.java)
+
+        setAnimals()
+
+        return binding.root
+    }
+
+    private fun setAnimals() {
         animalViewModel.getAnimalsByCategory(arguments.getString(Constants.ARG_CATEGORY_ID)!!).observe(this, Observer { animals ->
             animals?.let {
                 animalsAdapter.animals = it
@@ -42,7 +49,5 @@ class AnimalsFragment : Fragment() {
                 }
             }
         })
-
-        return binding.root
     }
 }

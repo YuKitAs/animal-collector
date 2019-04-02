@@ -20,6 +20,7 @@ class PhotoDetailFragment : Fragment() {
     private lateinit var binding: FragmentPhotoDetailBinding
     private lateinit var photoViewModel: PhotoViewModel
     private lateinit var animalViewModel: AnimalViewModel
+    private lateinit var photoId: String
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -30,21 +31,28 @@ class PhotoDetailFragment : Fragment() {
         photoViewModel = ViewModelProviders.of(this).get(PhotoViewModel::class.java)
         animalViewModel = ViewModelProviders.of(this).get(AnimalViewModel::class.java)
 
-        val photoId = activity.intent.getStringExtra(ARG_PHOTO_ID)
+        photoId = activity.intent.getStringExtra(ARG_PHOTO_ID)
         photoViewModel.getPhotoById(photoId).observe(this, Observer { photo ->
             photo?.let {
                 binding.photo = it
 
-                val photoContent = Base64.decode(it.content.toByteArray(), Base64.NO_WRAP)
-                binding.photoContent.setImageBitmap(BitmapFactory.decodeByteArray(photoContent, 0, photoContent.size))
-
-                animalViewModel.getAnimalsByPhoto(photoId).observe(this, Observer { animals ->
-                    animals?.let {
-                        binding.photoAnimals.text = animals.joinToString(", ") { animal -> animal.name }
-                    }
-                })
+                setPhotoContent(it.content)
+                setAnimals()
             }
         })
         return binding.root
+    }
+
+    private fun setPhotoContent(content: String) {
+        val photoContent = Base64.decode(content.toByteArray(), Base64.NO_WRAP)
+        binding.photoContent.setImageBitmap(BitmapFactory.decodeByteArray(photoContent, 0, photoContent.size))
+    }
+
+    private fun setAnimals() {
+        animalViewModel.getAnimalsByPhoto(photoId).observe(this, Observer { animals ->
+            animals?.let {
+                binding.photoAnimals.text = animals.joinToString(", ") { animal -> animal.name }
+            }
+        })
     }
 }

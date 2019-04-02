@@ -32,6 +32,13 @@ class AlbumsFragment : Fragment() {
         binding.gridAlbums.adapter = albumsAdapter
 
         albumViewModel = ViewModelProviders.of(this).get(AlbumViewModel::class.java)
+
+        setAlbums()
+
+        return binding.root
+    }
+
+    private fun setAlbums() {
         albumViewModel.getAlbumsByCategory(arguments.getString(ARG_CATEGORY_ID)!!).observe(this, Observer { albums ->
             albums?.let {
                 albumsAdapter.albums = it
@@ -44,7 +51,5 @@ class AlbumsFragment : Fragment() {
                 }
             }
         })
-
-        return binding.root
     }
 }
