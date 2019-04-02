@@ -20,25 +20,8 @@ class AnimalsAdapter(private val context: Context) : BaseAdapter() {
             notifyDataSetChanged()
         }
 
-    @SuppressLint("ViewHolder")
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.item_animal, parent, false)
-
-        val animal = animals[position]
-        binding.animal = animal
-
-        animal.tags.forEach {
-            if (it.isNotEmpty()) {
-                val tagView = LayoutInflater.from(context).inflate(R.layout.template_animal_tag, parent, false).text_animal_tag_template
-                tagView.text = it
-                binding.layoutAnimalTags.addView(tagView)
-
-                val spaceView = LayoutInflater.from(context).inflate(R.layout.template_space, parent, false)
-                binding.layoutAnimalTags.addView(spaceView)
-            }
-        }
-
-        return convertView ?: binding.root
+    override fun getCount(): Int {
+        return animals.size
     }
 
     override fun getItem(position: Int): Any {
@@ -49,7 +32,28 @@ class AnimalsAdapter(private val context: Context) : BaseAdapter() {
         return position.toLong()
     }
 
-    override fun getCount(): Int {
-        return animals.size
+    @SuppressLint("ViewHolder")
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.item_animal, parent, false)
+
+        val animal = animals[position]
+        binding.animal = animal
+
+        setAnimalTags(animal, parent)
+
+        return convertView ?: binding.root
+    }
+
+    private fun setAnimalTags(animal: Animal, parent: ViewGroup?) {
+        animal.tags.forEach {
+            if (it.isNotEmpty()) {
+                val tagView = LayoutInflater.from(context).inflate(R.layout.template_animal_tag, parent, false).text_animal_tag_template
+                tagView.text = it
+                binding.layoutAnimalTags.addView(tagView)
+
+                val spaceView = LayoutInflater.from(context).inflate(R.layout.template_space, parent, false)
+                binding.layoutAnimalTags.addView(spaceView)
+            }
+        }
     }
 }
