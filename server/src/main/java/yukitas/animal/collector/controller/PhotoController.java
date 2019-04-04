@@ -40,9 +40,19 @@ public class PhotoController {
         return new ResponseEntity<>(photoService.getPhotosByAlbum(albumId), HttpStatus.OK);
     }
 
+    @GetMapping("/albums/{album_id}/photos/latest")
+    public ResponseEntity<Photo> getLatestPhotoByAlbum(@PathVariable("album_id") UUID albumId) {
+        return new ResponseEntity<>(photoService.getLatestPhotoByAlbum(albumId), HttpStatus.OK);
+    }
+
     @GetMapping("/animals/{animal_id}/photos")
     public ResponseEntity<List<Photo>> getPhotosByAnimal(@PathVariable("animal_id") UUID animalId) {
         return new ResponseEntity<>(photoService.getPhotosByAnimal(animalId), HttpStatus.OK);
+    }
+
+    @GetMapping("/animals/{animal_id}/photos/latest")
+    public ResponseEntity<Photo> getLatestPhotoByAnimal(@PathVariable("animal_id") UUID animalId) {
+        return new ResponseEntity<>(photoService.getLatestPhotoByAnimal(animalId), HttpStatus.OK);
     }
 
     @GetMapping("/photos/{id}")

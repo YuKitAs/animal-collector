@@ -42,8 +42,18 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
+    public Photo getLatestPhotoByAlbum(UUID albumId) {
+        return getPhotosByAlbum(albumId).get(0);
+    }
+
+    @Override
     public List<Photo> getPhotosByAnimal(UUID animalId) {
         return new ArrayList<>(findAnimalById(animalId).getPhotos());
+    }
+
+    @Override
+    public Photo getLatestPhotoByAnimal(UUID animalId) {
+        return getPhotosByAnimal(animalId).get(0);
     }
 
     @Override
@@ -64,7 +74,7 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public Photo updatePhoto(UUID id, Set<UUID> animalIds, Set<UUID> albumIds, String description) {
+    public void updatePhoto(UUID id, Set<UUID> animalIds, Set<UUID> albumIds, String description) {
         Photo photo = photoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ENTITY_NAME, id));
 
         Set<Animal> animals = getAnimalsById(animalIds);
@@ -96,7 +106,7 @@ public class PhotoServiceImpl implements PhotoService {
                 photo.getAnimals().stream().map(Animal::getName).collect(Collectors.joining(",")),
                 photo.getAlbums().stream().map(Album::getName).collect(Collectors.joining(",")));
 
-        return photoRepository.save(photo);
+        photoRepository.save(photo);
     }
 
     @Override
