@@ -34,7 +34,7 @@ public class Animal {
     private String[] tags = new String[0];
 
     @ManyToMany(mappedBy = "animals")
-    @OrderBy("created_at")
+    @OrderBy("created_at DESC")
     @JsonIgnore
     private Set<Photo> photos = new HashSet<>();
 
