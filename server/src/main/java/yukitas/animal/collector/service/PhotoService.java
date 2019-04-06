@@ -1,6 +1,7 @@
 package yukitas.animal.collector.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -9,11 +10,11 @@ import yukitas.animal.collector.model.Photo;
 public interface PhotoService {
     List<Photo> getPhotosByAlbum(UUID albumId);
 
-    Photo getLatestPhotoByAlbum(UUID albumId);
+    Optional<Photo> getLatestPhotoByAlbum(UUID albumId);
 
     List<Photo> getPhotosByAnimal(UUID animalId);
 
-    Photo getLatestPhotoByAnimal(UUID animalId);
+    Optional<Photo> getLatestPhotoByAnimal(UUID animalId);
 
     Photo getPhoto(UUID id);
 

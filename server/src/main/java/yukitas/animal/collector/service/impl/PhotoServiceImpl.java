@@ -42,8 +42,9 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public Photo getLatestPhotoByAlbum(UUID albumId) {
-        return getPhotosByAlbum(albumId).get(0);
+    public Optional<Photo> getLatestPhotoByAlbum(UUID albumId) {
+        List<Photo> photos = getPhotosByAlbum(albumId);
+        return photos.isEmpty() ? Optional.empty() : Optional.of(photos.get(0));
     }
 
     @Override
@@ -52,8 +53,9 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public Photo getLatestPhotoByAnimal(UUID animalId) {
-        return getPhotosByAnimal(animalId).get(0);
+    public Optional<Photo> getLatestPhotoByAnimal(UUID animalId) {
+        List<Photo> photos = getPhotosByAnimal(animalId);
+        return photos.isEmpty() ? Optional.empty() : Optional.of(photos.get(0));
     }
 
     @Override
