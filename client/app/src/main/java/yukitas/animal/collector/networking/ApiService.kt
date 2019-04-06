@@ -20,8 +20,14 @@ interface ApiService {
     @GET("albums/{albumId}/photos")
     fun getPhotosByAlbum(@Path("albumId") albumId: String): Call<List<Photo>>
 
+    @GET("albums/{albumId}/photos/latest")
+    fun getAlbumThumbnail(@Path("albumId") albumId: String): Call<Photo>
+
     @GET("animals/{animalId}/photos")
     fun getPhotosByAnimal(@Path("animalId") animalId: String): Call<List<Photo>>
+
+    @GET("animals/{animalId}/photos/latest")
+    fun getAnimalThumbnail(@Path("animalId") animalId: String): Call<Photo>
 
     @GET("photos/{photoId}")
     fun getPhotoById(@Path("photoId") id: String): Call<Photo>
