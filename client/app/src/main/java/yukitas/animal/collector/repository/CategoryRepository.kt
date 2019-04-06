@@ -21,7 +21,7 @@ object CategoryRepository {
                     categories.value = response.body()!!
                     Log.d(TAG, "Fetched categories: ${categories.value}")
                 } else {
-                    Log.e(TAG, "Response failed")
+                    Log.e(TAG, "Fetching categories responded with\n$response")
                 }
             }
 

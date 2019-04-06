@@ -21,7 +21,7 @@ object PhotoRepository {
                     photos.value = response.body()!!
                     Log.d(TAG, "Fetched photos by album $albumId: ${photos.value}")
                 } else {
-                    Log.e(TAG, "Response failed")
+                    Log.e(TAG, "Fetching photos by album $albumId responded with\n$response")
                 }
             }
 
@@ -41,7 +41,7 @@ object PhotoRepository {
                     photos.value = response.body()!!
                     Log.d(TAG, "Fetched photos by animal $animalId: ${photos.value}")
                 } else {
-                    Log.e(TAG, "Response failed")
+                    Log.e(TAG, "Fetching photos by animal $animalId responded with\n$response")
                 }
             }
 
@@ -61,12 +61,12 @@ object PhotoRepository {
                     photo.value = response.body()!!
                     Log.d(TAG, "Fetched photo by id $id: ${photo.value}")
                 } else {
-                    Log.e(TAG, "Response failed")
+                    Log.e(TAG, "Fetching photo by id $id responded with\n$response")
                 }
             }
 
             override fun onFailure(call: Call<Photo>, t: Throwable) {
-                Log.e(TAG, "Fetching photo failed", t)
+                Log.e(TAG, "Fetching photo by id $id failed", t)
             }
         })
 

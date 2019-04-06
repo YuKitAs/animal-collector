@@ -7,6 +7,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import yukitas.animal.collector.model.Album
+import yukitas.animal.collector.model.Photo
 import yukitas.animal.collector.networking.ApiService
 
 object AlbumRepository {
@@ -21,7 +22,7 @@ object AlbumRepository {
                     albums.value = response.body()!!
                     Log.d(TAG, "Fetched albums by category $categoryId: ${albums.value}")
                 } else {
-                    Log.e(TAG, "Response failed")
+                    Log.e(TAG, "Fetching albums by category $categoryId responded with\n$response")
                 }
             }
 
@@ -31,5 +32,25 @@ object AlbumRepository {
         })
 
         return albums
+    }
+
+    fun fetchAlbumThumbnail(albumId: String): LiveData<Photo?> {
+        val photo: MutableLiveData<Photo> = MutableLiveData()
+        AlbumRepository.apiService.getAlbumThumbnail(albumId).enqueue(object : Callback<Photo> {
+            override fun onResponse(call: Call<Photo>, response: Response<Photo>?) {
+                if (response!!.isSuccessful) {
+                    photo.value = response.body()
+                    Log.d(AlbumRepository.TAG, "Fetched latest photo by album $albumId")
+                } else {
+                    Log.w(AlbumRepository.TAG, "Fetching latest photo by album $albumId responded with\n$response")
+                }
+            }
+
+            override fun onFailure(call: Call<Photo>, t: Throwable) {
+                Log.e(AlbumRepository.TAG, "Fetching latest photo by album $albumId failed", t)
+            }
+        })
+
+        return photo
     }
 }
