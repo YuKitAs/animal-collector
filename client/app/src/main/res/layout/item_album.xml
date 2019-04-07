@@ -19,14 +19,14 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             card_view:cardCornerRadius="5dp"
-            card_view:cardElevation="10dp">
+            card_view:cardElevation="5dp">
 
             <ImageView
-                android:id="@+id/image_album_bg"
+                android:id="@+id/image_album_thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="@string/content_desc_album"
-                card_view:srcCompat="@android:color/darker_gray" />
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/content_desc_album" />
         </android.support.v7.widget.CardView>
 
         <TextView
