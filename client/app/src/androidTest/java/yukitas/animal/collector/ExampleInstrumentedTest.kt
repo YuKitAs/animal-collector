@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("yukitas.animal_collector", appContext.packageName)
+        assertEquals("yukitas.animal.collector", appContext.packageName)
     }
 }
