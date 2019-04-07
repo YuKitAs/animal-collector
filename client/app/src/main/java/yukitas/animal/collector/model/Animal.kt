@@ -3,5 +3,6 @@ package yukitas.animal.collector.model
 data class Animal(
         val id: String,
         val name: String,
-        val tags: List<String>
+        val tags: List<String>,
+        var thumbnail: Photo?
 )
