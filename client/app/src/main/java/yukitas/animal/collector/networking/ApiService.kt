@@ -1,5 +1,7 @@
 package yukitas.animal.collector.networking
 
+import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -16,25 +18,25 @@ interface ApiService {
     fun getCategories(): Call<List<Category>>
 
     @GET("categories/{categoryId}/albums")
-    fun getAlbumsByCategory(@Path("categoryId") categoryId: String): Call<List<Album>>
+    fun getAlbumsByCategory(@Path("categoryId") categoryId: String): Observable<List<Album>>
 
     @GET("albums/{albumId}/photos")
     fun getPhotosByAlbum(@Path("albumId") albumId: String): Call<List<Photo>>
 
     @GET("albums/{albumId}/photos/latest")
-    fun getAlbumThumbnail(@Path("albumId") albumId: String): Call<Photo>
+    fun getAlbumThumbnail(@Path("albumId") albumId: String): Single<Photo>
 
     @GET("animals/{animalId}/photos")
     fun getPhotosByAnimal(@Path("animalId") animalId: String): Call<List<Photo>>
 
     @GET("animals/{animalId}/photos/latest")
-    fun getAnimalThumbnail(@Path("animalId") animalId: String): Call<Photo>
+    fun getAnimalThumbnail(@Path("animalId") animalId: String): Single<Photo>
 
     @GET("photos/{photoId}")
     fun getPhotoById(@Path("photoId") id: String): Call<Photo>
 
     @GET("categories/{categoryId}/animals")
-    fun getAnimalsByCategory(@Path("categoryId") categoryId: String): Call<List<Animal>>
+    fun getAnimalsByCategory(@Path("categoryId") categoryId: String): Observable<List<Animal>>
 
     @GET("photos/{photoId}/animals")
     fun getAnimalsByPhoto(@Path("photoId") photoId: String): Call<List<Animal>>

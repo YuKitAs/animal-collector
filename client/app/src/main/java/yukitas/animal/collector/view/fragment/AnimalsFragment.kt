@@ -1,24 +1,37 @@
 package yukitas.animal.collector.view.fragment
 
-import android.arch.lifecycle.Observer
+import android.annotation.SuppressLint
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.model.Animal
+import yukitas.animal.collector.model.Photo
+import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.activity.PhotoActivity
 import yukitas.animal.collector.view.adapter.AnimalsAdapter
 import yukitas.animal.collector.viewmodel.AnimalViewModel
+import java.util.*
+import java.util.stream.Collectors
 
 class AnimalsFragment : Fragment() {
+    private val TAG = AnimalsFragment::class.java.simpleName
+
     private lateinit var binding: yukitas.animal.collector.databinding.FragmentAnimalsBinding
     private lateinit var animalViewModel: AnimalViewModel
     private lateinit var animalsAdapter: AnimalsAdapter
+    private val disposable = CompositeDisposable()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -36,18 +49,55 @@ class AnimalsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
+    }
+
     private fun setAnimals() {
-        animalViewModel.getAnimalsByCategory(arguments.getString(Constants.ARG_CATEGORY_ID)!!).observe(this, Observer { animals ->
-            animals?.let {
-                animalsAdapter.animals = it
-                binding.listAnimals.setOnItemClickListener { _, _, position, _ ->
-                    val intent = Intent(activity, PhotoActivity::class.java)
-                    val bundle = Bundle()
-                    bundle.putString(Constants.ARG_ANIMAL_ID, animalsAdapter.animals[position].id)
-                    intent.putExtras(bundle)
-                    activity.startActivity(intent)
-                }
+        disposable.add(
+                ApiService.create().getAnimalsByCategory(arguments.getString(
+                        Constants.ARG_CATEGORY_ID)!!)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(this::setThumbnails))
+
+        setAnimalListner()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    @SuppressLint("CheckResult")
+    private fun setThumbnails(animals: List<Animal>) {
+        val animalThumbnailMaps: List<Single<Map<String, Photo?>>> = animals.stream().map { animal ->
+            ApiService.create().getAnimalThumbnail(animal.id).map { photo ->
+                Collections.singletonMap(animal.id, photo)
             }
-        })
+        }.collect(Collectors.toList())
+
+        Single.zip(animalThumbnailMaps.asIterable()) { obj -> obj }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    var animalThumbnailMap: Map<String, Photo?> = emptyMap()
+                    it.forEach { animalThumbnail ->
+                        animalThumbnailMap = animalThumbnailMap.plus(
+                                animalThumbnail as Map<String, Photo?>)
+                    }
+
+                    animals.forEach { animal -> animal.thumbnail = animalThumbnailMap[animal.id] }
+                    animalsAdapter.animals = animals
+                }) {
+                    Log.e(TAG, "Some errors occurred: $it")
+                }
+    }
+
+    private fun setAnimalListner() {
+        binding.listAnimals.setOnItemClickListener { _, _, position, _ ->
+            val intent = Intent(activity, PhotoActivity::class.java)
+            val bundle = Bundle()
+            bundle.putString(Constants.ARG_ANIMAL_ID, animalsAdapter.animals[position].id)
+            intent.putExtras(bundle)
+            activity.startActivity(intent)
+        }
     }
 }
