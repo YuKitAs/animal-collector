@@ -44,7 +44,7 @@ public class PhotoController {
     public ResponseEntity<Photo> getLatestPhotoByAlbum(@PathVariable("album_id") UUID albumId) {
         return photoService.getLatestPhotoByAlbum(albumId)
                 .map(photo -> new ResponseEntity<>(photo, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     @GetMapping("/animals/{animal_id}/photos")
@@ -56,7 +56,7 @@ public class PhotoController {
     public ResponseEntity<Photo> getLatestPhotoByAnimal(@PathVariable("animal_id") UUID animalId) {
         return photoService.getLatestPhotoByAnimal(animalId)
                 .map(photo -> new ResponseEntity<>(photo, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     @GetMapping("/photos/{id}")
