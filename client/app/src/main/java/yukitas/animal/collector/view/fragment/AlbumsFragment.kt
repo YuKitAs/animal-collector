@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.reactivex.Single
+import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -70,13 +70,13 @@ class AlbumsFragment : Fragment() {
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("CheckResult")
     private fun setThumbnails(albums: List<Album>) {
-        val albumThumbnailMaps: List<Single<Map<String, Photo?>>> = albums.stream().map { album ->
+        val albumThumbnailMaps: List<Maybe<Map<String, Photo?>>> = albums.stream().map { album ->
             ApiService.create().getAlbumThumbnail(album.id).map { photo ->
                 Collections.singletonMap(album.id, photo)
-            }
+            }.defaultIfEmpty(Collections.singletonMap(album.id, null as Photo?))
         }.collect(Collectors.toList())
 
-        Single.zip(albumThumbnailMaps.asIterable()) { obj -> obj }
+        Maybe.zip(albumThumbnailMaps.asIterable()) { obj -> obj }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -85,8 +85,11 @@ class AlbumsFragment : Fragment() {
                         albumThumbnailMap = albumThumbnailMap.plus(
                                 albumThumbnail as Map<String, Photo?>)
                     }
-
-                    albums.forEach { album -> album.thumbnail = albumThumbnailMap[album.id] }
+                    albums.forEach { album ->
+                        album.thumbnail = albumThumbnailMap[album.id]
+                        Log.d(TAG,
+                                "Set thumbnail ${albumThumbnailMap[album.id]} for album ${album.name}")
+                    }
                     albumsAdapter.albums = albums
                 }) {
                     Log.e(TAG, "Some errors occurred: $it")

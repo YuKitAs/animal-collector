@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.reactivex.Single
+import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -68,13 +68,13 @@ class AnimalsFragment : Fragment() {
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("CheckResult")
     private fun setThumbnails(animals: List<Animal>) {
-        val animalThumbnailMaps: List<Single<Map<String, Photo?>>> = animals.stream().map { animal ->
+        val animalThumbnailMaps: List<Maybe<Map<String, Photo?>>> = animals.stream().map { animal ->
             ApiService.create().getAnimalThumbnail(animal.id).map { photo ->
                 Collections.singletonMap(animal.id, photo)
-            }
+            }.defaultIfEmpty(Collections.singletonMap(animal.id, null as Photo?))
         }.collect(Collectors.toList())
 
-        Single.zip(animalThumbnailMaps.asIterable()) { obj -> obj }
+        Maybe.zip(animalThumbnailMaps.asIterable()) { obj -> obj }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -83,8 +83,11 @@ class AnimalsFragment : Fragment() {
                         animalThumbnailMap = animalThumbnailMap.plus(
                                 animalThumbnail as Map<String, Photo?>)
                     }
-
-                    animals.forEach { animal -> animal.thumbnail = animalThumbnailMap[animal.id] }
+                    animals.forEach { animal ->
+                        animal.thumbnail = animalThumbnailMap[animal.id]
+                        Log.d(TAG,
+                                "Set thumbnail ${animalThumbnailMap[animal.id]} for animal ${animal.name}")
+                    }
                     animalsAdapter.animals = animals
                 }) {
                     Log.e(TAG, "Some errors occurred: $it")
