@@ -1,7 +1,6 @@
 package yukitas.animal.collector.view.fragment
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -23,17 +22,15 @@ import yukitas.animal.collector.model.Photo
 import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.activity.PhotoActivity
 import yukitas.animal.collector.view.adapter.AlbumsAdapter
-import yukitas.animal.collector.viewmodel.AlbumViewModel
 import java.util.*
 import java.util.stream.Collectors
-
 
 class AlbumsFragment : Fragment() {
     private val TAG = AlbumsFragment::class.java.simpleName
 
     private lateinit var binding: FragmentAlbumsBinding
-    private lateinit var albumViewModel: AlbumViewModel
     private lateinit var albumsAdapter: AlbumsAdapter
+    private val apiService by lazy { ApiService.create() }
     private val disposable = CompositeDisposable()
 
     override fun onCreateView(
@@ -44,8 +41,6 @@ class AlbumsFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_albums, container, false)
         albumsAdapter = AlbumsAdapter(context)
         binding.gridAlbums.adapter = albumsAdapter
-
-        albumViewModel = ViewModelProviders.of(this).get(AlbumViewModel::class.java)
 
         setAlbums()
 
@@ -59,7 +54,7 @@ class AlbumsFragment : Fragment() {
 
     private fun setAlbums() {
         disposable.add(
-                ApiService.create().getAlbumsByCategory(arguments.getString(ARG_CATEGORY_ID)!!)
+                apiService.getAlbumsByCategory(arguments.getString(ARG_CATEGORY_ID)!!)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::setThumbnails))
@@ -71,7 +66,7 @@ class AlbumsFragment : Fragment() {
     @SuppressLint("CheckResult")
     private fun setThumbnails(albums: List<Album>) {
         val albumThumbnailMaps: List<Maybe<Map<String, Photo?>>> = albums.stream().map { album ->
-            ApiService.create().getAlbumThumbnail(album.id).map { photo ->
+            apiService.getAlbumThumbnail(album.id).map { photo ->
                 Collections.singletonMap(album.id, photo)
             }.defaultIfEmpty(Collections.singletonMap(album.id, null as Photo?))
         }.collect(Collectors.toList())

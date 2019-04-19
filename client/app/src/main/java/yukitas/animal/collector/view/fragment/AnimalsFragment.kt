@@ -1,7 +1,6 @@
 package yukitas.animal.collector.view.fragment
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -21,7 +20,6 @@ import yukitas.animal.collector.model.Photo
 import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.activity.PhotoActivity
 import yukitas.animal.collector.view.adapter.AnimalsAdapter
-import yukitas.animal.collector.viewmodel.AnimalViewModel
 import java.util.*
 import java.util.stream.Collectors
 
@@ -29,8 +27,8 @@ class AnimalsFragment : Fragment() {
     private val TAG = AnimalsFragment::class.java.simpleName
 
     private lateinit var binding: yukitas.animal.collector.databinding.FragmentAnimalsBinding
-    private lateinit var animalViewModel: AnimalViewModel
     private lateinit var animalsAdapter: AnimalsAdapter
+    private val apiService by lazy { ApiService.create() }
     private val disposable = CompositeDisposable()
 
     override fun onCreateView(
@@ -41,8 +39,6 @@ class AnimalsFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_animals, container, false)
         animalsAdapter = AnimalsAdapter(context)
         binding.listAnimals.adapter = animalsAdapter
-
-        animalViewModel = ViewModelProviders.of(this).get(AnimalViewModel::class.java)
 
         setAnimals()
 
@@ -56,7 +52,7 @@ class AnimalsFragment : Fragment() {
 
     private fun setAnimals() {
         disposable.add(
-                ApiService.create().getAnimalsByCategory(arguments.getString(
+                apiService.getAnimalsByCategory(arguments.getString(
                         Constants.ARG_CATEGORY_ID)!!)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -69,7 +65,7 @@ class AnimalsFragment : Fragment() {
     @SuppressLint("CheckResult")
     private fun setThumbnails(animals: List<Animal>) {
         val animalThumbnailMaps: List<Maybe<Map<String, Photo?>>> = animals.stream().map { animal ->
-            ApiService.create().getAnimalThumbnail(animal.id).map { photo ->
+            apiService.getAnimalThumbnail(animal.id).map { photo ->
                 Collections.singletonMap(animal.id, photo)
             }.defaultIfEmpty(Collections.singletonMap(animal.id, null as Photo?))
         }.collect(Collectors.toList())
