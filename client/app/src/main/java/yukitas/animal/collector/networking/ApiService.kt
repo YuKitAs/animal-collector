@@ -6,12 +6,15 @@ import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.Category
 import yukitas.animal.collector.model.Photo
+import yukitas.animal.collector.model.dto.CreateAlbumRequest
 
 interface ApiService {
     @GET("categories")
@@ -40,6 +43,10 @@ interface ApiService {
 
     @GET("photos/{photoId}/animals")
     fun getAnimalsByPhoto(@Path("photoId") photoId: String): Observable<List<Animal>>
+
+    @POST("categories/{categoryId}/albums")
+    fun createAlbum(@Path(
+            "categoryId") categoryId: String, @Body album: CreateAlbumRequest): Single<Album>
 
     companion object {
         fun create(): ApiService {

@@ -14,12 +14,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
+import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
 import yukitas.animal.collector.databinding.FragmentAlbumsBinding
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Photo
 import yukitas.animal.collector.networking.ApiService
+import yukitas.animal.collector.view.activity.CreateAlbumActivity
 import yukitas.animal.collector.view.activity.PhotoActivity
 import yukitas.animal.collector.view.adapter.AlbumsAdapter
 import java.util.*
@@ -43,6 +45,7 @@ class AlbumsFragment : Fragment() {
         binding.gridAlbums.adapter = albumsAdapter
 
         setAlbums()
+        setAddButtonListener()
 
         return binding.root
     }
@@ -97,6 +100,18 @@ class AlbumsFragment : Fragment() {
             val bundle = Bundle()
             bundle.putString(ARG_ALBUM_ID, albumsAdapter.albums[position].id)
             intent.putExtras(bundle)
+            activity.startActivity(intent)
+        }
+    }
+
+    private fun setAddButtonListener() {
+        binding.btnAddAlbum.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(Constants.ARG_CATEGORY_ID, arguments.getString(ARG_CATEGORY_ID))
+
+            val intent = Intent(activity, CreateAlbumActivity::class.java)
+            intent.putExtras(bundle)
+
             activity.startActivity(intent)
         }
     }
