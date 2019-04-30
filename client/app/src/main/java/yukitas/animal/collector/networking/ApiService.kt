@@ -15,6 +15,7 @@ import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.Category
 import yukitas.animal.collector.model.Photo
 import yukitas.animal.collector.model.dto.CreateAlbumRequest
+import yukitas.animal.collector.model.dto.CreateAnimalRequest
 
 interface ApiService {
     @GET("categories")
@@ -47,6 +48,10 @@ interface ApiService {
     @POST("categories/{categoryId}/albums")
     fun createAlbum(@Path(
             "categoryId") categoryId: String, @Body album: CreateAlbumRequest): Single<Album>
+
+    @POST("categories/{categoryId}/animals")
+    fun createAnimal(@Path(
+            "categoryId") categoryId: String, @Body animal: CreateAnimalRequest): Single<Animal>
 
     companion object {
         fun create(): ApiService {
