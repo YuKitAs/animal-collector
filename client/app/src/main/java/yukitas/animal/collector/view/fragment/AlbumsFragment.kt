@@ -50,6 +50,11 @@ class AlbumsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        setAlbums()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         disposable.clear()

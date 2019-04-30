@@ -18,6 +18,7 @@ import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.Photo
 import yukitas.animal.collector.networking.ApiService
+import yukitas.animal.collector.view.activity.CreateAnimalActivity
 import yukitas.animal.collector.view.activity.PhotoActivity
 import yukitas.animal.collector.view.adapter.AnimalsAdapter
 import java.util.*
@@ -41,8 +42,14 @@ class AnimalsFragment : Fragment() {
         binding.listAnimals.adapter = animalsAdapter
 
         setAnimals()
+        setAddButtonListener()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setAnimals()
     }
 
     override fun onDestroy() {
@@ -96,6 +103,19 @@ class AnimalsFragment : Fragment() {
             val bundle = Bundle()
             bundle.putString(Constants.ARG_ANIMAL_ID, animalsAdapter.animals[position].id)
             intent.putExtras(bundle)
+            activity.startActivity(intent)
+        }
+    }
+
+    private fun setAddButtonListener() {
+        binding.btnAddAnimal.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(Constants.ARG_CATEGORY_ID, arguments.getString(
+                    Constants.ARG_CATEGORY_ID))
+
+            val intent = Intent(activity, CreateAnimalActivity::class.java)
+            intent.putExtras(bundle)
+
             activity.startActivity(intent)
         }
     }

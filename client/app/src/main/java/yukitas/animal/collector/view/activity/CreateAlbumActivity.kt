@@ -1,6 +1,5 @@
 package yukitas.animal.collector.view.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -33,9 +32,11 @@ class CreateAlbumActivity : AppCompatActivity() {
                             CreateAlbumRequest(inputAlbumName.text.toString()))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { album -> Log.d(TAG, "Created album: $album") })
-
-            startActivity(Intent(this, MainActivity::class.java))
+                            .subscribe { album ->
+                                Log.d(TAG, "Created album: $album")
+                                // return to MainActivity
+                                finish()
+                            })
         }
     }
 

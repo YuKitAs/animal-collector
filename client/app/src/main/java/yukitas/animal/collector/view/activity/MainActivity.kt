@@ -42,6 +42,12 @@ class MainActivity : AppCompatActivity() {
         viewPager.addOnPageChangeListener(getOnPageChangeListener())
     }
 
+    override fun onResume() {
+        super.onResume()
+        // invoke getItem() to refresh fragment
+        categoryPagerAdapter.notifyDataSetChanged()
+    }
+
     private fun setCategories() {
         disposable.add(
                 apiService.getCategories()
