@@ -65,16 +65,15 @@ public class PhotoController {
     }
 
     @PutMapping("/photos/{id}")
-    public ResponseEntity<Void> updatePhoto(@PathVariable("id") UUID photoId,
-            @RequestBody UpdatePhotoRequest updatePhotoRequest) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updatePhoto(@PathVariable("id") UUID photoId, @RequestBody UpdatePhotoRequest updatePhotoRequest) {
         photoService.updatePhoto(photoId, updatePhotoRequest.getAnimalIds(), updatePhotoRequest.getAlbumIds(),
                 updatePhotoRequest.getDescription());
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/photos/{id}")
-    public ResponseEntity<Void> deletePhoto(@PathVariable("id") UUID photoId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePhoto(@PathVariable("id") UUID photoId) {
         photoService.deletePhoto(photoId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -52,8 +52,8 @@ public class AlbumController {
     }
 
     @DeleteMapping("/albums/{id}")
-    public ResponseEntity<Void> deleteAlbum(@PathVariable("id") UUID albumId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAlbum(@PathVariable("id") UUID albumId) {
         albumService.deleteAlbum(albumId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -63,4 +63,10 @@ public class AnimalController {
                 animalService.updateAnimal(animalId, createAnimalRequest.getName(), createAnimalRequest.getTags()),
                 HttpStatus.OK);
     }
+
+    @DeleteMapping("/animals/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAnimal(@PathVariable("id") UUID animalId) {
+        animalService.deleteAnimal(animalId);
+    }
 }
