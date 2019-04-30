@@ -28,7 +28,6 @@ public class Album {
     private Category category;
 
     @Size(max = 64)
-    @Column(unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "albums")

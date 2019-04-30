@@ -28,7 +28,6 @@ public class Animal {
     private Category category;
 
     @Size(max = 32)
-    @Column(unique = true)
     private String name;
 
     private String[] tags = new String[0];
