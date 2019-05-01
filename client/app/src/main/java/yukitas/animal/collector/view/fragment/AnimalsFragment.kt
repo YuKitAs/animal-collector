@@ -58,9 +58,12 @@ class AnimalsFragment : Fragment() {
     }
 
     private fun setAnimals() {
+        val categoryId = arguments.getString(Constants.ARG_CATEGORY_ID)!!
+
+        Log.d(TAG, "Retrieving animals for category $categoryId")
+
         disposable.add(
-                apiService.getAnimalsByCategory(arguments.getString(
-                        Constants.ARG_CATEGORY_ID)!!)
+                apiService.getAnimalsByCategory(categoryId)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::setThumbnails))
@@ -91,6 +94,7 @@ class AnimalsFragment : Fragment() {
                         Log.d(TAG,
                                 "Set thumbnail ${animalThumbnailMap[animal.id]} for animal ${animal.name}")
                     }
+                    // update animals
                     animalsAdapter.animals = animals
                 }) {
                     Log.e(TAG, "Some errors occurred: $it")

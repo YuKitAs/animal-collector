@@ -21,17 +21,11 @@ class AnimalsAdapter(private val context: Context) : BaseAdapter() {
             notifyDataSetChanged()
         }
 
-    override fun getCount(): Int {
-        return animals.size
-    }
+    override fun getCount(): Int = animals.size
 
-    override fun getItem(position: Int): Any {
-        return animals[position]
-    }
+    override fun getItem(position: Int): Any? = animals[position]
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+    override fun getItemId(position: Int): Long = position.toLong()
 
     @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -44,7 +38,7 @@ class AnimalsAdapter(private val context: Context) : BaseAdapter() {
         setAnimalThumbnail(animal)
         setAnimalTags(animal, parent)
 
-        return convertView ?: binding.root
+        return binding.root
     }
 
     private fun setAnimalThumbnail(animal: Animal) {

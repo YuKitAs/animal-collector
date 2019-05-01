@@ -61,8 +61,12 @@ class AlbumsFragment : Fragment() {
     }
 
     private fun setAlbums() {
+        val categoryId = arguments.getString(ARG_CATEGORY_ID)!!
+
+        Log.d(TAG, "Retrieving albums for category $categoryId")
+
         disposable.add(
-                apiService.getAlbumsByCategory(arguments.getString(ARG_CATEGORY_ID)!!)
+                apiService.getAlbumsByCategory(categoryId)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::setThumbnails))
@@ -93,6 +97,7 @@ class AlbumsFragment : Fragment() {
                         Log.d(TAG,
                                 "Set thumbnail ${albumThumbnailMap[album.id]} for album ${album.name}")
                     }
+                    // update albums
                     albumsAdapter.albums = albums
                 }) {
                     Log.e(TAG, "Some errors occurred: $it")
