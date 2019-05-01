@@ -65,7 +65,7 @@ class AnimalsFragment : Fragment() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::setThumbnails))
 
-        setAnimalListner()
+        setAnimalListener()
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -97,7 +97,7 @@ class AnimalsFragment : Fragment() {
                 }
     }
 
-    private fun setAnimalListner() {
+    private fun setAnimalListener() {
         binding.listAnimals.setOnItemClickListener { _, _, position, _ ->
             val intent = Intent(activity, PhotoActivity::class.java)
             val bundle = Bundle()
