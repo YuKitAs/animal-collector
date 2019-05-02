@@ -6,7 +6,8 @@
     <string name="content_desc_animal">Animal</string>
     <string name="tab_albums">Albums</string>
     <string name="tab_animals">Animals</string>
-    <string name="hint_album_name">Enter a name for your album</string>
-    <string name="hint_animal_name">Enter a name for your animal</string>
+    <string name="hint_album_name">Album name</string>
+    <string name="hint_animal_name">Animal name</string>
     <string name="btn_create">create</string>
+    <string name="hint_animal_tags">Tags (separated by spaces)</string>
 </resources>

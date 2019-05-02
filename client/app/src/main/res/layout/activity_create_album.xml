@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_album_name"
                 android:inputType="text"
+                android:maxLength="32"
                 android:maxLines="1"
                 android:textSize="18sp" />
         </android.support.design.widget.TextInputLayout>

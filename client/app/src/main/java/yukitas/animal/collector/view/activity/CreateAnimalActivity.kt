@@ -29,7 +29,8 @@ class CreateAnimalActivity : AppCompatActivity() {
 
             disposable.add(
                     apiService.createAnimal(intent.getStringExtra(Constants.ARG_CATEGORY_ID),
-                            CreateAnimalRequest(inputAnimalName.text.toString(), emptyList()))
+                            CreateAnimalRequest(inputAnimalName.text.toString(),
+                                    inputAnimalTags.text.split("\\s+".toRegex()).map { it.trim() }))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe { animal ->
