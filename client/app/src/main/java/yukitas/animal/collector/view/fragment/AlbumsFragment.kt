@@ -16,6 +16,7 @@ import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
+import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_NAME
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
 import yukitas.animal.collector.databinding.FragmentAlbumsBinding
 import yukitas.animal.collector.model.Album
@@ -108,7 +109,9 @@ class AlbumsFragment : Fragment() {
         binding.gridAlbums.setOnItemClickListener { _, _, position, _ ->
             val intent = Intent(activity, PhotoActivity::class.java)
             val bundle = Bundle()
-            bundle.putString(ARG_ALBUM_ID, albumsAdapter.albums[position].id)
+            val album = albumsAdapter.albums[position]
+            bundle.putString(ARG_ALBUM_ID, album.id)
+            bundle.putString(ARG_ALBUM_NAME, album.name)
             intent.putExtras(bundle)
             activity.startActivity(intent)
         }

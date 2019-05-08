@@ -14,7 +14,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
-import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_ID
+import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_NAME
+import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.Photo
 import yukitas.animal.collector.networking.ApiService
@@ -58,7 +60,7 @@ class AnimalsFragment : Fragment() {
     }
 
     private fun setAnimals() {
-        val categoryId = arguments.getString(Constants.ARG_CATEGORY_ID)!!
+        val categoryId = arguments.getString(ARG_CATEGORY_ID)!!
 
         Log.d(TAG, "Retrieving animals for category $categoryId")
 
@@ -105,7 +107,9 @@ class AnimalsFragment : Fragment() {
         binding.listAnimals.setOnItemClickListener { _, _, position, _ ->
             val intent = Intent(activity, PhotoActivity::class.java)
             val bundle = Bundle()
-            bundle.putString(Constants.ARG_ANIMAL_ID, animalsAdapter.animals[position].id)
+            val animal = animalsAdapter.animals[position]
+            bundle.putString(ARG_ANIMAL_ID, animal.id)
+            bundle.putString(ARG_ANIMAL_NAME, animal.name)
             intent.putExtras(bundle)
             activity.startActivity(intent)
         }
@@ -114,8 +118,7 @@ class AnimalsFragment : Fragment() {
     private fun setAddButtonListener() {
         binding.btnAddAnimal.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString(Constants.ARG_CATEGORY_ID, arguments.getString(
-                    Constants.ARG_CATEGORY_ID))
+            bundle.putString(ARG_CATEGORY_ID, arguments.getString(ARG_CATEGORY_ID))
 
             val intent = Intent(activity, CreateAnimalActivity::class.java)
             intent.putExtras(bundle)

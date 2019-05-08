@@ -9,10 +9,13 @@ import android.widget.GridView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_photos.*
 import yukitas.animal.collector.AnimalCollectorApplication
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
+import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_NAME
 import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_ID
+import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_NAME
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
 import yukitas.animal.collector.common.ViewMode
 import yukitas.animal.collector.networking.ApiService
@@ -62,7 +65,11 @@ class PhotosFragment : Fragment() {
                                 activity.intent!!.extras!!.getString(ARG_ALBUM_ID)!!)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe { photosAdapter.photos = it })
+                                .subscribe {
+                                    photosAdapter.photos = it
+                                    textCollectionName.text = activity.intent!!.extras!!.getString(
+                                            ARG_ALBUM_NAME)!!.toUpperCase()
+                                })
             }
             ViewMode.ANIMAL -> {
                 disposable.add(
@@ -70,7 +77,11 @@ class PhotosFragment : Fragment() {
                                 activity.intent!!.extras!!.getString(ARG_ANIMAL_ID)!!)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe { photosAdapter.photos = it })
+                                .subscribe {
+                                    photosAdapter.photos = it
+                                    textCollectionName.text = activity.intent!!.extras!!.getString(
+                                            ARG_ANIMAL_NAME)!!.toUpperCase()
+                                })
             }
         }
     }
