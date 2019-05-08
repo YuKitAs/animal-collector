@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -73,14 +74,7 @@ public class AnimalServiceImpl implements AnimalService {
     @Override
     public Animal updateAnimal(UUID id, String name, String[] tags) {
         Animal animal = findAnimalById(id);
-
-        if (name != null) {
-            animal.setName(name);
-        }
-
-        if (tags != null) {
-            animal.setTags(tags);
-        }
+        animal.setTags(Objects.requireNonNullElseGet(tags, () -> new String[0]));
 
         return animalRepository.save(animal);
     }

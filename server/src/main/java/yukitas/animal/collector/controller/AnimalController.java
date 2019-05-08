@@ -58,7 +58,7 @@ public class AnimalController {
 
     @PutMapping("/animals/{id}")
     public ResponseEntity<Animal> updateAnimal(@PathVariable("id") UUID animalId,
-            @RequestBody CreateAnimalRequest createAnimalRequest) {
+            @Valid @RequestBody CreateAnimalRequest createAnimalRequest) {
         return new ResponseEntity<>(
                 animalService.updateAnimal(animalId, createAnimalRequest.getName(), createAnimalRequest.getTags()),
                 HttpStatus.OK);
