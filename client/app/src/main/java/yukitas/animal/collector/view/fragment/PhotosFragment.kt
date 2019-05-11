@@ -1,42 +1,22 @@
 package yukitas.animal.collector.view.fragment
 
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_photos.*
-import yukitas.animal.collector.AnimalCollectorApplication
 import yukitas.animal.collector.R
-import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
-import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_NAME
-import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_ID
-import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_NAME
-import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_TAGS
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
-import yukitas.animal.collector.common.ViewMode
-import yukitas.animal.collector.model.Album
-import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.networking.ApiService
-import yukitas.animal.collector.view.activity.EditAlbumActivity
-import yukitas.animal.collector.view.activity.EditAnimalActivity
 import yukitas.animal.collector.view.adapter.PhotosAdapter
-import java.util.*
 
-class PhotosFragment : Fragment() {
-    private val TAG = PhotosFragment::class.java.simpleName
-
-    private lateinit var binding: yukitas.animal.collector.databinding.FragmentPhotosBinding
-    private lateinit var photosAdapter: PhotosAdapter
-    private val apiService by lazy { ApiService.create() }
-    private val disposable = CompositeDisposable()
+abstract class PhotosFragment : Fragment() {
+    lateinit var binding: yukitas.animal.collector.databinding.FragmentPhotosBinding
+    lateinit var photosAdapter: PhotosAdapter
+    val apiService by lazy { ApiService.create() }
+    val disposable = CompositeDisposable()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -75,134 +55,9 @@ class PhotosFragment : Fragment() {
         disposable.clear()
     }
 
-    private fun setPhotos() {
-        when (AnimalCollectorApplication.currentViewMode) {
-            ViewMode.ALBUM -> {
-                val albumId = activity.intent!!.extras!!.getString(ARG_ALBUM_ID)!!
+    abstract fun setPhotos()
 
-                disposable.add(apiService.getAlbumById(albumId)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            textCollectionName.text = it.name.toUpperCase()
-                            setEditAlbumButtonListener(it)
-                            setDeleteAlbumButtonListener(it.id)
-                        }, {
-                            Log.e(TAG, "Some errors occurred: $it")
-                        }))
+    abstract fun setEditButtonListener()
 
-                disposable.add(
-                        apiService.getPhotosByAlbum(albumId)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe {
-                                    photosAdapter.photos = it
-                                })
-            }
-            ViewMode.ANIMAL -> {
-                val animalId = activity.intent!!.extras!!.getString(ARG_ANIMAL_ID)!!
-
-                disposable.add(apiService.getAnimalById(animalId)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            textCollectionName.text = it.name.toUpperCase()
-                            setEditAnimalButtonListenr(it)
-                            setDeleteAnimalButtonListener(it.id)
-                        }, {
-                            Log.e(TAG, "Some errors occurred: $it")
-                        }))
-
-                disposable.add(
-                        apiService.getPhotosByAnimal(animalId)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe {
-                                    photosAdapter.photos = it
-                                })
-            }
-        }
-    }
-
-    private fun setEditAlbumButtonListener(album: Album) {
-        binding.btnEditCollection.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putBoolean("isCreating", false)
-            bundle.putString(ARG_ALBUM_ID, album.id)
-            bundle.putString(ARG_ALBUM_NAME, album.name)
-
-            val intent = Intent(activity, EditAlbumActivity::class.java)
-            intent.putExtras(bundle)
-
-            activity.startActivity(intent)
-        }
-    }
-
-    private fun setDeleteAlbumButtonListener(albumId: String) {
-        binding.btnDeleteCollection.setOnClickListener {
-            val builder = AlertDialog.Builder(activity)
-            builder.apply {
-                setMessage("Are you sure you want to delete this album?")
-                setPositiveButton(R.string.label_confirm_positive
-                ) { _, id ->
-                    Log.d(TAG, "Deleting album '$albumId'")
-
-                    disposable.add(
-                            apiService.deleteAlbum(albumId)
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe {
-                                        Log.d(TAG, "Deleted album '$albumId'")
-                                        activity.onBackPressed()
-                                    })
-                }
-                setNegativeButton(R.string.label_confirm_negative
-                ) { dialog, _ ->
-                    dialog.cancel()
-                }
-            }
-            builder.show()
-        }
-    }
-
-    private fun setEditAnimalButtonListenr(animal: Animal) {
-        binding.btnEditCollection.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putBoolean("isCreating", false)
-            bundle.putString(ARG_ANIMAL_ID, animal.id)
-            bundle.putString(ARG_ANIMAL_NAME, animal.name)
-            bundle.putStringArrayList(ARG_ANIMAL_TAGS, ArrayList(animal.tags))
-
-            val intent = Intent(activity, EditAnimalActivity::class.java)
-            intent.putExtras(bundle)
-
-            activity.startActivity(intent)
-        }
-    }
-
-    private fun setDeleteAnimalButtonListener(animalId: String) {
-        binding.btnDeleteCollection.setOnClickListener {
-            val builder = AlertDialog.Builder(activity)
-            builder.apply {
-                setMessage("Are you sure you want to delete this animal?")
-                setPositiveButton(R.string.label_confirm_negative
-                ) { _, id ->
-                    Log.d(TAG, "Deleting animal '$animalId'")
-
-                    disposable.add(
-                            apiService.deleteAnimal(animalId)
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe {
-                                        Log.d(TAG, "Deleted animal '$animalId'")
-                                        activity.onBackPressed()
-                                    })
-                }
-                setNegativeButton(R.string.label_confirm_negative) { dialog, _ ->
-                    dialog.cancel()
-                }
-            }
-            builder.show()
-        }
-    }
+    abstract fun setDeleteButtonListener()
 }
