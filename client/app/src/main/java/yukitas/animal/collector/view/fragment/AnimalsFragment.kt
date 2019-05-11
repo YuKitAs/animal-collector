@@ -15,12 +15,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_ID
-import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_NAME
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.Photo
 import yukitas.animal.collector.networking.ApiService
-import yukitas.animal.collector.view.activity.CreateAnimalActivity
+import yukitas.animal.collector.view.activity.EditAnimalActivity
 import yukitas.animal.collector.view.activity.PhotoActivity
 import yukitas.animal.collector.view.adapter.AnimalsAdapter
 import java.util.*
@@ -105,11 +104,12 @@ class AnimalsFragment : Fragment() {
 
     private fun setAnimalListener() {
         binding.listAnimals.setOnItemClickListener { _, _, position, _ ->
-            val intent = Intent(activity, PhotoActivity::class.java)
             val bundle = Bundle()
             val animal = animalsAdapter.animals[position]
             bundle.putString(ARG_ANIMAL_ID, animal.id)
-            bundle.putString(ARG_ANIMAL_NAME, animal.name)
+            bundle.putBoolean("isCreating", true)
+
+            val intent = Intent(activity, PhotoActivity::class.java)
             intent.putExtras(bundle)
             activity.startActivity(intent)
         }
@@ -120,7 +120,7 @@ class AnimalsFragment : Fragment() {
             val bundle = Bundle()
             bundle.putString(ARG_CATEGORY_ID, arguments.getString(ARG_CATEGORY_ID))
 
-            val intent = Intent(activity, CreateAnimalActivity::class.java)
+            val intent = Intent(activity, EditAnimalActivity::class.java)
             intent.putExtras(bundle)
 
             activity.startActivity(intent)

@@ -1,28 +1,32 @@
 package yukitas.animal.collector.networking
 
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.Category
 import yukitas.animal.collector.model.Photo
-import yukitas.animal.collector.model.dto.CreateAlbumRequest
-import yukitas.animal.collector.model.dto.CreateAnimalRequest
+import yukitas.animal.collector.model.dto.SaveAlbumRequest
+import yukitas.animal.collector.model.dto.SaveAnimalRequest
 
 interface ApiService {
+    /**
+     * GET
+     */
     @GET("categories")
     fun getCategories(): Observable<List<Category>>
 
     @GET("categories/{categoryId}/albums")
     fun getAlbumsByCategory(@Path("categoryId") categoryId: String): Observable<List<Album>>
+
+    @GET("albums/{id}")
+    fun getAlbumById(@Path("id") id: String): Single<Album>
 
     @GET("albums/{albumId}/photos")
     fun getPhotosByAlbum(@Path("albumId") albumId: String): Observable<List<Photo>>
@@ -42,16 +46,33 @@ interface ApiService {
     @GET("categories/{categoryId}/animals")
     fun getAnimalsByCategory(@Path("categoryId") categoryId: String): Observable<List<Animal>>
 
+    @GET("animals/{id}")
+    fun getAnimalById(@Path("id") id: String): Single<Animal>
+
     @GET("photos/{photoId}/animals")
     fun getAnimalsByPhoto(@Path("photoId") photoId: String): Observable<List<Animal>>
 
+    /**
+     * POST
+     */
     @POST("categories/{categoryId}/albums")
     fun createAlbum(@Path(
-            "categoryId") categoryId: String, @Body album: CreateAlbumRequest): Single<Album>
+            "categoryId") categoryId: String, @Body album: SaveAlbumRequest): Single<Album>
 
     @POST("categories/{categoryId}/animals")
     fun createAnimal(@Path(
-            "categoryId") categoryId: String, @Body animal: CreateAnimalRequest): Single<Animal>
+            "categoryId") categoryId: String, @Body animal: SaveAnimalRequest): Single<Animal>
+
+    /**
+     * PUT
+     */
+    @PUT("albums/{albumId}")
+    fun updateAlbum(@Path("albumId") albumId: String, @Body album: SaveAlbumRequest): Completable
+
+    @PUT("animals/{animalId}")
+    fun updateAnimal(@Path(
+            "animalId") animalId: String, @Body animal: SaveAnimalRequest): Completable
+
 
     companion object {
         fun create(): ApiService {

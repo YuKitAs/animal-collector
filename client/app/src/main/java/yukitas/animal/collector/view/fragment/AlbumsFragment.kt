@@ -16,13 +16,12 @@ import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
-import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_NAME
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
 import yukitas.animal.collector.databinding.FragmentAlbumsBinding
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Photo
 import yukitas.animal.collector.networking.ApiService
-import yukitas.animal.collector.view.activity.CreateAlbumActivity
+import yukitas.animal.collector.view.activity.EditAlbumActivity
 import yukitas.animal.collector.view.activity.PhotoActivity
 import yukitas.animal.collector.view.adapter.AlbumsAdapter
 import java.util.*
@@ -107,12 +106,14 @@ class AlbumsFragment : Fragment() {
 
     private fun setAlbumListener() {
         binding.gridAlbums.setOnItemClickListener { _, _, position, _ ->
-            val intent = Intent(activity, PhotoActivity::class.java)
             val bundle = Bundle()
             val album = albumsAdapter.albums[position]
             bundle.putString(ARG_ALBUM_ID, album.id)
-            bundle.putString(ARG_ALBUM_NAME, album.name)
+            bundle.putBoolean("isCreating", true)
+
+            val intent = Intent(activity, PhotoActivity::class.java)
             intent.putExtras(bundle)
+
             activity.startActivity(intent)
         }
     }
@@ -122,7 +123,7 @@ class AlbumsFragment : Fragment() {
             val bundle = Bundle()
             bundle.putString(Constants.ARG_CATEGORY_ID, arguments.getString(ARG_CATEGORY_ID))
 
-            val intent = Intent(activity, CreateAlbumActivity::class.java)
+            val intent = Intent(activity, EditAlbumActivity::class.java)
             intent.putExtras(bundle)
 
             activity.startActivity(intent)
