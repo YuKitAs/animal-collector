@@ -73,6 +73,15 @@ interface ApiService {
     fun updateAnimal(@Path(
             "animalId") animalId: String, @Body animal: SaveAnimalRequest): Completable
 
+    /**
+     * DELETE
+     */
+    @DELETE("albums/{albumId}")
+    fun deleteAlbum(@Path("albumId") albumId: String): Completable
+
+    @DELETE("animals/{animalId}")
+    fun deleteAnimal(@Path("animalId") animalId: String): Completable
+
 
     companion object {
         fun create(): ApiService {

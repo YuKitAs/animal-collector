@@ -14,4 +14,6 @@
     <string name="label_update_animal">Update Animal</string>
     <string name="label_create_album">Create Album</string>
     <string name="label_update_album">Update Album</string>
+    <string name="label_confirm_positive">yes</string>
+    <string name="label_confirm_negative">not now</string>
 </resources>

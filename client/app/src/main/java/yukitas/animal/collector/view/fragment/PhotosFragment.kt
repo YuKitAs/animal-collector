@@ -4,6 +4,7 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -85,6 +86,7 @@ class PhotosFragment : Fragment() {
                         .subscribe({
                             textCollectionName.text = it.name.toUpperCase()
                             setEditAlbumButtonListener(it)
+                            setDeleteAlbumButtonListener(it.id)
                         }, {
                             Log.e(TAG, "Some errors occurred: $it")
                         }))
@@ -106,6 +108,7 @@ class PhotosFragment : Fragment() {
                         .subscribe({
                             textCollectionName.text = it.name.toUpperCase()
                             setEditAnimalButtonListenr(it)
+                            setDeleteAnimalButtonListener(it.id)
                         }, {
                             Log.e(TAG, "Some errors occurred: $it")
                         }))
@@ -135,6 +138,33 @@ class PhotosFragment : Fragment() {
         }
     }
 
+    private fun setDeleteAlbumButtonListener(albumId: String) {
+        binding.btnDeleteCollection.setOnClickListener {
+            val builder = AlertDialog.Builder(activity)
+            builder.apply {
+                setMessage("Are you sure you want to delete this album?")
+                setPositiveButton(R.string.label_confirm_positive
+                ) { _, id ->
+                    Log.d(TAG, "Deleting album '$albumId'")
+
+                    disposable.add(
+                            apiService.deleteAlbum(albumId)
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe {
+                                        Log.d(TAG, "Deleted album '$albumId'")
+                                        activity.onBackPressed()
+                                    })
+                }
+                setNegativeButton(R.string.label_confirm_negative
+                ) { dialog, _ ->
+                    dialog.cancel()
+                }
+            }
+            builder.show()
+        }
+    }
+
     private fun setEditAnimalButtonListenr(animal: Animal) {
         binding.btnEditCollection.setOnClickListener {
             val bundle = Bundle()
@@ -147,6 +177,32 @@ class PhotosFragment : Fragment() {
             intent.putExtras(bundle)
 
             activity.startActivity(intent)
+        }
+    }
+
+    private fun setDeleteAnimalButtonListener(animalId: String) {
+        binding.btnDeleteCollection.setOnClickListener {
+            val builder = AlertDialog.Builder(activity)
+            builder.apply {
+                setMessage("Are you sure you want to delete this animal?")
+                setPositiveButton(R.string.label_confirm_negative
+                ) { _, id ->
+                    Log.d(TAG, "Deleting animal '$animalId'")
+
+                    disposable.add(
+                            apiService.deleteAnimal(animalId)
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe {
+                                        Log.d(TAG, "Deleted animal '$animalId'")
+                                        activity.onBackPressed()
+                                    })
+                }
+                setNegativeButton(R.string.label_confirm_negative) { dialog, _ ->
+                    dialog.cancel()
+                }
+            }
+            builder.show()
         }
     }
 }
