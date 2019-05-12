@@ -1,27 +1,29 @@
 package yukitas.animal.collector.view.activity
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.tab_viewmode.*
 import kotlinx.android.synthetic.main.viewpager_category.*
 import yukitas.animal.collector.AnimalCollectorApplication
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.ViewMode
+import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.adapter.CategoryPagerAdapter
-import yukitas.animal.collector.viewmodel.CategoryViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager
     private lateinit var categoryPagerAdapter: CategoryPagerAdapter
     private lateinit var tabs: TabLayout
-    private lateinit var categoryViewModel: CategoryViewModel
+    private val apiService by lazy { ApiService.create() }
+    private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,15 +36,24 @@ class MainActivity : AppCompatActivity() {
         tabs = sliding_tabs
         tabs.addOnTabSelectedListener(getOnTabSelectedListener())
 
-        categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel::class.java)
-        categoryViewModel.categories.observe(this, Observer { categories ->
-            categories?.let {
-                categoryPagerAdapter.categories = it
-            }
-        })
+        setCategories()
 
         viewPager.adapter = categoryPagerAdapter
         viewPager.addOnPageChangeListener(getOnPageChangeListener())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // invoke getItem() to refresh fragment
+        categoryPagerAdapter.notifyDataSetChanged()
+    }
+
+    private fun setCategories() {
+        disposable.add(
+                apiService.getCategories()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { categoryPagerAdapter.categories = it })
     }
 
     private fun getOnTabSelectedListener(): TabLayout.OnTabSelectedListener {
@@ -68,7 +79,8 @@ class MainActivity : AppCompatActivity() {
         return object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            override fun onPageScrolled(position: Int, positionOffset: Float,
+                                        positionOffsetPixels: Int) {
                 AnimalCollectorApplication.currentCategoryIndex = position
             }
 
@@ -88,5 +100,10 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
     }
 }

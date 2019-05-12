@@ -1,37 +1,32 @@
 package yukitas.animal.collector.view.fragment
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridView
-import yukitas.animal.collector.AnimalCollectorApplication
+import io.reactivex.disposables.CompositeDisposable
 import yukitas.animal.collector.R
-import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
-import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_ID
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
-import yukitas.animal.collector.common.ViewMode
+import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.adapter.PhotosAdapter
-import yukitas.animal.collector.viewmodel.PhotoViewModel
 
-class PhotosFragment : Fragment() {
-    private lateinit var photoViewModel: PhotoViewModel
-    private lateinit var photosAdapter: PhotosAdapter
+abstract class PhotosFragment : Fragment() {
+    lateinit var binding: yukitas.animal.collector.databinding.FragmentPhotosBinding
+    lateinit var photosAdapter: PhotosAdapter
+    val apiService by lazy { ApiService.create() }
+    val disposable = CompositeDisposable()
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {
-        val view: View = inflater.inflate(R.layout.fragment_photos, container, false)
-        val gridView = view.findViewById<GridView>(R.id.grid_photos)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_photos, container, false)
+        val gridView = binding.gridPhotos
         photosAdapter = PhotosAdapter(context)
         gridView.adapter = photosAdapter
-
-        photoViewModel = ViewModelProviders.of(this).get(PhotoViewModel::class.java)
 
         setPhotos()
 
@@ -46,27 +41,23 @@ class PhotosFragment : Fragment() {
                     .commit()
         }
 
-        return view
+        return binding.root
     }
 
-    private fun setPhotos() {
-        when (AnimalCollectorApplication.currentViewMode) {
-            ViewMode.ALBUM -> {
-                val albumId = activity.intent!!.extras!!.getString(ARG_ALBUM_ID)!!
-                photoViewModel.getPhotosByAlbum(albumId).observe(this, Observer { photos ->
-                    photos?.let {
-                        photosAdapter.photos = it
-                    }
-                })
-            }
-            ViewMode.ANIMAL -> {
-                val animalId = activity.intent!!.extras!!.getString(ARG_ANIMAL_ID)!!
-                photoViewModel.getPhotosByAnimal(animalId).observe(this, Observer { photos ->
-                    photos?.let {
-                        photosAdapter.photos = it
-                    }
-                })
-            }
-        }
+    override fun onResume() {
+        super.onResume()
+        // refresh fragment
+        setPhotos()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
+    }
+
+    abstract fun setPhotos()
+
+    abstract fun setEditButtonListener()
+
+    abstract fun setDeleteButtonListener()
 }

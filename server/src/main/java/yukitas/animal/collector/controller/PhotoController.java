@@ -44,7 +44,7 @@ public class PhotoController {
     public ResponseEntity<Photo> getLatestPhotoByAlbum(@PathVariable("album_id") UUID albumId) {
         return photoService.getLatestPhotoByAlbum(albumId)
                 .map(photo -> new ResponseEntity<>(photo, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     @GetMapping("/animals/{animal_id}/photos")
@@ -56,7 +56,7 @@ public class PhotoController {
     public ResponseEntity<Photo> getLatestPhotoByAnimal(@PathVariable("animal_id") UUID animalId) {
         return photoService.getLatestPhotoByAnimal(animalId)
                 .map(photo -> new ResponseEntity<>(photo, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     @GetMapping("/photos/{id}")
@@ -65,16 +65,15 @@ public class PhotoController {
     }
 
     @PutMapping("/photos/{id}")
-    public ResponseEntity<Void> updatePhoto(@PathVariable("id") UUID photoId,
-            @RequestBody UpdatePhotoRequest updatePhotoRequest) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updatePhoto(@PathVariable("id") UUID photoId, @RequestBody UpdatePhotoRequest updatePhotoRequest) {
         photoService.updatePhoto(photoId, updatePhotoRequest.getAnimalIds(), updatePhotoRequest.getAlbumIds(),
                 updatePhotoRequest.getDescription());
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/photos/{id}")
-    public ResponseEntity<Void> deletePhoto(@PathVariable("id") UUID photoId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePhoto(@PathVariable("id") UUID photoId) {
         photoService.deletePhoto(photoId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

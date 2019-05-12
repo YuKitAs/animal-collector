@@ -6,4 +6,14 @@
     <string name="content_desc_animal">Animal</string>
     <string name="tab_albums">Albums</string>
     <string name="tab_animals">Animals</string>
+    <string name="hint_album_name">Album name</string>
+    <string name="hint_animal_name">Animal name</string>
+    <string name="btn_save">save</string>
+    <string name="hint_animal_tags">Tags (separated by spaces)</string>
+    <string name="label_create_animal">Create Animal</string>
+    <string name="label_update_animal">Update Animal</string>
+    <string name="label_create_album">Create Album</string>
+    <string name="label_update_album">Update Album</string>
+    <string name="label_confirm_positive">yes</string>
+    <string name="label_confirm_negative">not now</string>
 </resources>

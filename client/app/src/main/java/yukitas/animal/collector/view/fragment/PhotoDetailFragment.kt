@@ -1,58 +1,71 @@
 package yukitas.animal.collector.view.fragment
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
 import yukitas.animal.collector.databinding.FragmentPhotoDetailBinding
-import yukitas.animal.collector.viewmodel.AnimalViewModel
-import yukitas.animal.collector.viewmodel.PhotoViewModel
+import yukitas.animal.collector.networking.ApiService
+import yukitas.animal.collector.utility.toBitmap
 
 class PhotoDetailFragment : Fragment() {
+    private val TAG = PhotoDetailFragment::class.java.simpleName
+
     private lateinit var binding: FragmentPhotoDetailBinding
-    private lateinit var photoViewModel: PhotoViewModel
-    private lateinit var animalViewModel: AnimalViewModel
     private lateinit var photoId: String
+    private val apiService by lazy { ApiService.create() }
+    private val disposable = CompositeDisposable()
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.fragment_photo_detail, container, false)
-        photoViewModel = ViewModelProviders.of(this).get(PhotoViewModel::class.java)
-        animalViewModel = ViewModelProviders.of(this).get(AnimalViewModel::class.java)
+        binding = DataBindingUtil.inflate(LayoutInflater.from(context),
+                R.layout.fragment_photo_detail, container, false)
 
         photoId = activity.intent.getStringExtra(ARG_PHOTO_ID)
-        photoViewModel.getPhotoById(photoId).observe(this, Observer { photo ->
-            photo?.let {
-                binding.photo = it
+        setPhoto()
 
-                setPhotoContent(it.content)
-                setAnimals()
-            }
-        })
         return binding.root
     }
 
-    private fun setPhotoContent(content: String) {
-        val photoContent = Base64.decode(content.toByteArray(), Base64.NO_WRAP)
-        binding.photoContent.setImageBitmap(BitmapFactory.decodeByteArray(photoContent, 0, photoContent.size))
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
+    }
+
+    private fun setPhoto() {
+        disposable.add(
+                apiService.getPhotoById(photoId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            binding.photo = it
+                            binding.photoContent.setImageBitmap(toBitmap(it.content))
+                            setAnimals()
+                        }, {
+                            Log.e(TAG, "Some errors occurred: $it")
+                        }))
     }
 
     private fun setAnimals() {
-        animalViewModel.getAnimalsByPhoto(photoId).observe(this, Observer { animals ->
-            animals?.let {
-                binding.photoAnimals.text = animals.joinToString(", ") { animal -> animal.name }
-            }
-        })
+        disposable.add(
+                apiService.getAnimalsByPhoto(photoId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            binding.photoAnimals.text = it.joinToString(
+                                    ", ") { animal -> animal.name }
+                        }
+        )
     }
 }
