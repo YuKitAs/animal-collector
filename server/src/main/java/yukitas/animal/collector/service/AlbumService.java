@@ -10,7 +10,7 @@ public interface AlbumService {
 
     Album getAlbum(UUID id);
 
-    Album createAlbum(Album album);
+    Album createAlbum(UUID categoryId, String name);
 
     Album updateAlbum(UUID id, String name);
 

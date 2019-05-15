@@ -10,7 +10,7 @@ public interface CategoryService {
 
     Category getCategory(UUID id);
 
-    Category createCategory(Category category);
+    Category createCategory(String name);
 
     Category updateCategory(UUID id, String name);
 

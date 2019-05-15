@@ -65,9 +65,11 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public UUID createPhoto(Photo.Builder builder, byte[] content) {
+        LOGGER.trace("Creating photo...");
+
         Photo photo = photoRepository.save(builder.setContent(content)
-                .setLocation(
-                        new Location(-90 + 180 * new Random().nextDouble(), -180 + 360 * new Random().nextDouble()))
+                .setLocation(new Location(-90 + 180 * new Random().nextDouble(),
+                        -180 + 360 * new Random().nextDouble())) // FIXME
                 .build());
 
         LOGGER.debug("Created photo (id={})", photo.getId());
@@ -77,6 +79,9 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public void updatePhoto(UUID id, Set<UUID> animalIds, Set<UUID> albumIds, String description) {
+        LOGGER.trace("Updating photo '{}' with [animalIds={}, albumIds={}, description='{}']", id, animalIds, albumIds,
+                description);
+
         Photo photo = photoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ENTITY_NAME, id));
 
         Set<Animal> animals = getAnimalsById(animalIds);
@@ -90,12 +95,12 @@ public class PhotoServiceImpl implements PhotoService {
             throw new RequiredDataNotProvidedException("album_ids");
         }
 
-        if (animals != null) {
+        if (!animals.isEmpty()) {
             photo.setAnimals(animals);
             animals.forEach(animal -> animal.addPhoto(photo));
         }
 
-        if (albums != null) {
+        if (!albums.isEmpty()) {
             photo.setAlbums(albums);
             albums.forEach(album -> album.addPhoto(photo));
         }
@@ -119,11 +124,15 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     private Set<Animal> getAnimalsById(Set<UUID> animalIds) {
-        return animalIds == null ? null : animalIds.stream().map(this::findAnimalById).collect(Collectors.toSet());
+        return animalIds == null ? Collections.emptySet() : animalIds.stream()
+                .map(this::findAnimalById)
+                .collect(Collectors.toSet());
     }
 
     private Set<Album> getAlbumsById(Set<UUID> albumIds) {
-        return albumIds == null ? null : albumIds.stream().map(this::findAlbumById).collect(Collectors.toSet());
+        return albumIds == null ? Collections.emptySet() : albumIds.stream()
+                .map(this::findAlbumById)
+                .collect(Collectors.toSet());
     }
 
     private Animal findAnimalById(UUID id) {

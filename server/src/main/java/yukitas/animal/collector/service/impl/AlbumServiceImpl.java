@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 import yukitas.animal.collector.model.Album;
+import yukitas.animal.collector.model.Category;
 import yukitas.animal.collector.repository.AlbumRepository;
 import yukitas.animal.collector.repository.CategoryRepository;
 import yukitas.animal.collector.repository.PhotoRepository;
@@ -34,7 +35,8 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     public List<Album> getAlbumsByCategory(UUID categoryId) {
-        categoryRepository.findById(categoryId).orElseThrow(() -> new EntityNotFoundException("category", categoryId));
+        // Only to check if categoryId exists
+        findCategoryById(categoryId);
 
         return albumRepository.findByCategoryId(categoryId);
     }
@@ -45,15 +47,19 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
-    public Album createAlbum(Album album) {
-        return albumRepository.save(album);
+    public Album createAlbum(UUID categoryId, String name) {
+        LOGGER.trace("Creating album with [name='{}'] for category '{}'", name, categoryId);
+        return albumRepository.save(
+                new Album.Builder().setCategory(findCategoryById(categoryId)).setName(name).build());
     }
 
     @Override
     public Album updateAlbum(UUID id, String name) {
+        LOGGER.trace("Updating album '{}' with [name='{}']", id, name);
+
         Album album = findAlbumById(id);
 
-        if (name != null) {
+        if (name != null && !name.isBlank()) {
             album.setName(name);
         }
 
@@ -63,6 +69,7 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     public void deleteAlbum(UUID id) {
         Album album = findAlbumById(id);
+
         album.getPhotos().forEach(photo -> {
             photo.removeAlbum(album);
             if (photo.getAlbums().isEmpty()) {
@@ -71,11 +78,16 @@ public class AlbumServiceImpl implements AlbumService {
             }
         });
 
-        LOGGER.debug("Delete album [id={}, name='{}']", id, album.getName());
+        LOGGER.debug("Deleting album [id={}, name='{}']", id, album.getName());
         albumRepository.deleteById(id);
     }
 
     private Album findAlbumById(UUID id) {
         return albumRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ENTITY_NAME, id));
+    }
+
+    private Category findCategoryById(UUID id) {
+        // Not using categoryService#findCategoryById mainly because it would cause circular dependencies
+        return categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("category", id));
     }
 }

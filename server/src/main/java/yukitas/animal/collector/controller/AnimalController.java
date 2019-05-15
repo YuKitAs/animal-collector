@@ -11,19 +11,17 @@ import java.util.UUID;
 import javax.validation.Valid;
 
 import yukitas.animal.collector.controller.dto.CreateAnimalRequest;
+import yukitas.animal.collector.controller.dto.UpdateAnimalRequest;
 import yukitas.animal.collector.model.Animal;
 import yukitas.animal.collector.service.AnimalService;
-import yukitas.animal.collector.service.CategoryService;
 
 @RestController
 public class AnimalController {
     private final AnimalService animalService;
-    private final CategoryService categoryService;
 
     @Autowired
-    public AnimalController(AnimalService animalService, CategoryService categoryService) {
+    public AnimalController(AnimalService animalService) {
         this.animalService = animalService;
-        this.categoryService = categoryService;
     }
 
     @GetMapping("/animals")
@@ -49,18 +47,16 @@ public class AnimalController {
     @PostMapping("/categories/{cat_id}/animals")
     public ResponseEntity<Animal> createAnimal(@PathVariable("cat_id") UUID categoryId,
             @Valid @RequestBody CreateAnimalRequest createAnimalRequest) {
-        return new ResponseEntity<>(animalService.createAnimal(CreateAnimalRequest.builder()
-                .setName(createAnimalRequest.getName())
-                .setTags(createAnimalRequest.getTags())
-                .setCategory(categoryService.getCategory(categoryId))
-                .build()), HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                animalService.createAnimal(categoryId, createAnimalRequest.getName(), createAnimalRequest.getTags()),
+                HttpStatus.CREATED);
     }
 
     @PutMapping("/animals/{id}")
     public ResponseEntity<Animal> updateAnimal(@PathVariable("id") UUID animalId,
-            @Valid @RequestBody CreateAnimalRequest createAnimalRequest) {
+            @Valid @RequestBody UpdateAnimalRequest updateAnimalRequest) {
         return new ResponseEntity<>(
-                animalService.updateAnimal(animalId, createAnimalRequest.getName(), createAnimalRequest.getTags()),
+                animalService.updateAnimal(animalId, updateAnimalRequest.getName(), updateAnimalRequest.getTags()),
                 HttpStatus.OK);
     }
 

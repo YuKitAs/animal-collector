@@ -13,17 +13,14 @@ import javax.validation.Valid;
 import yukitas.animal.collector.controller.dto.CreateAlbumRequest;
 import yukitas.animal.collector.model.Album;
 import yukitas.animal.collector.service.AlbumService;
-import yukitas.animal.collector.service.CategoryService;
 
 @RestController
 public class AlbumController {
     private final AlbumService albumService;
-    private final CategoryService categoryService;
 
     @Autowired
-    public AlbumController(AlbumService albumService, CategoryService categoryService) {
+    public AlbumController(AlbumService albumService) {
         this.albumService = albumService;
-        this.categoryService = categoryService;
     }
 
     @GetMapping("/categories/{cat_id}/albums")
@@ -39,10 +36,8 @@ public class AlbumController {
     @PostMapping("/categories/{cat_id}/albums")
     public ResponseEntity<Album> createAlbum(@PathVariable("cat_id") UUID categoryId,
             @Valid @RequestBody CreateAlbumRequest createAlbumRequest) {
-        return new ResponseEntity<>(albumService.createAlbum(CreateAlbumRequest.builder()
-                .setName(createAlbumRequest.getName())
-                .setCategory(categoryService.getCategory(categoryId))
-                .build()), HttpStatus.CREATED);
+        return new ResponseEntity<>(albumService.createAlbum(categoryId, createAlbumRequest.getName()),
+                HttpStatus.CREATED);
     }
 
     @PutMapping("/albums/{id}")

@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotBlank;
 
-import yukitas.animal.collector.model.Album;
-
 public final class CreateAlbumRequest {
     @NotBlank
     private String name;
@@ -18,9 +16,5 @@ public final class CreateAlbumRequest {
 
     public String getName() {
         return name;
-    }
-
-    public static Album.Builder builder() {
-        return new Album.Builder();
     }
 }

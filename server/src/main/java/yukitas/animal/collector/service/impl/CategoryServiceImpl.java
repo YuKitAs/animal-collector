@@ -43,15 +43,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category createCategory(Category category) {
-        return categoryRepository.save(category);
+    public Category createCategory(String name) {
+        LOGGER.trace("Creating category with [name='{}']", name);
+        return categoryRepository.save(new Category.Builder().setName(name).build());
     }
 
     @Override
     public Category updateCategory(UUID id, String name) {
         Category category = findCategoryById(id);
 
-        if (name != null) {
+        if (name != null && !name.isBlank()) {
             category.setName(name);
         }
 
@@ -62,10 +63,13 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory(UUID id) {
         Category category = findCategoryById(id);
 
+        // Have to pre-remove albums and animals manually because of a bug on cascade delete
+        // Hibernate bug ticket: https://hibernate.atlassian.net/browse/HHH-12239
         albumService.getAlbumsByCategory(id).forEach(album -> albumService.deleteAlbum(album.getId()));
         animalService.getAnimalsByCategory(id).forEach(animal -> animalService.deleteAnimal(animal.getId()));
 
-        LOGGER.debug("Delete category [id={}, name='{}']", id, category.getName());
+        LOGGER.debug("Deleting category [id={}, name='{}']", id, category.getName());
+
         categoryRepository.deleteById(id);
     }
 
