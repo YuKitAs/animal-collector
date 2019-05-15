@@ -35,7 +35,7 @@ public class Album {
     @JsonIgnore
     private Set<Photo> photos = new HashSet<>();
 
-    public Album() {
+    private Album() {
     }
 
     private Album(Category category, String name) {

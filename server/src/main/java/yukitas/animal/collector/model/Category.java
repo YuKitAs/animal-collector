@@ -19,7 +19,7 @@ public class Category {
     @Column(unique = true)
     private String name;
 
-    public Category() {
+    private Category() {
     }
 
     private Category(String name) {

@@ -10,7 +10,7 @@ public class Location {
 
     private String address;
 
-    public Location() {
+    private Location() {
     }
 
     public Location(double latitude, double longitude) {

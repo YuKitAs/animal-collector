@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,14 +31,14 @@ public class Animal {
     @Size(max = 32)
     private String name;
 
-    private String[] tags = new String[0];
+    private String[] tags;
 
     @ManyToMany(mappedBy = "animals")
     @OrderBy("created_at DESC")
     @JsonIgnore
     private Set<Photo> photos = new HashSet<>();
 
-    public Animal() {
+    private Animal() {
     }
 
     private Animal(Category category, String name, String[] tags) {
@@ -79,9 +80,9 @@ public class Animal {
     }
 
     public static class Builder {
-        private Category category = null;
-        private String name = null;
-        private String[] tags = null;
+        private Category category;
+        private String name;
+        private String[] tags;
 
         public Builder setCategory(Category category) {
             this.category = category;
@@ -94,7 +95,7 @@ public class Animal {
         }
 
         public Builder setTags(String[] tags) {
-            this.tags = tags;
+            this.tags = Objects.requireNonNullElseGet(tags, () -> new String[0]);
             return this;
         }
 

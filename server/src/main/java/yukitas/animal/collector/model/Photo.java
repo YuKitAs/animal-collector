@@ -44,7 +44,7 @@ public class Photo {
     @Embedded
     private Location location;
 
-    public Photo() {
+    private Photo() {
     }
 
     private Photo(Set<Animal> animals, Set<Album> albums, byte[] content, String description, Instant createdAt,
