@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
+import okhttp3.MultipartBody
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -14,6 +15,8 @@ import yukitas.animal.collector.model.Category
 import yukitas.animal.collector.model.Photo
 import yukitas.animal.collector.model.dto.SaveAlbumRequest
 import yukitas.animal.collector.model.dto.SaveAnimalRequest
+import yukitas.animal.collector.model.dto.SavePhotoRequest
+import yukitas.animal.collector.model.dto.SavePhotoResponse
 
 interface ApiService {
     /**
@@ -63,6 +66,10 @@ interface ApiService {
     fun createAnimal(@Path(
             "categoryId") categoryId: String, @Body animal: SaveAnimalRequest): Single<Animal>
 
+    @Multipart
+    @POST("photos")
+    fun createPhoto(@Part photo: MultipartBody.Part): Single<SavePhotoResponse>
+
     /**
      * PUT
      */
@@ -72,6 +79,9 @@ interface ApiService {
     @PUT("animals/{animalId}")
     fun updateAnimal(@Path(
             "animalId") animalId: String, @Body animal: SaveAnimalRequest): Completable
+
+    @PUT("photos/{photoId}")
+    fun updatePhoto(@Path("photoId") photoId: String, @Body photo: SavePhotoRequest): Completable
 
     /**
      * DELETE
