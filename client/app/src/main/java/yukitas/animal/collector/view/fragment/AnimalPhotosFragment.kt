@@ -63,7 +63,7 @@ class AnimalPhotosFragment : PhotosFragment() {
         binding.btnDeleteCollection.setOnClickListener {
             val builder = AlertDialog.Builder(activity)
             builder.apply {
-                setMessage("Are you sure you want to delete this animal?")
+                setMessage(String.format(getString(R.string.message_delete_confirm), "animal"))
                 setPositiveButton(R.string.label_confirm_positive
                 ) { _, _ ->
                     val animalId = animal.id

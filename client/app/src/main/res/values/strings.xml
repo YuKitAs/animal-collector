@@ -16,4 +16,5 @@
     <string name="label_update_album">Update Album</string>
     <string name="label_confirm_positive">yes</string>
     <string name="label_confirm_negative">not now</string>
+    <string name="message_delete_confirm">Are you sure you want to delete this %1$s?</string>
 </resources>

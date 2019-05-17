@@ -3,6 +3,7 @@ package yukitas.animal.collector.view.fragment
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,7 @@ class PhotoDetailFragment : Fragment() {
 
         photoId = activity.intent.getStringExtra(ARG_PHOTO_ID)
         setPhoto()
+        setDeleteButtonListener()
 
         return binding.root
     }
@@ -67,5 +69,31 @@ class PhotoDetailFragment : Fragment() {
                                     ", ") { animal -> animal.name }
                         }
         )
+    }
+
+    private fun setDeleteButtonListener() {
+        binding.btnDeletePhoto.setOnClickListener {
+            val builder = AlertDialog.Builder(activity)
+            builder.apply {
+                setMessage(String.format(getString(R.string.message_delete_confirm), "photo"))
+                setPositiveButton(R.string.label_confirm_positive
+                ) { _, _ ->
+                    Log.d(TAG, "Deleting photo '$photoId'")
+
+                    disposable.add(
+                            apiService.deletePhoto(photoId)
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe {
+                                        Log.d(TAG, "Deleted photo '$photoId'")
+                                        activity.onBackPressed()
+                                    })
+                }
+                setNegativeButton(R.string.label_confirm_negative) { dialog, _ ->
+                    dialog.cancel()
+                }
+            }
+            builder.show()
+        }
     }
 }

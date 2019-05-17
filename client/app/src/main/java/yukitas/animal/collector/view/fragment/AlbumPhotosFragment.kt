@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_photos.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
 import yukitas.animal.collector.model.Album
@@ -81,8 +82,8 @@ class AlbumPhotosFragment : PhotosFragment() {
         binding.btnDeleteCollection.setOnClickListener {
             val builder = AlertDialog.Builder(activity)
             builder.apply {
-                setMessage("Are you sure you want to delete this album?")
-                setPositiveButton(yukitas.animal.collector.R.string.label_confirm_positive
+                setMessage(String.format(getString(R.string.message_delete_confirm), "album"))
+                setPositiveButton(R.string.label_confirm_positive
                 ) { _, _ ->
                     val albumId = album.id
                     Log.d(TAG, "Deleting album '$albumId'")
@@ -96,7 +97,7 @@ class AlbumPhotosFragment : PhotosFragment() {
                                         activity.onBackPressed()
                                     })
                 }
-                setNegativeButton(yukitas.animal.collector.R.string.label_confirm_negative
+                setNegativeButton(R.string.label_confirm_negative
                 ) { dialog, _ ->
                     dialog.cancel()
                 }
