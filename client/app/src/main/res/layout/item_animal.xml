@@ -24,7 +24,9 @@
                 android:id="@+id/image_animal_thumbnail"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:contentDescription="@string/content_desc_animal" />
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/content_desc_animal"
+                android:scaleType="centerCrop" />
 
             <TextView
                 android:id="@+id/text_animal_name"

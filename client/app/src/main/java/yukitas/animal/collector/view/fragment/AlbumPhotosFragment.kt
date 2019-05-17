@@ -35,6 +35,8 @@ class AlbumPhotosFragment : PhotosFragment() {
     private val TAG = AlbumPhotosFragment::class.java.simpleName
     private lateinit var album: Album
 
+    private val MAX_SIDE_LENGTH = 1080
+
     override fun setPhotos() {
         val albumId = activity.intent!!.extras!!.getString(ARG_ALBUM_ID)!!
 
@@ -115,7 +117,7 @@ class AlbumPhotosFragment : PhotosFragment() {
 
             Log.d(TAG, "Photo path in storage: $photoPath")
 
-            postPhoto(rotatePhoto(photoPath))
+            postPhoto(processPhoto(photoPath))
         }
     }
 
@@ -172,27 +174,52 @@ class AlbumPhotosFragment : PhotosFragment() {
                         }))
     }
 
-    /* Fix photo orientation */
-    private fun rotatePhoto(photoPath: String): Bitmap {
+    /* Scale and fix photo orientation */
+    private fun processPhoto(photoPath: String): Bitmap {
+        val scaledPhoto = scaleBitmap(BitmapFactory.decodeFile(photoPath))
+
+        val rotatedPhoto: Bitmap
         val orientation = ExifInterface(photoPath).getAttributeInt(ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_UNDEFINED)
-        val bitmap = BitmapFactory.decodeFile(photoPath)
-        var rotatedPhoto = bitmap
-        when (orientation) {
+        rotatedPhoto = when (orientation) {
             ExifInterface.ORIENTATION_ROTATE_90 -> {
-                rotatedPhoto = rotateBitmap(bitmap, 90F)
+                rotateBitmap(scaledPhoto, 90F)
             }
             ExifInterface.ORIENTATION_ROTATE_180 -> {
-                rotatedPhoto = rotateBitmap(bitmap, 180F)
+                rotateBitmap(scaledPhoto, 180F)
             }
             ExifInterface.ORIENTATION_ROTATE_270 -> {
-                rotatedPhoto = rotateBitmap(bitmap, 270F)
+                rotateBitmap(scaledPhoto, 270F)
+            }
+            else -> {
+                scaledPhoto
             }
         }
 
-        Log.d(TAG, "Rotated photo: ${rotatedPhoto.width}x${rotatedPhoto.height}")
+        Log.d(TAG, "Final photo: ${rotatedPhoto.width}x${rotatedPhoto.height}")
 
         return rotatedPhoto
+    }
+
+    private fun scaleBitmap(source: Bitmap): Bitmap {
+        val width = source.width
+        val height = source.height
+        val ratio = width.toFloat() / height.toFloat()
+
+        var finalWidth = width
+        var finalHeight = height
+        if (width >= height) {
+            if (width > MAX_SIDE_LENGTH) {
+                finalWidth = MAX_SIDE_LENGTH
+                finalHeight = (MAX_SIDE_LENGTH / ratio).toInt()
+            }
+        } else {
+            if (height > MAX_SIDE_LENGTH) {
+                finalHeight = MAX_SIDE_LENGTH
+                finalWidth = (MAX_SIDE_LENGTH * ratio).toInt()
+            }
+        }
+        return Bitmap.createScaledBitmap(source, finalWidth, finalHeight, true)
     }
 
     private fun rotateBitmap(source: Bitmap, angle: Float): Bitmap {
