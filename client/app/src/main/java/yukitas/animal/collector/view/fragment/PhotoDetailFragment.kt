@@ -76,7 +76,7 @@ class PhotoDetailFragment : Fragment() {
             val builder = AlertDialog.Builder(activity)
             builder.apply {
                 setMessage(String.format(getString(R.string.message_delete_confirm), "photo"))
-                setPositiveButton(R.string.label_confirm_positive
+                setPositiveButton(R.string.btn_confirm_positive
                 ) { _, _ ->
                     Log.d(TAG, "Deleting photo '$photoId'")
 
@@ -89,7 +89,7 @@ class PhotoDetailFragment : Fragment() {
                                         activity.onBackPressed()
                                     })
                 }
-                setNegativeButton(R.string.label_confirm_negative) { dialog, _ ->
+                setNegativeButton(R.string.btn_confirm_negative) { dialog, _ ->
                     dialog.cancel()
                 }
             }

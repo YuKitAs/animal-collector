@@ -83,7 +83,7 @@ class AlbumPhotosFragment : PhotosFragment() {
             val builder = AlertDialog.Builder(activity)
             builder.apply {
                 setMessage(String.format(getString(R.string.message_delete_confirm), "album"))
-                setPositiveButton(R.string.label_confirm_positive
+                setPositiveButton(R.string.btn_confirm_positive
                 ) { _, _ ->
                     val albumId = album.id
                     Log.d(TAG, "Deleting album '$albumId'")
@@ -97,7 +97,7 @@ class AlbumPhotosFragment : PhotosFragment() {
                                         activity.onBackPressed()
                                     })
                 }
-                setNegativeButton(R.string.label_confirm_negative
+                setNegativeButton(R.string.btn_confirm_negative
                 ) { dialog, _ ->
                     dialog.cancel()
                 }
