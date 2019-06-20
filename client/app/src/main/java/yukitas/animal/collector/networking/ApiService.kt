@@ -55,6 +55,9 @@ interface ApiService {
     @GET("photos/{photoId}/animals")
     fun getAnimalsByPhoto(@Path("photoId") photoId: String): Observable<List<Animal>>
 
+    @GET("animals")
+    fun getAllAnimals(): Observable<List<Animal>>
+
     /**
      * POST
      */
