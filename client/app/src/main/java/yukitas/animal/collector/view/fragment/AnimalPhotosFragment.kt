@@ -19,7 +19,8 @@ class AnimalPhotosFragment : PhotosFragment() {
     private lateinit var animal: Animal
 
     override fun setPhotos() {
-        val animalId = activity.intent!!.extras!!.getString(ARG_ANIMAL_ID)!!
+        animalId = activity.intent!!.extras!!.getString(ARG_ANIMAL_ID)!!
+        Log.d(TAG, "Selected animal: $animalId")
 
         disposable.add(apiService.getAnimalById(animalId)
                 .subscribeOn(Schedulers.io())

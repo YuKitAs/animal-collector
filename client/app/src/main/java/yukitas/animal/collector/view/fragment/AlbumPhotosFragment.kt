@@ -22,15 +22,15 @@ import okhttp3.RequestBody
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
+import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
 import yukitas.animal.collector.model.Album
-import yukitas.animal.collector.model.dto.SavePhotoRequest
 import yukitas.animal.collector.view.activity.EditAlbumActivity
+import yukitas.animal.collector.view.activity.EditPhotoActivity
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.util.*
-
 
 class AlbumPhotosFragment : PhotosFragment() {
     private val TAG = AlbumPhotosFragment::class.java.simpleName
@@ -39,7 +39,8 @@ class AlbumPhotosFragment : PhotosFragment() {
     private val MAX_SIDE_LENGTH = 1080
 
     override fun setPhotos() {
-        val albumId = activity.intent!!.extras!!.getString(ARG_ALBUM_ID)!!
+        albumId = activity.intent!!.extras!!.getString(ARG_ALBUM_ID)!!
+        Log.d(TAG, "Selected album: $albumId")
 
         disposable.add(apiService.getAlbumById(albumId)
                 .subscribeOn(Schedulers.io())
@@ -108,71 +109,20 @@ class AlbumPhotosFragment : PhotosFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
-            val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
-            val cursor = activity.contentResolver.query(data.data!!,
-                    filePathColumn, null, null, null)!!
-            cursor.moveToFirst()
-            val columnIndex = cursor.getColumnIndex(filePathColumn[0])
-            val photoPath = cursor.getString(columnIndex)
-            cursor.close()
-
-            Log.d(TAG, "Photo path in storage: $photoPath")
-
-            postPhoto(processPhoto(photoPath))
+            postPhoto(processPhoto(readPhotoFromStorage(data.data!!)))
         }
     }
 
-    private fun postPhoto(photo: Bitmap) {
-        val wrapper = ContextWrapper(context)
+    private fun readPhotoFromStorage(data: Uri): String {
+        val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = activity.contentResolver.query(data, filePathColumn, null, null, null)!!
+        cursor.moveToFirst()
+        val columnIndex = cursor.getColumnIndex(filePathColumn[0])
+        val photoPath = cursor.getString(columnIndex)
+        cursor.close()
 
-        var file = wrapper.getDir(context.cacheDir.name, Context.MODE_PRIVATE)
-        file = File(file, "photo-${UUID.randomUUID()}.jpg")
-
-        try {
-            // Compress the bitmap and save in jpg format
-            val os: OutputStream = FileOutputStream(file)
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, os)
-            os.flush()
-            os.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        val photoFilePath = Uri.parse(file.absolutePath).path
-        Log.d(TAG, "Photo to send: $photoFilePath")
-
-        val requestFile = RequestBody.create(MediaType.parse("image/*"), file)
-
-        disposable.add(
-                apiService.createPhoto(
-                        MultipartBody.Part.createFormData("content", photoFilePath, requestFile))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ response ->
-                            val photoId = response.id
-                            Log.d(TAG, "Created photo with id '$photoId'")
-                            updatePhoto(photoId)
-                        }, {
-                            Log.e(TAG, "Some errors occurred: $it")
-                        }))
-    }
-
-    private fun updatePhoto(photoId: String) {
-        // FIXME
-        val animalIds = listOf("02215b2b-94d2-4dcb-b3b8-7e038a76bfec")
-        val albumIds = listOf("bfd1ece1-7cf6-4fab-b63c-dd058b8c0f71")
-        val description = "test"
-
-        disposable.add(
-                apiService.updatePhoto(
-                        photoId, SavePhotoRequest(animalIds, albumIds, description))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            Log.d(TAG, "Updated photo '$photoId'")
-                        }, {
-                            Log.e(TAG, "Some errors occurred: $it")
-                        }))
+        Log.d(TAG, "Photo path in storage: $photoPath")
+        return photoPath
     }
 
     /* Scale and fix photo orientation */
@@ -228,5 +178,53 @@ class AlbumPhotosFragment : PhotosFragment() {
         matrix.postRotate(angle)
         return Bitmap.createBitmap(source, 0, 0, source.width, source.height,
                 matrix, true)
+    }
+
+    private fun postPhoto(photo: Bitmap) {
+        val wrapper = ContextWrapper(context)
+
+        var file = wrapper.getDir(context.cacheDir.name, Context.MODE_PRIVATE)
+        file = File(file, "photo-${UUID.randomUUID()}.jpg")
+
+        try {
+            // Compress the bitmap and save in jpg format
+            val os: OutputStream = FileOutputStream(file)
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, os)
+            os.flush()
+            os.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        val outputPhotoPath = Uri.parse(file.absolutePath).path
+        Log.d(TAG, "Photo to send: $outputPhotoPath")
+
+        uploadPhoto(outputPhotoPath, RequestBody.create(MediaType.parse("image/*"), file))
+    }
+
+    private fun uploadPhoto(photoFilePath: String?, requestFile: RequestBody) {
+        disposable.add(
+                apiService.createPhoto(
+                        MultipartBody.Part.createFormData("content", photoFilePath, requestFile))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ response ->
+                            val photoId = response.id
+                            Log.d(TAG, "Created photo with id '$photoId'")
+                            startEditPhotoActivity(photoId)
+                        }, {
+                            Log.e(TAG, "Some errors occurred: $it")
+                        }))
+    }
+
+    private fun startEditPhotoActivity(photoId: String) {
+        val bundle = Bundle()
+        bundle.putString(ARG_PHOTO_ID, photoId)
+        bundle.putString(ARG_ALBUM_ID, albumId)
+
+        val intent = Intent(activity, EditPhotoActivity::class.java)
+        intent.putExtras(bundle)
+
+        activity.startActivity(intent)
     }
 }

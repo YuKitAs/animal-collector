@@ -18,9 +18,14 @@ import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
 import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.adapter.PhotosAdapter
 
+/**
+ *  Photos in a selected album or animal
+ */
 abstract class PhotosFragment : Fragment() {
     lateinit var binding: yukitas.animal.collector.databinding.FragmentPhotosBinding
     lateinit var photosAdapter: PhotosAdapter
+    lateinit var albumId: String
+    lateinit var animalId: String
     lateinit var imageView: ImageView // FIXME only for test of photo display
     val RESULT_LOAD_IMAGE = 1
 

@@ -20,7 +20,6 @@ import yukitas.animal.collector.networking.ApiService
 class EditAlbumActivity : AppCompatActivity() {
     private val TAG = EditAlbumActivity::class.java.simpleName
 
-    //private lateinit var editAlbumBinding: yukitas.animal.collector.databinding.ActivityEditAlbumBinding
     private val apiService by lazy { ApiService.create() }
     private val disposable = CompositeDisposable()
 
