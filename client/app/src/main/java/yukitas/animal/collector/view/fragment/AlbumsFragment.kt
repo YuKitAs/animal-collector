@@ -111,9 +111,9 @@ class AlbumsFragment : Fragment() {
             bundle.putString(ARG_ALBUM_ID, album.id)
             bundle.putBoolean("isCreating", true)
 
-            val intent = Intent(activity, PhotoActivity::class.java)
-            intent.putExtras(bundle)
-
+            val intent = Intent(activity, PhotoActivity::class.java).apply {
+                putExtras(bundle)
+            }
             activity.startActivity(intent)
         }
     }
