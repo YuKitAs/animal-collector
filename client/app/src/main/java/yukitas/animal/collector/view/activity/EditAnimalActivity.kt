@@ -15,7 +15,7 @@ import yukitas.animal.collector.model.dto.SaveAnimalRequest
 import yukitas.animal.collector.networking.ApiService
 
 /**
- * Create or update an Animal
+ * Create or update an Animal in a predetermined Category
  */
 class EditAnimalActivity : AppCompatActivity() {
     private val TAG = EditAnimalActivity::class.java.simpleName

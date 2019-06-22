@@ -15,7 +15,7 @@ import yukitas.animal.collector.model.dto.SaveAlbumRequest
 import yukitas.animal.collector.networking.ApiService
 
 /**
- * Create or update an Album
+ * Create or update an Album in a predetermined Category
  */
 class EditAlbumActivity : AppCompatActivity() {
     private val TAG = EditAlbumActivity::class.java.simpleName
