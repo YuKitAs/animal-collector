@@ -16,10 +16,14 @@
     <string name="label_update_animal">Update Animal</string>
     <string name="label_create_album">Create Album</string>
     <string name="label_update_album">Update Album</string>
+    <!-- Dropdown labels -->
+    <string name="label_select_category">Select a category</string>
+    <string name="label_select_animal">Select an Animal</string>
     <!-- Button labels -->
     <string name="btn_save">save</string>
     <string name="btn_confirm_positive">yes</string>
     <string name="btn_confirm_negative">not now</string>
+    <string name="btn_new_animal">New Animal</string>
     <!-- Dialog messages -->
     <string name="message_delete_confirm">Are you sure you want to delete this %1$s?</string>
 </resources>
