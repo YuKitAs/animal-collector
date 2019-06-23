@@ -34,6 +34,11 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
+    public List<Album> getAllAlbums() {
+        return albumRepository.findAll();
+    }
+
+    @Override
     public List<Album> getAlbumsByCategory(UUID categoryId) {
         // Only to check if categoryId exists
         findCategoryById(categoryId);

@@ -23,6 +23,11 @@ public class AlbumController {
         this.albumService = albumService;
     }
 
+    @GetMapping("/albums")
+    public ResponseEntity<List<Album>> getAllAlbums() {
+        return new ResponseEntity<>(albumService.getAllAlbums(), HttpStatus.OK);
+    }
+
     @GetMapping("/categories/{cat_id}/albums")
     public ResponseEntity<List<Album>> getAlbums(@PathVariable("cat_id") UUID categoryId) {
         return new ResponseEntity<>(albumService.getAlbumsByCategory(categoryId), HttpStatus.OK);

@@ -10,5 +10,7 @@ import yukitas.animal.collector.model.Album;
 
 @Repository
 public interface AlbumRepository extends CrudRepository<Album, UUID> {
+    List<Album> findAll();
+
     List<Album> findByCategoryId(UUID categoryId);
 }

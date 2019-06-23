@@ -59,11 +59,13 @@ public class AnimalControllerTest extends AbstractControllerTest {
 
     private void isAnimalCat1(Animal animal) {
         assertThat(animal.getId()).isEqualTo(ANIMAL_CAT_1_ID);
+        assertThat(animal.getCategory().getId()).isEqualTo(CATEGORY_CAT_ID);
         assertThat(animal.getName()).isEqualTo(ANIMAL_CAT_1_NAME);
     }
 
     private void isAnimalDog(Animal animal) {
         assertThat(animal.getId()).isEqualTo(ANIMAL_DOG_ID);
+        assertThat(animal.getCategory().getId()).isEqualTo(CATEGORY_DOG_ID);
         assertThat(animal.getName()).isEqualTo(ANIMAL_DOG_NAME);
     }
 
