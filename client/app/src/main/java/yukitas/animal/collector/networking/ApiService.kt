@@ -28,6 +28,9 @@ interface ApiService {
     @GET("categories/{categoryId}/albums")
     fun getAlbumsByCategory(@Path("categoryId") categoryId: String): Observable<List<Album>>
 
+    @GET("/albums")
+    fun getAllAlbums(): Observable<List<Album>>
+
     @GET("albums/{id}")
     fun getAlbumById(@Path("id") id: String): Single<Album>
 
