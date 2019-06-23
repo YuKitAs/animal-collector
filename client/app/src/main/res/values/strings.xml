@@ -19,11 +19,13 @@
     <!-- Dropdown labels -->
     <string name="label_select_category">Select a category</string>
     <string name="label_select_animal">Select an Animal</string>
+    <string name="label_select_album">Select an Album</string>
     <!-- Button labels -->
     <string name="btn_save">save</string>
     <string name="btn_confirm_positive">yes</string>
     <string name="btn_confirm_negative">not now</string>
     <string name="btn_new_animal">New Animal</string>
+    <string name="btn_new_album">New Album</string>
     <!-- Dialog messages -->
     <string name="message_delete_confirm">Are you sure you want to delete this %1$s?</string>
 </resources>
