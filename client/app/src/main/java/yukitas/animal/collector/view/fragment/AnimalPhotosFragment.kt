@@ -12,6 +12,7 @@ import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_ID
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.view.activity.EditAnimalActivity
+import yukitas.animal.collector.view.activity.EditAnimalPhotoActivity
 import java.util.*
 
 class AnimalPhotosFragment : PhotosFragment() {
@@ -43,6 +44,17 @@ class AnimalPhotosFragment : PhotosFragment() {
                         .subscribe {
                             photosAdapter.photos = it
                         })
+    }
+
+    override fun startEditPhotoActivity(photoId: String) {
+        val bundle = Bundle()
+        bundle.putString(Constants.ARG_PHOTO_ID, photoId)
+        bundle.putString(Constants.ARG_ANIMAL_ID, animalId)
+
+        val intent = Intent(activity, EditAnimalPhotoActivity::class.java).apply {
+            putExtras(bundle)
+        }
+        activity.startActivity(intent)
     }
 
     override fun setEditButtonListener() {
