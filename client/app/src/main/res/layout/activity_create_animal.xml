@@ -24,7 +24,7 @@
             android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/labelSelectCollection"
+            android:id="@+id/label_select_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
