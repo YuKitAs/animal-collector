@@ -64,8 +64,9 @@ class AlbumPhotosFragment : PhotosFragment() {
             bundle.putString(ARG_ALBUM_ID, album.id)
             bundle.putString(Constants.ARG_ALBUM_NAME, album.name)
 
-            val intent = Intent(activity, EditAlbumActivity::class.java)
-            intent.putExtras(bundle)
+            val intent = Intent(activity, EditAlbumActivity::class.java).apply {
+                putExtras(bundle)
+            }
 
             activity.startActivity(intent)
         }
