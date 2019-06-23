@@ -2,7 +2,6 @@ package yukitas.animal.collector.view.activity
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -10,18 +9,18 @@ import android.widget.ArrayAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_create_animal.*
+import kotlinx.android.synthetic.main.activity_create_album.*
 import kotlinx.android.synthetic.main.activity_main.*
 import yukitas.animal.collector.R
-import yukitas.animal.collector.model.dto.SaveAnimalRequest
+import yukitas.animal.collector.model.dto.SaveAlbumRequest
 import yukitas.animal.collector.networking.ApiService
 import java.util.stream.Collectors
 
 /**
- * Create an Animal for an arbitrary Category
+ * Create an Album for an arbitrary Category
  */
-class CreateAnimalActivity : AppCompatActivity() {
-    private val TAG = CreateAnimalActivity::class.java.simpleName
+class CreateAlbumActivity : AppCompatActivity() {
+    private val TAG = CreateAlbumActivity::class.java.simpleName
     private lateinit var categoryId: String
 
     private val apiService by lazy { ApiService.create() }
@@ -29,10 +28,10 @@ class CreateAnimalActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_animal)
+        setContentView(R.layout.activity_create_album)
         setSupportActionBar(toolbar)
 
-        setCategoriesDropdown()
+        setCategoryList()
         setSaveButtonListener()
     }
 
@@ -41,7 +40,7 @@ class CreateAnimalActivity : AppCompatActivity() {
         disposable.clear()
     }
 
-    private fun setCategoriesDropdown() {
+    private fun setCategoryList() {
         disposable.add(
                 apiService.getCategories()
                         .subscribeOn(Schedulers.io())
@@ -72,24 +71,19 @@ class CreateAnimalActivity : AppCompatActivity() {
     }
 
     private fun setSaveButtonListener() {
-        btnSaveAnimal.setOnClickListener {
+        btnSaveAlbum.setOnClickListener {
             Log.d(TAG,
-                    "Creating animal for category '$categoryId' with name '${inputAnimalName.text}'")
+                    "Creating album for category '$categoryId' with name '${inputAlbumName.text}'")
 
             disposable.add(
-                    apiService.createAnimal(categoryId,
-                            SaveAnimalRequest(inputAnimalName.text.toString(),
-                                    parseTagsFromText(inputAnimalTags.text)))
+                    apiService.createAlbum(categoryId,
+                            SaveAlbumRequest(inputAlbumName.text.toString()))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { animal ->
-                                Log.d(TAG, "Created animal: $animal")
+                            .subscribe { album ->
+                                Log.d(TAG, "Created album: $album")
                                 finish()
                             })
         }
-    }
-
-    private fun parseTagsFromText(tags: Editable): List<String> {
-        return tags.split("\\s+".toRegex()).map { it.trim() }
     }
 }
