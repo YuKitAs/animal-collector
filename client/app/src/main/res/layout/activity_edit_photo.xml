@@ -25,25 +25,28 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/labelSelectCollection"
+            android:id="@+id/labelCollection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textSelectedCollections"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
             android:textSize="18sp" />
 
-        <Spinner
-            android:id="@+id/dropdownCollection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown" />
+        <include layout="@layout/listview_collection_multiselection" />
 
         <Button
             android:id="@+id/btnAddCollection"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
             android:background="@color/colorPrimary" />
 
         <android.support.design.widget.TextInputLayout
