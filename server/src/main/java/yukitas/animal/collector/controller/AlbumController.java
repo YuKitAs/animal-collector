@@ -2,7 +2,6 @@ package yukitas.animal.collector.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,31 +23,31 @@ public class AlbumController {
     }
 
     @GetMapping("/albums")
-    public ResponseEntity<List<Album>> getAllAlbums() {
-        return new ResponseEntity<>(albumService.getAllAlbums(), HttpStatus.OK);
+    public List<Album> getAllAlbums() {
+        return albumService.getAllAlbums();
     }
 
     @GetMapping("/categories/{cat_id}/albums")
-    public ResponseEntity<List<Album>> getAlbums(@PathVariable("cat_id") UUID categoryId) {
-        return new ResponseEntity<>(albumService.getAlbumsByCategory(categoryId), HttpStatus.OK);
+    public List<Album> getAlbums(@PathVariable("cat_id") UUID categoryId) {
+        return albumService.getAlbumsByCategory(categoryId);
     }
 
     @GetMapping("/albums/{id}")
-    public ResponseEntity<Album> getAlbum(@PathVariable("id") UUID albumId) {
-        return new ResponseEntity<>(albumService.getAlbum(albumId), HttpStatus.OK);
+    public Album getAlbum(@PathVariable("id") UUID albumId) {
+        return albumService.getAlbum(albumId);
     }
 
     @PostMapping("/categories/{cat_id}/albums")
-    public ResponseEntity<Album> createAlbum(@PathVariable("cat_id") UUID categoryId,
+    @ResponseStatus(HttpStatus.CREATED)
+    public Album createAlbum(@PathVariable("cat_id") UUID categoryId,
             @Valid @RequestBody CreateAlbumRequest createAlbumRequest) {
-        return new ResponseEntity<>(albumService.createAlbum(categoryId, createAlbumRequest.getName()),
-                HttpStatus.CREATED);
+        return albumService.createAlbum(categoryId, createAlbumRequest.getName());
     }
 
     @PutMapping("/albums/{id}")
-    public ResponseEntity<Album> updateAlbum(@PathVariable("id") UUID albumId,
+    public Album updateAlbum(@PathVariable("id") UUID albumId,
             @Valid @RequestBody CreateAlbumRequest createAlbumRequest) {
-        return new ResponseEntity<>(albumService.updateAlbum(albumId, createAlbumRequest.getName()), HttpStatus.OK);
+        return albumService.updateAlbum(albumId, createAlbumRequest.getName());
     }
 
     @DeleteMapping("/albums/{id}")

@@ -2,7 +2,6 @@ package yukitas.animal.collector.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,21 +24,20 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
-        return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
+    public List<Category> getAllCategories() {
+        return categoryService.getAllCategories();
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@Valid @RequestBody CreateCategoryRequest createCategoryRequest) {
-        return new ResponseEntity<>(categoryService.createCategory(createCategoryRequest.getName()),
-                HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Category createCategory(@Valid @RequestBody CreateCategoryRequest createCategoryRequest) {
+        return categoryService.createCategory(createCategoryRequest.getName());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable("id") UUID categoryId,
+    public Category updateCategory(@PathVariable("id") UUID categoryId,
             @Valid @RequestBody CreateCategoryRequest createCategoryRequest) {
-        return new ResponseEntity<>(categoryService.updateCategory(categoryId, createCategoryRequest.getName()),
-                HttpStatus.OK);
+        return categoryService.updateCategory(categoryId, createCategoryRequest.getName());
     }
 
     @DeleteMapping("/{id}")

@@ -28,16 +28,14 @@ public class PhotoController {
     }
 
     @PostMapping("/photos")
-    public ResponseEntity<CreatePhotoResponse> createPhoto(
-            @Valid @RequestParam("content") MultipartFile content) throws IOException {
-        return new ResponseEntity<>(
-                new CreatePhotoResponse(photoService.createPhoto(CreatePhotoRequest.builder(), content.getBytes())),
-                HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public CreatePhotoResponse createPhoto(@Valid @RequestParam("content") MultipartFile content) throws IOException {
+        return new CreatePhotoResponse(photoService.createPhoto(CreatePhotoRequest.builder(), content.getBytes()));
     }
 
     @GetMapping("/albums/{album_id}/photos")
-    public ResponseEntity<List<Photo>> getPhotosByAlbum(@PathVariable("album_id") UUID albumId) {
-        return new ResponseEntity<>(photoService.getPhotosByAlbum(albumId), HttpStatus.OK);
+    public List<Photo> getPhotosByAlbum(@PathVariable("album_id") UUID albumId) {
+        return photoService.getPhotosByAlbum(albumId);
     }
 
     @GetMapping("/albums/{album_id}/photos/latest")
@@ -48,8 +46,8 @@ public class PhotoController {
     }
 
     @GetMapping("/animals/{animal_id}/photos")
-    public ResponseEntity<List<Photo>> getPhotosByAnimal(@PathVariable("animal_id") UUID animalId) {
-        return new ResponseEntity<>(photoService.getPhotosByAnimal(animalId), HttpStatus.OK);
+    public List<Photo> getPhotosByAnimal(@PathVariable("animal_id") UUID animalId) {
+        return photoService.getPhotosByAnimal(animalId);
     }
 
     @GetMapping("/animals/{animal_id}/photos/latest")
@@ -60,8 +58,8 @@ public class PhotoController {
     }
 
     @GetMapping("/photos/{id}")
-    public ResponseEntity<Photo> getPhoto(@PathVariable("id") UUID photoId) {
-        return new ResponseEntity<>(photoService.getPhoto(photoId), HttpStatus.OK);
+    public Photo getPhoto(@PathVariable("id") UUID photoId) {
+        return photoService.getPhoto(photoId);
     }
 
     @PutMapping("/photos/{id}")

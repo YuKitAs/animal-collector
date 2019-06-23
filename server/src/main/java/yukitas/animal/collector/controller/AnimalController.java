@@ -2,7 +2,6 @@ package yukitas.animal.collector.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,39 +24,36 @@ public class AnimalController {
     }
 
     @GetMapping("/animals")
-    public ResponseEntity<List<Animal>> getAllAnimals() {
-        return new ResponseEntity<>(animalService.getAllAnimals(), HttpStatus.OK);
+    public List<Animal> getAllAnimals() {
+        return animalService.getAllAnimals();
     }
 
     @GetMapping("/categories/{cat_id}/animals")
-    public ResponseEntity<List<Animal>> getAnimalsByCategory(@PathVariable("cat_id") UUID categoryId) {
-        return new ResponseEntity<>(animalService.getAnimalsByCategory(categoryId), HttpStatus.OK);
+    public List<Animal> getAnimalsByCategory(@PathVariable("cat_id") UUID categoryId) {
+        return animalService.getAnimalsByCategory(categoryId);
     }
 
     @GetMapping("/photos/{photo_id}/animals")
-    public ResponseEntity<List<Animal>> getAnimalsByPhoto(@PathVariable("photo_id") UUID photoId) {
-        return new ResponseEntity<>(animalService.getAnimalsByPhoto(photoId), HttpStatus.OK);
+    public List<Animal> getAnimalsByPhoto(@PathVariable("photo_id") UUID photoId) {
+        return animalService.getAnimalsByPhoto(photoId);
     }
 
     @GetMapping("/animals/{id}")
-    public ResponseEntity<Animal> getAnimal(@PathVariable("id") UUID animalId) {
-        return new ResponseEntity<>(animalService.getAnimal(animalId), HttpStatus.OK);
+    public Animal getAnimal(@PathVariable("id") UUID animalId) {
+        return animalService.getAnimal(animalId);
     }
 
     @PostMapping("/categories/{cat_id}/animals")
-    public ResponseEntity<Animal> createAnimal(@PathVariable("cat_id") UUID categoryId,
+    @ResponseStatus(HttpStatus.CREATED)
+    public Animal createAnimal(@PathVariable("cat_id") UUID categoryId,
             @Valid @RequestBody CreateAnimalRequest createAnimalRequest) {
-        return new ResponseEntity<>(
-                animalService.createAnimal(categoryId, createAnimalRequest.getName(), createAnimalRequest.getTags()),
-                HttpStatus.CREATED);
+        return animalService.createAnimal(categoryId, createAnimalRequest.getName(), createAnimalRequest.getTags());
     }
 
     @PutMapping("/animals/{id}")
-    public ResponseEntity<Animal> updateAnimal(@PathVariable("id") UUID animalId,
+    public Animal updateAnimal(@PathVariable("id") UUID animalId,
             @Valid @RequestBody UpdateAnimalRequest updateAnimalRequest) {
-        return new ResponseEntity<>(
-                animalService.updateAnimal(animalId, updateAnimalRequest.getName(), updateAnimalRequest.getTags()),
-                HttpStatus.OK);
+        return animalService.updateAnimal(animalId, updateAnimalRequest.getName(), updateAnimalRequest.getTags());
     }
 
     @DeleteMapping("/animals/{id}")
