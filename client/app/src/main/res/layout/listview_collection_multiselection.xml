@@ -3,9 +3,11 @@
 <ListView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/multiselectionCollection"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
+    android:choiceMode="multipleChoice"
     android:gravity="center"
     android:horizontalSpacing="10dp"
+    android:maxHeight="200dp"
     android:padding="5dp"
     android:verticalSpacing="5dp" />

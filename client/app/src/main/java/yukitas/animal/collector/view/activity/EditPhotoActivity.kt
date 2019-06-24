@@ -32,8 +32,6 @@ abstract class EditPhotoActivity : AppCompatActivity() {
 
         photoId = intent.getStringExtra(Constants.ARG_PHOTO_ID)
 
-        setLabels()
-        setCollectionList()
         setAddButtonListener()
         setSaveButtonListener()
     }
@@ -59,10 +57,6 @@ abstract class EditPhotoActivity : AppCompatActivity() {
                             Log.e(TAG, "Some errors occurred while updating photo '$photoId': $it")
                         }))
     }
-
-    protected abstract fun setLabels()
-
-    protected abstract fun setCollectionList()
 
     protected abstract fun setAddButtonListener()
 

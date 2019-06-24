@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_edit_photo.*
+import kotlinx.android.synthetic.main.listview_collection_multiselection.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.model.Album
@@ -14,31 +15,36 @@ import java.util.stream.Collectors
 
 class EditAnimalPhotoActivity : EditPhotoActivity() {
     private val TAG = EditAnimalPhotoActivity::class.java.simpleName
+    private lateinit var animalId: String
     private var albums: List<Album> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        btnAddCollection.text = getString(R.string.btn_new_album)
+        animalId = intent.getStringExtra(Constants.ARG_ANIMAL_ID)
+
+        setLabels()
+        setAlbums()
     }
 
     override fun onResume() {
         super.onResume()
 
         if (albums.isNotEmpty()) {
-            setCollectionList()
+            setAlbums()
         }
     }
 
-    override fun setLabels() {
-        val animalId = intent.getStringExtra(Constants.ARG_ANIMAL_ID)
+    private fun setLabels() {
+        btnAddCollection.text = getString(R.string.btn_new_album)
+        labelCollection.text = getString(R.string.label_select_albums)
+
         disposable.add(
                 apiService.getAnimalById(animalId).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ animal ->
                             categoryId = animal.category.id
                             textCollectionName.text = animal.name
-                            labelSelectCollection.text = getString(R.string.label_select_album)
                         }, {
                             Log.e(TAG,
                                     "Some errors occurred while fetching animal '$animalId': $it")
@@ -46,17 +52,19 @@ class EditAnimalPhotoActivity : EditPhotoActivity() {
         )
     }
 
-    override fun setCollectionList() {
+    private fun setAlbums() {
         disposable.add(
                 apiService.getAllAlbums()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ albums ->
                             this.albums = albums
-                            dropdownCollection.adapter = ArrayAdapter<String>(this,
-                                    android.R.layout.simple_spinner_dropdown_item,
+                            multiselectionCollection.adapter = ArrayAdapter<String>(this,
+                                    android.R.layout.simple_list_item_multiple_choice,
+                                    android.R.id.text1,
                                     albums.stream().map { album -> album.name }.collect(
                                             Collectors.toList()).toTypedArray())
+
                         }, {
                             Log.e(TAG, "Some errors occurred while fetching all albums: $it")
                         }))
@@ -70,14 +78,30 @@ class EditAnimalPhotoActivity : EditPhotoActivity() {
 
     override fun setSaveButtonListener() {
         btnSavePhoto.setOnClickListener {
-            val selectedAlbum = albums[dropdownCollection.selectedItemPosition]
-            if (selectedAlbum.category.id != categoryId) {
+            val selectedAlbumPositions = multiselectionCollection.checkedItemPositions
+
+            val selectedAlbumIds: ArrayList<String> = ArrayList()
+            var albumInCategory = false
+
+            for (i in 0 until selectedAlbumPositions.size()) {
+                if (selectedAlbumPositions.valueAt(i)) {
+                    val selectedAlbum = albums[selectedAlbumPositions.keyAt(i)]
+                    Log.d(TAG, "Selected album: $selectedAlbum")
+
+                    selectedAlbumIds.add(selectedAlbum.id)
+
+                    if (selectedAlbum.category.id == categoryId) {
+                        albumInCategory = true
+                    }
+                }
+            }
+
+            if (!albumInCategory) {
                 Log.w(TAG,
                         "No album selected in the current category '$categoryId'")
+                // TODO show alert dialog
             } else {
-                Log.d(TAG, "Selected album: ${selectedAlbum.id}")
-                updatePhoto(listOf(intent.getStringExtra(Constants.ARG_ANIMAL_ID)),
-                        listOf(selectedAlbum.id))
+                updatePhoto(listOf(animalId), selectedAlbumIds)
             }
         }
     }
