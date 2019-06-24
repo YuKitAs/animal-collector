@@ -6,21 +6,19 @@
     <string name="content_desc_animal">Animal</string>
     <string name="label_albums">Albums</string>
     <string name="label_animals">Animals</string>
-    <string name="text_none">None</string>
     <!-- Input hints -->
     <string name="hint_album_name">Album name</string>
     <string name="hint_animal_name">Animal name</string>
     <string name="hint_animal_tags">Tags (separated by spaces)</string>
     <string name="hint_photo_desc">Description</string>
-    <!-- Input labels -->
+    <!-- Text labels -->
     <string name="label_create_animal">Create Animal</string>
     <string name="label_update_animal">Update Animal</string>
     <string name="label_create_album">Create Album</string>
     <string name="label_update_album">Update Album</string>
-    <!-- Dropdown labels -->
     <string name="label_select_category">Select a category</string>
-    <string name="label_select_animal">Select an Animal</string>
-    <string name="label_select_album">Select an Album</string>
+    <string name="label_select_animals">Select animals</string>
+    <string name="label_select_albums">Select albums</string>
     <!-- Button labels -->
     <string name="btn_save">save</string>
     <string name="btn_confirm_positive">yes</string>
