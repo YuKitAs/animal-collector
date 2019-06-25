@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_edit_photo.*
@@ -99,7 +100,8 @@ class EditAnimalPhotoActivity : EditPhotoActivity() {
             if (!albumInCategory) {
                 Log.w(TAG,
                         "No album selected in the current category '$categoryId'")
-                // TODO show alert dialog
+                Toast.makeText(this, getString(R.string.warning_select_albums),
+                        Toast.LENGTH_LONG).show()
             } else {
                 updatePhoto(listOf(animalId), selectedAlbumIds)
             }

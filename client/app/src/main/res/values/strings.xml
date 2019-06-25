@@ -27,4 +27,6 @@
     <string name="btn_new_album">New Album</string>
     <!-- Dialog messages -->
     <string name="message_delete_confirm">Are you sure you want to delete this %1$s?</string>
+    <string name="warning_select_albums">"Please select at least one album belonging to the current category!"</string>
+    <string name="warning_select_animals">"Please select at least one animal belonging to the current category!"</string>
 </resources>
