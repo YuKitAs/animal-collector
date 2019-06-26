@@ -9,7 +9,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_photos.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
-import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_ID
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.view.activity.EditAnimalActivity
 import yukitas.animal.collector.view.activity.EditAnimalPhotoActivity
@@ -20,7 +19,7 @@ class AnimalPhotosFragment : PhotosFragment() {
     private lateinit var animal: Animal
 
     override fun setPhotos() {
-        animalId = activity.intent!!.extras!!.getString(ARG_ANIMAL_ID)!!
+        animalId = activity.intent!!.extras!!.getString(Constants.ARG_ANIMAL_ID)!!
         Log.d(TAG, "Selected animal: $animalId")
 
         disposable.add(apiService.getAnimalById(animalId)
@@ -61,7 +60,7 @@ class AnimalPhotosFragment : PhotosFragment() {
         binding.btnEditCollection.setOnClickListener {
             val bundle = Bundle()
             bundle.putBoolean("isCreating", false)
-            bundle.putString(ARG_ANIMAL_ID, animal.id)
+            bundle.putString(Constants.ARG_ANIMAL_ID, animal.id)
             bundle.putString(Constants.ARG_ANIMAL_NAME, animal.name)
             bundle.putStringArrayList(Constants.ARG_ANIMAL_TAGS, ArrayList(animal.tags))
 

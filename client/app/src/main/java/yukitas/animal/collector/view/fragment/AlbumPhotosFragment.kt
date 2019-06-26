@@ -9,8 +9,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_photos.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
-import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
-import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.view.activity.EditAlbumActivity
 import yukitas.animal.collector.view.activity.EditAlbumPhotoActivity
@@ -20,7 +18,7 @@ class AlbumPhotosFragment : PhotosFragment() {
     private lateinit var album: Album
 
     override fun setPhotos() {
-        albumId = activity.intent!!.extras!!.getString(ARG_ALBUM_ID)!!
+        albumId = activity.intent!!.extras!!.getString(Constants.ARG_ALBUM_ID)!!
         Log.d(TAG, "Selected album: $albumId")
 
         disposable.add(apiService.getAlbumById(albumId)
@@ -48,7 +46,7 @@ class AlbumPhotosFragment : PhotosFragment() {
 
     override fun startEditPhotoActivity(photoId: String) {
         val bundle = Bundle()
-        bundle.putString(ARG_PHOTO_ID, photoId)
+        bundle.putString(Constants.ARG_PHOTO_ID, photoId)
         bundle.putString(Constants.ARG_ALBUM_ID, albumId)
 
         val intent = Intent(activity, EditAlbumPhotoActivity::class.java).apply {
@@ -61,7 +59,7 @@ class AlbumPhotosFragment : PhotosFragment() {
         binding.btnEditCollection.setOnClickListener {
             val bundle = Bundle()
             bundle.putBoolean("isCreating", false)
-            bundle.putString(ARG_ALBUM_ID, album.id)
+            bundle.putString(Constants.ARG_ALBUM_ID, album.id)
             bundle.putString(Constants.ARG_ALBUM_NAME, album.name)
 
             val intent = Intent(activity, EditAlbumActivity::class.java).apply {
