@@ -1,69 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:orientation="vertical"
+    android:paddingLeft="50dp"
+    android:paddingRight="50dp"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
-        android:orientation="vertical"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+    <TextView
+        android:id="@+id/label_select_albums"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/label_select_albums"
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/textCollectionName"
+    <include
+        android:id="@+id/multiselectionAlbum"
+        layout="@layout/listview_collection_multiselection" />
+
+    <Button
+        android:id="@+id/btnAddAlbum"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:height="30dp"
+        android:background="@color/colorPrimary"
+        android:minHeight="0dp"
+        android:text="@string/btn_new_album" />
+
+    <TextView
+        android:id="@+id/label_select_animals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/label_select_animals"
+        android:textSize="20sp" />
+
+    <include
+        android:id="@+id/multiselectionAnimal"
+        layout="@layout/listview_collection_multiselection" />
+
+    <Button
+        android:id="@+id/btnAddAnimal"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:height="30dp"
+        android:background="@color/colorPrimary"
+        android:minHeight="0dp"
+        android:text="@string/btn_new_animal" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_photo_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/inputPhotoDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="30sp" />
+            android:hint="@string/hint_photo_desc"
+            android:inputType="text"
+            android:maxLength="200"
+            android:textSize="18sp" />
+    </android.support.design.widget.TextInputLayout>
 
-        <TextView
-            android:id="@+id/labelCollection"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="20sp" />
-
-        <include layout="@layout/listview_collection_multiselection" />
-
-        <Button
-            android:id="@+id/btnAddCollection"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="@color/colorPrimary" />
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_photo_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/inputPhotoDesc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_photo_desc"
-                android:inputType="text"
-                android:textSize="18sp" />
-        </android.support.design.widget.TextInputLayout>
-
-        <Button
-            android:id="@+id/btnSavePhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorPrimary"
-            android:text="@string/btn_save" />
-    </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/btnSavePhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/btn_save" />
+</LinearLayout>
