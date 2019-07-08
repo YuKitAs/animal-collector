@@ -10,7 +10,7 @@
     <string name="hint_album_name">Album name</string>
     <string name="hint_animal_name">Animal name</string>
     <string name="hint_animal_tags">Tags (separated by spaces)</string>
-    <string name="hint_photo_desc">Description</string>
+    <string name="hint_photo_desc">Description (max. 200 characters)</string>
     <!-- Text labels -->
     <string name="label_create_animal">Create Animal</string>
     <string name="label_update_animal">Update Animal</string>
@@ -27,6 +27,5 @@
     <string name="btn_new_album">New Album</string>
     <!-- Dialog messages -->
     <string name="message_delete_confirm">Are you sure you want to delete this %1$s?</string>
-    <string name="warning_select_albums">"Please select at least one album belonging to the current category!"</string>
-    <string name="warning_select_animals">"Please select at least one animal belonging to the current category!"</string>
+    <string name="warning_select_collections">"Please select at least one album OR one animal!"</string>
 </resources>
