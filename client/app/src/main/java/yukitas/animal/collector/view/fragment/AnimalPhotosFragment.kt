@@ -11,7 +11,7 @@ import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.view.activity.EditAnimalActivity
-import yukitas.animal.collector.view.activity.EditAnimalPhotoActivity
+import yukitas.animal.collector.view.activity.EditPhotoActivity
 import java.util.*
 
 class AnimalPhotosFragment : PhotosFragment() {
@@ -50,7 +50,7 @@ class AnimalPhotosFragment : PhotosFragment() {
         bundle.putString(Constants.ARG_PHOTO_ID, photoId)
         bundle.putString(Constants.ARG_ANIMAL_ID, animalId)
 
-        val intent = Intent(activity, EditAnimalPhotoActivity::class.java).apply {
+        val intent = Intent(activity, EditPhotoActivity::class.java).apply {
             putExtras(bundle)
         }
         activity.startActivity(intent)
