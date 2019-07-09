@@ -50,7 +50,10 @@ class EditPhotoActivity : AppCompatActivity() {
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ albums ->
-                                this.albumsOfPhoto = albums
+                                albumsOfPhoto = albums
+                                Log.d(TAG,
+                                        "Fetched albums for photo $photoId: ${albumsOfPhoto.stream().map { album -> album.name }.collect(
+                                                Collectors.toList())}")
                             }, {
                                 Log.e(TAG,
                                         "Some errors occurred while fetching albums by photo $photoId: $it")
@@ -61,7 +64,10 @@ class EditPhotoActivity : AppCompatActivity() {
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe({ animals ->
-                                this.animalsOfPhoto = animals
+                                animalsOfPhoto = animals
+                                Log.d(TAG,
+                                        "Fetched animals for photo $photoId: ${animalsOfPhoto.stream().map { animal -> animal.name }.collect(
+                                                Collectors.toList())}")
                             }, {
                                 Log.e(TAG,
                                         "Some errors occurred while fetching animals by photo $photoId: $it")
@@ -138,6 +144,7 @@ class EditPhotoActivity : AppCompatActivity() {
         for (i in 0 until adapter.count) {
             if (albumsOfPhoto.stream().map { album -> album.name }.collect(
                             Collectors.toSet()).contains(adapter.getItem(i))) {
+                Log.d(TAG, "Select album ${adapter.getItem(i)}")
                 (multiselectionAlbum as ListView).setItemChecked(i, true)
             }
         }
@@ -147,8 +154,8 @@ class EditPhotoActivity : AppCompatActivity() {
         val adapter = (multiselectionAnimal as ListView).adapter
         for (i in 0 until adapter.count) {
             if (animalsOfPhoto.stream().map { animal -> animal.name }.collect(
-                            Collectors.toSet()).contains(
-                            adapter.getItem(i))) {
+                            Collectors.toSet()).contains(adapter.getItem(i))) {
+                Log.d(TAG, "Select animal ${adapter.getItem(i)}")
                 (multiselectionAnimal as ListView).setItemChecked(i, true)
             }
         }
@@ -206,9 +213,9 @@ class EditPhotoActivity : AppCompatActivity() {
     }
 
     private fun validSelections(albumIds: List<String>, animalIds: List<String>): Boolean {
-        // verify if no collection selected
-        if (albumIds.isEmpty() || animalIds.isEmpty()) {
-            Toast.makeText(this, getString(R.string.warning_select_empty_collections),
+        // verify if no animal is selected
+        if (animalIds.isEmpty()) {
+            Toast.makeText(this, getString(R.string.warning_select_no_animal),
                     Toast.LENGTH_LONG).show()
             return false
         }
