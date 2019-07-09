@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import yukitas.animal.collector.model.Album;
 import yukitas.animal.collector.model.Category;
@@ -14,6 +15,7 @@ import yukitas.animal.collector.repository.AlbumRepository;
 import yukitas.animal.collector.repository.CategoryRepository;
 import yukitas.animal.collector.repository.PhotoRepository;
 import yukitas.animal.collector.service.AlbumService;
+import yukitas.animal.collector.service.PhotoService;
 import yukitas.animal.collector.service.exception.EntityNotFoundException;
 
 @Service
@@ -22,13 +24,15 @@ public class AlbumServiceImpl implements AlbumService {
     private static final String ENTITY_NAME = "album";
 
     private final AlbumRepository albumRepository;
+    private final PhotoService photoService;
     private final CategoryRepository categoryRepository;
     private final PhotoRepository photoRepository;
 
     @Autowired
-    public AlbumServiceImpl(AlbumRepository albumRepository, CategoryRepository categoryRepository,
-            PhotoRepository photoRepository) {
+    public AlbumServiceImpl(AlbumRepository albumRepository, PhotoService photoService,
+            CategoryRepository categoryRepository, PhotoRepository photoRepository) {
         this.albumRepository = albumRepository;
+        this.photoService = photoService;
         this.categoryRepository = categoryRepository;
         this.photoRepository = photoRepository;
     }
@@ -44,6 +48,14 @@ public class AlbumServiceImpl implements AlbumService {
         findCategoryById(categoryId);
 
         return albumRepository.findByCategoryId(categoryId);
+    }
+
+    @Override
+    public List<Album> getAlbumsByPhoto(UUID photoId) {
+        return albumRepository.findAll()
+                .stream()
+                .filter(album -> album.getPhotos().contains(photoService.getPhoto(photoId)))
+                .collect(Collectors.toList());
     }
 
     @Override

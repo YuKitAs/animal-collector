@@ -10,6 +10,8 @@ public interface AlbumService {
 
     List<Album> getAlbumsByCategory(UUID categoryId);
 
+    List<Album> getAlbumsByPhoto(UUID photoId);
+
     Album getAlbum(UUID id);
 
     Album createAlbum(UUID categoryId, String name);

@@ -32,6 +32,11 @@ public class AlbumController {
         return albumService.getAlbumsByCategory(categoryId);
     }
 
+    @GetMapping("/photos/{photo_id}/albums")
+    public List<Album> getAlbumsByPhoto(@PathVariable("photo_id") UUID photoId) {
+        return albumService.getAlbumsByPhoto(photoId);
+    }
+
     @GetMapping("/albums/{id}")
     public Album getAlbum(@PathVariable("id") UUID albumId) {
         return albumService.getAlbum(albumId);

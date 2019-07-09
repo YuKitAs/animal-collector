@@ -38,6 +38,18 @@ public class AlbumControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void getAlbumsByPhoto() {
+        ResponseEntity<Album[]> response = getTestRestTemplate().getForEntity(
+                String.format("/photos/%s/albums", PHOTO_CAT_1_ID), Album[].class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).satisfies(albums -> {
+            assertThat(albums.length).isEqualTo(1);
+            isAlbumCat1(albums[0]);
+        });
+    }
+
+    @Test
     public void getAlbumById() {
         ResponseEntity<Album> response = getTestRestTemplate().getForEntity("/albums/" + ALBUM_DOG_ID, Album.class);
 
