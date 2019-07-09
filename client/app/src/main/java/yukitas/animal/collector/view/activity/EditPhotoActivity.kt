@@ -99,32 +99,12 @@ class EditPhotoActivity : AppCompatActivity() {
                         }))
     }
 
-    private fun updatePhoto(albumIds: List<String>, animalIds: List<String>) {
-        Log.d(TAG, "Updating photo '$photoId' with albums '$albumIds' and animals '$animalIds'")
-
-        disposable.add(
-                apiService.updatePhoto(
-                        photoId,
-                        SavePhotoRequest(albumIds, animalIds, inputPhotoDesc.text.toString()))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            Log.d(TAG, "Updated photo '$photoId'")
-                            finish()
-                        }, {
-                            Log.e(TAG, "Some errors occurred while updating photo '$photoId': $it")
-                        }))
-    }
-
     private fun setSaveButtonListener() {
         btnSavePhoto.setOnClickListener {
-            val selectedAnimalIds = getSelectedAnimals()
             val selectedAlbumIds = getSelectedAlbumIds()
+            val selectedAnimalIds = getSelectedAnimals()
 
-            if (selectedAlbumIds.isEmpty() || selectedAnimalIds.isEmpty()) {
-                Toast.makeText(this, getString(R.string.warning_select_collections),
-                        Toast.LENGTH_LONG).show()
-            } else {
+            if (validSelections(selectedAlbumIds, selectedAnimalIds)) {
                 updatePhoto(selectedAlbumIds, selectedAnimalIds)
             }
         }
@@ -168,5 +148,49 @@ class EditPhotoActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun validSelections(albumIds: List<String>, animalIds: List<String>): Boolean {
+        // verify if no collection selected
+        if (albumIds.isEmpty() || animalIds.isEmpty()) {
+            Toast.makeText(this, getString(R.string.warning_select_empty_collections),
+                    Toast.LENGTH_LONG).show()
+            return false
+        }
+
+        // verify if selected collections have no intersection
+        val selectedAlbumCategories = albums.stream().filter { album ->
+            albumIds.contains(album.id)
+        }.map { album -> album.category.id }.collect(Collectors.toSet())
+
+        val selectedAnimalCategories = animals.stream().filter { animal ->
+            animalIds.contains(animal.id)
+        }.map { animal -> animal.category.id }.collect(Collectors.toSet())
+
+        if (selectedAlbumCategories.intersect(selectedAnimalCategories).isEmpty()) {
+            Toast.makeText(this, getString(R.string.warning_select_invalid_collections),
+                    Toast.LENGTH_LONG).show()
+            return false
+        }
+
+        return true
+    }
+
+
+    private fun updatePhoto(albumIds: List<String>, animalIds: List<String>) {
+        Log.d(TAG, "Updating photo '$photoId' with albums '$albumIds' and animals '$animalIds'")
+
+        disposable.add(
+                apiService.updatePhoto(
+                        photoId,
+                        SavePhotoRequest(albumIds, animalIds, inputPhotoDesc.text.toString()))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            Log.d(TAG, "Updated photo '$photoId'")
+                            finish()
+                        }, {
+                            Log.e(TAG, "Some errors occurred while updating photo '$photoId': $it")
+                        }))
     }
 }

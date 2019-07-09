@@ -27,5 +27,6 @@
     <string name="btn_new_album">New Album</string>
     <!-- Dialog messages -->
     <string name="message_delete_confirm">Are you sure you want to delete this %1$s?</string>
-    <string name="warning_select_collections">"Please select at least one album OR one animal!"</string>
+    <string name="warning_select_empty_collections">Please select at least one album OR one animal!</string>
+    <string name="warning_select_invalid_collections">At least one album AND one animal should belong to the same category!</string>
 </resources>
