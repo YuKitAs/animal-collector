@@ -26,7 +26,6 @@ import java.util.stream.Collectors
  */
 class EditPhotoActivity : AppCompatActivity() {
     private val TAG = EditPhotoActivity::class.java.simpleName
-    private lateinit var photoId: String
     private var albums: List<Album> = emptyList()
     private var animals: List<Animal> = emptyList()
 
@@ -37,8 +36,6 @@ class EditPhotoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_photo)
         setSupportActionBar(toolbar)
-
-        photoId = intent.getStringExtra(Constants.ARG_PHOTO_ID)
 
         setAlbumList()
         setAnimalList()
@@ -178,6 +175,8 @@ class EditPhotoActivity : AppCompatActivity() {
 
 
     private fun updatePhoto(albumIds: List<String>, animalIds: List<String>) {
+        val photoId = intent.getStringExtra(Constants.ARG_PHOTO_ID)
+
         Log.d(TAG, "Updating photo '$photoId' with albums '$albumIds' and animals '$animalIds'")
 
         disposable.add(
