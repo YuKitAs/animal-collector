@@ -34,6 +34,9 @@ interface ApiService {
     @GET("albums/{id}")
     fun getAlbumById(@Path("id") id: String): Single<Album>
 
+    @GET("photos/{photoId}/albums")
+    fun getAlbumsByPhoto(@Path("photoId") photoId: String): Observable<List<Album>>
+
     @GET("albums/{albumId}/photos")
     fun getPhotosByAlbum(@Path("albumId") albumId: String): Observable<List<Photo>>
 
