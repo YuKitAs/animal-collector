@@ -109,7 +109,7 @@ class AlbumsFragment : Fragment() {
             val bundle = Bundle()
             val album = albumsAdapter.albums[position]
             bundle.putString(ARG_ALBUM_ID, album.id)
-            bundle.putBoolean("isCreating", true)
+            bundle.putBoolean(Constants.ARG_IS_CREATING, true)
 
             val intent = Intent(activity, PhotoActivity::class.java).apply {
                 putExtras(bundle)

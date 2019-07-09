@@ -9,5 +9,6 @@ class Constants {
         const val ARG_ANIMAL_NAME = "animal_name"
         const val ARG_ANIMAL_TAGS = "animal_tags"
         const val ARG_PHOTO_ID = "photo_id"
+        const val ARG_IS_CREATING = "isCreating"
     }
 }

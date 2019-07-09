@@ -58,7 +58,7 @@ class AlbumPhotosFragment : PhotosFragment() {
     override fun setEditButtonListener() {
         binding.btnEditCollection.setOnClickListener {
             val bundle = Bundle()
-            bundle.putBoolean("isCreating", false)
+            bundle.putBoolean(Constants.ARG_IS_CREATING, false)
             bundle.putString(Constants.ARG_ALBUM_ID, album.id)
             bundle.putString(Constants.ARG_ALBUM_NAME, album.name)
 

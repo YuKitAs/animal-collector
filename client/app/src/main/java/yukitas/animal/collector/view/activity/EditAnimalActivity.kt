@@ -28,7 +28,7 @@ class EditAnimalActivity : AppCompatActivity() {
         setContentView(R.layout.activity_edit_animal)
         setSupportActionBar(toolbar)
 
-        val isCreating = intent.getBooleanExtra("isCreating", true)
+        val isCreating = intent.getBooleanExtra(Constants.ARG_IS_CREATING, true)
         if (isCreating) {
             labelEditAnimal.text = getString(R.string.label_create_animal)
 

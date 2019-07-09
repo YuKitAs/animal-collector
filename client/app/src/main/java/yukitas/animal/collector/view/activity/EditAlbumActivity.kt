@@ -28,7 +28,7 @@ class EditAlbumActivity : AppCompatActivity() {
         setContentView(R.layout.activity_edit_album)
         setSupportActionBar(toolbar)
 
-        val isCreating = intent.getBooleanExtra("isCreating", true)
+        val isCreating = intent.getBooleanExtra(Constants.ARG_IS_CREATING, true)
         if (isCreating) {
             labelEditAlbum.text = getString(R.string.label_create_album)
 
