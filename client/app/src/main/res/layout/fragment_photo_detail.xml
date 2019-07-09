@@ -74,6 +74,16 @@
         </RelativeLayout>
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btn_edit_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_mode_edit_black_24dp"
+            app:borderWidth="0dp"
+            app:fabSize="normal" />
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/btn_delete_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

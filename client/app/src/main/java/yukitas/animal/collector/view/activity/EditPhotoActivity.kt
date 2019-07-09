@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_edit_photo.*
 import kotlinx.android.synthetic.main.activity_main.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.common.Constants.Companion.ARG_IS_CREATING
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.dto.SavePhotoRequest
@@ -28,6 +29,10 @@ class EditPhotoActivity : AppCompatActivity() {
     private val TAG = EditPhotoActivity::class.java.simpleName
     private var albums: List<Album> = emptyList()
     private var animals: List<Animal> = emptyList()
+    private var albumsOfPhoto: List<Album> = emptyList()
+    private var animalsOfPhoto: List<Animal> = emptyList()
+    private var isCreating = true
+    private lateinit var photoId: String
 
     private val apiService by lazy { ApiService.create() }
     private val disposable = CompositeDisposable()
@@ -36,6 +41,32 @@ class EditPhotoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_photo)
         setSupportActionBar(toolbar)
+
+        photoId = intent.getStringExtra(Constants.ARG_PHOTO_ID)
+        isCreating = intent.getBooleanExtra(ARG_IS_CREATING, true)
+        if (!isCreating) {
+            disposable.add(
+                    apiService.getAlbumsByPhoto(photoId)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ albums ->
+                                this.albumsOfPhoto = albums
+                            }, {
+                                Log.e(TAG,
+                                        "Some errors occurred while fetching albums by photo $photoId: $it")
+                            }))
+
+            disposable.add(
+                    apiService.getAnimalsByPhoto(photoId)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ animals ->
+                                this.animalsOfPhoto = animals
+                            }, {
+                                Log.e(TAG,
+                                        "Some errors occurred while fetching animals by photo $photoId: $it")
+                            }))
+        }
 
         setAlbumList()
         setAnimalList()
@@ -73,6 +104,9 @@ class EditPhotoActivity : AppCompatActivity() {
                                     albums.stream().map { album -> album.name }.collect(
                                             Collectors.toList()).toTypedArray())
 
+                            if (!isCreating) {
+                                selectAlbumsOfPhoto()
+                            }
                         }, {
                             Log.e(TAG, "Some errors occurred while fetching all albums: $it")
                         }))
@@ -91,9 +125,33 @@ class EditPhotoActivity : AppCompatActivity() {
                                     animals.stream().map { animal -> animal.name }.collect(
                                             Collectors.toList()).toTypedArray())
 
+                            if (!isCreating) {
+                                selectAnimalsOfPhoto()
+                            }
                         }, {
                             Log.e(TAG, "Some errors occurred while fetching all animals: $it")
                         }))
+    }
+
+    private fun selectAlbumsOfPhoto() {
+        val adapter = (multiselectionAlbum as ListView).adapter
+        for (i in 0 until adapter.count) {
+            if (albumsOfPhoto.stream().map { album -> album.name }.collect(
+                            Collectors.toSet()).contains(adapter.getItem(i))) {
+                (multiselectionAlbum as ListView).setItemChecked(i, true)
+            }
+        }
+    }
+
+    private fun selectAnimalsOfPhoto() {
+        val adapter = (multiselectionAnimal as ListView).adapter
+        for (i in 0 until adapter.count) {
+            if (animalsOfPhoto.stream().map { animal -> animal.name }.collect(
+                            Collectors.toSet()).contains(
+                            adapter.getItem(i))) {
+                (multiselectionAnimal as ListView).setItemChecked(i, true)
+            }
+        }
     }
 
     private fun setSaveButtonListener() {
@@ -124,7 +182,7 @@ class EditPhotoActivity : AppCompatActivity() {
             for (i in 0 until selectedAlbumPositions.size()) {
                 if (selectedAlbumPositions.valueAt(i)) {
                     val selectedAlbum = albums[selectedAlbumPositions.keyAt(i)]
-                    Log.d(TAG, "Selected album: $selectedAlbum")
+                    Log.d(TAG, "Selected album: ${selectedAlbum.name}")
 
                     add(selectedAlbum.id)
                 }
@@ -139,7 +197,7 @@ class EditPhotoActivity : AppCompatActivity() {
             for (i in 0 until selectedAnimalPositions.size()) {
                 if (selectedAnimalPositions.valueAt(i)) {
                     val selectedAnimal = animals[selectedAnimalPositions.keyAt(i)]
-                    Log.d(TAG, "Selected animal: $selectedAnimal")
+                    Log.d(TAG, "Selected animal: ${selectedAnimal.name}")
 
                     add(selectedAnimal.id)
                 }
@@ -175,8 +233,6 @@ class EditPhotoActivity : AppCompatActivity() {
 
 
     private fun updatePhoto(albumIds: List<String>, animalIds: List<String>) {
-        val photoId = intent.getStringExtra(Constants.ARG_PHOTO_ID)
-
         Log.d(TAG, "Updating photo '$photoId' with albums '$albumIds' and animals '$animalIds'")
 
         disposable.add(
