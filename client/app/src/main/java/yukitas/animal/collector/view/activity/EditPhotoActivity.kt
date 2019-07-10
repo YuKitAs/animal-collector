@@ -227,7 +227,7 @@ class EditPhotoActivity : AppCompatActivity() {
             return false
         }
 
-        // verify if selected collections have no intersection
+        // verify if selected albums and animals have no intersected category
         val selectedAlbumCategories = albums.stream().filter { album ->
             albumIds.contains(album.id)
         }.map { album -> album.category.id }.collect(Collectors.toSet())
@@ -236,7 +236,8 @@ class EditPhotoActivity : AppCompatActivity() {
             animalIds.contains(animal.id)
         }.map { animal -> animal.category.id }.collect(Collectors.toSet())
 
-        if (selectedAlbumCategories.intersect(selectedAnimalCategories).isEmpty()) {
+        if (selectedAlbumCategories.isNotEmpty() && selectedAlbumCategories.intersect(
+                        selectedAnimalCategories).isEmpty()) {
             Toast.makeText(this, getString(R.string.warning_select_invalid_collections),
                     Toast.LENGTH_LONG).show()
             return false
