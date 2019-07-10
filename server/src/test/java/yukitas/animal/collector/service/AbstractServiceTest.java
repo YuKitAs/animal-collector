@@ -15,5 +15,4 @@ public abstract class AbstractServiceTest {
     static final String ANIMAL_NOT_FOUND_MESSAGE = "ANIMAL not found by id=" + INVALID_ID;
     static final String PHOTO_NOT_FOUND_MESSAGE = "PHOTO not found by id=" + INVALID_ID;
     static final String ANIMAL_IDS_NOT_PROVIDED_MESSAGE = "Required but not provided: animal_ids";
-    static final String ALBUM_IDS_NOT_PROVIDED_MESSAGE = "Required but not provided: album_ids";
 }

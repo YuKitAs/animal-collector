@@ -10,12 +10,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import yukitas.animal.collector.model.Album;
 import yukitas.animal.collector.model.Photo;
 import yukitas.animal.collector.repository.AlbumRepository;
 import yukitas.animal.collector.repository.AnimalRepository;
 import yukitas.animal.collector.repository.PhotoRepository;
 import yukitas.animal.collector.service.exception.EntityNotFoundException;
+import yukitas.animal.collector.service.exception.InvalidDataException;
 import yukitas.animal.collector.service.exception.RequiredDataNotProvidedException;
 import yukitas.animal.collector.service.impl.PhotoServiceImpl;
 
@@ -23,6 +23,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 public class PhotoServiceTest extends AbstractServiceTest {
+    private static final UUID PHOTO_ID = UUID.randomUUID();
+
     @InjectMocks
     private PhotoServiceImpl photoService;
 
@@ -40,6 +42,8 @@ public class PhotoServiceTest extends AbstractServiceTest {
         when(albumRepository.findById(INVALID_ID)).thenReturn(Optional.empty());
         when(animalRepository.findById(INVALID_ID)).thenReturn(Optional.empty());
         when(photoRepository.findById(INVALID_ID)).thenReturn(Optional.empty());
+        when(photoRepository.findById(PHOTO_ID)).thenReturn(Optional.of(
+                new Photo.Builder().setAnimals(Collections.emptySet()).setAlbums(Collections.emptySet()).build()));
     }
 
     @Test
@@ -68,16 +72,21 @@ public class PhotoServiceTest extends AbstractServiceTest {
 
     @Test
     public void updatePhoto_AnimalIdsNotProvided() {
-        Album album = new Album.Builder().build();
-        UUID albumId = UUID.randomUUID();
-        Photo photo = new Photo.Builder().setAnimals(Collections.emptySet()).setAlbums(Set.of(album)).build();
-        UUID photoId = UUID.randomUUID();
-
-        when(photoRepository.findById(photoId)).thenReturn(Optional.of(photo));
-
-        assertThatThrownBy(() -> photoService.updatePhoto(photoId, Collections.emptySet(), Set.of(albumId),
+        assertThatThrownBy(() -> photoService.updatePhoto(PHOTO_ID, Collections.emptySet(), Set.of(UUID.randomUUID()),
                 DESCRIPTION)).isInstanceOf(RequiredDataNotProvidedException.class)
                 .hasMessage(ANIMAL_IDS_NOT_PROVIDED_MESSAGE);
+    }
+
+    @Test
+    public void updatePhoto_InvalidAnimalIdProvided() {
+        assertThatThrownBy(() -> photoService.updatePhoto(PHOTO_ID, Set.of(INVALID_ID), Collections.emptySet(),
+                DESCRIPTION)).isInstanceOf(InvalidDataException.class);
+    }
+
+    @Test
+    public void updatePhoto_InvalidAlbumIdProvided() {
+        assertThatThrownBy(() -> photoService.updatePhoto(PHOTO_ID, Set.of(UUID.randomUUID()), Set.of(INVALID_ID),
+                DESCRIPTION)).isInstanceOf(InvalidDataException.class);
     }
 
     @Test

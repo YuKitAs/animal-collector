@@ -17,6 +17,7 @@ import yukitas.animal.collector.repository.AnimalRepository;
 import yukitas.animal.collector.repository.PhotoRepository;
 import yukitas.animal.collector.service.PhotoService;
 import yukitas.animal.collector.service.exception.EntityNotFoundException;
+import yukitas.animal.collector.service.exception.InvalidDataException;
 import yukitas.animal.collector.service.exception.RequiredDataNotProvidedException;
 
 @Service
@@ -84,18 +85,8 @@ public class PhotoServiceImpl implements PhotoService {
 
         Photo photo = photoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ENTITY_NAME, id));
 
-        // photo should be associated with at least one animal
-        if (animalIds.isEmpty()) {
-            throw new RequiredDataNotProvidedException("animal_ids");
-        }
-
-        Set<Animal> animals = getAnimalsById(animalIds);
-        photo.setAnimals(animals);
-        animals.forEach(animal -> animal.addPhoto(photo));
-
-        Set<Album> albums = getAlbumsById(albumIds);
-        photo.setAlbums(albums);
-        albums.forEach(album -> album.addPhoto(photo));
+        updatePhotoAnimals(photo, getValidAnimals(animalIds));
+        updatePhotoAlbums(photo, getValidAlbums(albumIds));
 
         photo.setDescription(description);
 
@@ -113,18 +104,6 @@ public class PhotoServiceImpl implements PhotoService {
         photoRepository.deleteById(id);
     }
 
-    private Set<Animal> getAnimalsById(Set<UUID> animalIds) {
-        return animalIds == null ? Collections.emptySet() : animalIds.stream()
-                .map(this::findAnimalById)
-                .collect(Collectors.toSet());
-    }
-
-    private Set<Album> getAlbumsById(Set<UUID> albumIds) {
-        return albumIds == null ? Collections.emptySet() : albumIds.stream()
-                .map(this::findAlbumById)
-                .collect(Collectors.toSet());
-    }
-
     private Animal findAnimalById(UUID id) {
         return animalRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("animal", id));
     }
@@ -135,5 +114,40 @@ public class PhotoServiceImpl implements PhotoService {
 
     private Photo findPhotoById(UUID id) {
         return photoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ENTITY_NAME, id));
+    }
+
+    private Set<Animal> getValidAnimals(Set<UUID> animalIds) {
+        // photo should be associated with at least one animal
+        if (animalIds.isEmpty()) {
+            throw new RequiredDataNotProvidedException("animal_ids");
+        }
+
+        Set<Animal> animals = new HashSet<>(animalRepository.findByIdIn(animalIds));
+        if (animals.size() != animalIds.size()) {
+            throw new InvalidDataException("animal_ids",
+                    animalIds.stream().map(UUID::toString).collect(Collectors.joining(", ")));
+        }
+
+        return animals;
+    }
+
+    private Set<Album> getValidAlbums(Set<UUID> albumIds) {
+        Set<Album> albums = new HashSet<>(albumRepository.findByIdIn(albumIds));
+        if (albums.size() != albumIds.size()) {
+            throw new InvalidDataException("album_ids",
+                    albumIds.stream().map(UUID::toString).collect(Collectors.joining(", ")));
+        }
+
+        return albums;
+    }
+
+    private void updatePhotoAnimals(Photo photo, Set<Animal> animals) {
+        photo.setAnimals(animals);
+        animals.forEach(animal -> animal.addPhoto(photo));
+    }
+
+    private void updatePhotoAlbums(Photo photo, Set<Album> albums) {
+        photo.setAlbums(albums);
+        albums.forEach(album -> album.addPhoto(photo));
     }
 }
