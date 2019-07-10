@@ -7,8 +7,10 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_edit_photo.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -45,33 +47,14 @@ class EditPhotoActivity : AppCompatActivity() {
         photoId = intent.getStringExtra(Constants.ARG_PHOTO_ID)
         isCreating = intent.getBooleanExtra(ARG_IS_CREATING, true)
         if (!isCreating) {
-            disposable.add(
-                    apiService.getAlbumsByPhoto(photoId)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ albums ->
-                                albumsOfPhoto = albums
-                                Log.d(TAG,
-                                        "Fetched albums for photo $photoId: ${albumsOfPhoto.stream().map { album -> album.name }.collect(
-                                                Collectors.toList())}")
-                            }, {
-                                Log.e(TAG,
-                                        "Some errors occurred while fetching albums by photo $photoId: $it")
-                            }))
-
-            disposable.add(
-                    apiService.getAnimalsByPhoto(photoId)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ animals ->
-                                animalsOfPhoto = animals
-                                Log.d(TAG,
-                                        "Fetched animals for photo $photoId: ${animalsOfPhoto.stream().map { animal -> animal.name }.collect(
-                                                Collectors.toList())}")
-                            }, {
-                                Log.e(TAG,
-                                        "Some errors occurred while fetching animals by photo $photoId: $it")
-                            }))
+            Observable.zip<List<Album>, List<Animal>, Unit>(apiService.getAlbumsByPhoto(photoId),
+                    apiService.getAnimalsByPhoto(photoId),
+                    BiFunction { albums, animals ->
+                        setAlbumsAndAnimalsOfPhoto(albums, animals)
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe()
         }
 
         setAlbumList()
@@ -97,6 +80,18 @@ class EditPhotoActivity : AppCompatActivity() {
         disposable.clear()
     }
 
+    private fun setAlbumsAndAnimalsOfPhoto(albums: List<Album>, animals: List<Animal>) {
+        Log.d(TAG,
+                "Fetched albums for photo $photoId: ${albums.stream().map { album -> album.name }.collect(
+                        Collectors.toList())}")
+        albumsOfPhoto = albums
+
+        Log.d(TAG,
+                "Fetched animals for photo $photoId: ${animals.stream().map { animal -> animal.name }.collect(
+                        Collectors.toList())}")
+        animalsOfPhoto = animals
+    }
+
     private fun setAlbumList() {
         disposable.add(
                 apiService.getAllAlbums()
@@ -115,6 +110,7 @@ class EditPhotoActivity : AppCompatActivity() {
                             }
                         }, {
                             Log.e(TAG, "Some errors occurred while fetching all albums: $it")
+                            it.printStackTrace()
                         }))
     }
 
@@ -136,6 +132,7 @@ class EditPhotoActivity : AppCompatActivity() {
                             }
                         }, {
                             Log.e(TAG, "Some errors occurred while fetching all animals: $it")
+                            it.printStackTrace()
                         }))
     }
 
@@ -253,6 +250,7 @@ class EditPhotoActivity : AppCompatActivity() {
                             finish()
                         }, {
                             Log.e(TAG, "Some errors occurred while updating photo '$photoId': $it")
+                            it.printStackTrace()
                         }))
     }
 }
