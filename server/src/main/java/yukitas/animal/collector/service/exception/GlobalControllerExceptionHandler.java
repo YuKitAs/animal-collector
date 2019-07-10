@@ -16,4 +16,9 @@ public class GlobalControllerExceptionHandler {
     public ResponseEntity<ExceptionResponseBody> handleRequiredDataNotProvided(RequiredDataNotProvidedException ex) {
         return new ResponseEntity<>(new ExceptionResponseBody(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<ExceptionResponseBody> handleInvalidData(InvalidDataException ex) {
+        return new ResponseEntity<>(new ExceptionResponseBody(ex.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 }
