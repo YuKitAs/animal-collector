@@ -14,6 +14,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_DESC
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
 import yukitas.animal.collector.databinding.FragmentPhotoDetailBinding
 import yukitas.animal.collector.networking.ApiService
@@ -44,6 +45,11 @@ class PhotoDetailFragment : Fragment() {
         setEditButtonListener()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setPhoto()
     }
 
     override fun onDestroy() {
@@ -82,6 +88,7 @@ class PhotoDetailFragment : Fragment() {
             val bundle = Bundle()
             bundle.putBoolean(Constants.ARG_IS_CREATING, false)
             bundle.putString(ARG_PHOTO_ID, photoId)
+            bundle.putString(ARG_PHOTO_DESC, binding.photo!!.description)
 
             val intent = Intent(activity, EditPhotoActivity::class.java).apply {
                 putExtras(bundle)

@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_IS_CREATING
+import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_DESC
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.dto.SavePhotoRequest
@@ -47,6 +48,8 @@ class EditPhotoActivity : AppCompatActivity() {
         photoId = intent.getStringExtra(Constants.ARG_PHOTO_ID)
         isCreating = intent.getBooleanExtra(ARG_IS_CREATING, true)
         if (!isCreating) {
+            inputPhotoDesc.setText(intent.getStringExtra(ARG_PHOTO_DESC))
+
             disposable.add(Observable.zip<List<Album>, List<Animal>, Unit>(
                     apiService.getAlbumsByPhoto(photoId),
                     apiService.getAnimalsByPhoto(photoId),
