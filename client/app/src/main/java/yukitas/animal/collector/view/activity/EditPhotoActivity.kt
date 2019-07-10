@@ -47,20 +47,30 @@ class EditPhotoActivity : AppCompatActivity() {
         photoId = intent.getStringExtra(Constants.ARG_PHOTO_ID)
         isCreating = intent.getBooleanExtra(ARG_IS_CREATING, true)
         if (!isCreating) {
-            Observable.zip<List<Album>, List<Animal>, Unit>(apiService.getAlbumsByPhoto(photoId),
+            disposable.add(Observable.zip<List<Album>, List<Animal>, Unit>(
+                    apiService.getAlbumsByPhoto(photoId),
                     apiService.getAnimalsByPhoto(photoId),
                     BiFunction { albums, animals ->
                         setAlbumsAndAnimalsOfPhoto(albums, animals)
                     })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe()
+                    .subscribe({
+                        setAlbumList()
+                        setAnimalList()
+                        setAddButtonListener()
+                        setSaveButtonListener()
+                    }, {
+                        Log.e(TAG,
+                                "Some errors occurred when fetching albums and animals of photo $photoId: $it")
+                        it.printStackTrace()
+                    }))
+        } else {
+            setAlbumList()
+            setAnimalList()
+            setAddButtonListener()
+            setSaveButtonListener()
         }
-
-        setAlbumList()
-        setAnimalList()
-        setAddButtonListener()
-        setSaveButtonListener()
     }
 
     override fun onResume() {
