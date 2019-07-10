@@ -15,6 +15,7 @@ public final class UpdatePhotoRequest {
     @NotNull
     private final Set<UUID> albumIds;
 
+    @NotNull
     private final String description;
 
     @JsonCreator

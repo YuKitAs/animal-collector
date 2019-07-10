@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import yukitas.animal.collector.model.Album;
-import yukitas.animal.collector.model.Animal;
 import yukitas.animal.collector.model.Photo;
 import yukitas.animal.collector.repository.AlbumRepository;
 import yukitas.animal.collector.repository.AnimalRepository;
@@ -75,24 +74,10 @@ public class PhotoServiceTest extends AbstractServiceTest {
         UUID photoId = UUID.randomUUID();
 
         when(photoRepository.findById(photoId)).thenReturn(Optional.of(photo));
-        when(albumRepository.findById(albumId)).thenReturn(Optional.of(album));
 
-        assertThatThrownBy(() -> photoService.updatePhoto(photoId, null, Set.of(albumId), DESCRIPTION)).isInstanceOf(
-                RequiredDataNotProvidedException.class).hasMessage(ANIMAL_IDS_NOT_PROVIDED_MESSAGE);
-    }
-
-    @Test
-    public void updatePhoto_AlbumIdsNotProvided() {
-        Animal animal = new Animal.Builder().build();
-        UUID animalId = UUID.randomUUID();
-        Photo photo = new Photo.Builder().setAnimals(Set.of(animal)).setAlbums(Collections.emptySet()).build();
-        UUID photoId = UUID.randomUUID();
-
-        when(photoRepository.findById(photoId)).thenReturn(Optional.of(photo));
-        when(animalRepository.findById(animalId)).thenReturn(Optional.of(animal));
-
-        assertThatThrownBy(() -> photoService.updatePhoto(photoId, Set.of(animalId), null, DESCRIPTION)).isInstanceOf(
-                RequiredDataNotProvidedException.class).hasMessage(ALBUM_IDS_NOT_PROVIDED_MESSAGE);
+        assertThatThrownBy(() -> photoService.updatePhoto(photoId, Collections.emptySet(), Set.of(albumId),
+                DESCRIPTION)).isInstanceOf(RequiredDataNotProvidedException.class)
+                .hasMessage(ANIMAL_IDS_NOT_PROVIDED_MESSAGE);
     }
 
     @Test

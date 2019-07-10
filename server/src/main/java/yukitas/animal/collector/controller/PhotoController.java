@@ -64,7 +64,8 @@ public class PhotoController {
 
     @PutMapping("/photos/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updatePhoto(@PathVariable("id") UUID photoId, @RequestBody UpdatePhotoRequest updatePhotoRequest) {
+    public void updatePhoto(@PathVariable("id") UUID photoId,
+            @Valid @RequestBody UpdatePhotoRequest updatePhotoRequest) {
         photoService.updatePhoto(photoId, updatePhotoRequest.getAnimalIds(), updatePhotoRequest.getAlbumIds(),
                 updatePhotoRequest.getDescription());
     }

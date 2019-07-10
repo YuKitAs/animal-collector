@@ -84,30 +84,20 @@ public class PhotoServiceImpl implements PhotoService {
 
         Photo photo = photoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ENTITY_NAME, id));
 
-        Set<Animal> animals = getAnimalsById(animalIds);
-        Set<Album> albums = getAlbumsById(albumIds);
-
-        if (photo.getAnimals().isEmpty() && animalIds == null) {
+        // photo should be associated with at least one animal
+        if (animalIds.isEmpty()) {
             throw new RequiredDataNotProvidedException("animal_ids");
         }
 
-        if (photo.getAlbums().isEmpty() && albumIds == null) {
-            throw new RequiredDataNotProvidedException("album_ids");
-        }
+        Set<Animal> animals = getAnimalsById(animalIds);
+        photo.setAnimals(animals);
+        animals.forEach(animal -> animal.addPhoto(photo));
 
-        if (!animals.isEmpty()) {
-            photo.setAnimals(animals);
-            animals.forEach(animal -> animal.addPhoto(photo));
-        }
+        Set<Album> albums = getAlbumsById(albumIds);
+        photo.setAlbums(albums);
+        albums.forEach(album -> album.addPhoto(photo));
 
-        if (!albums.isEmpty()) {
-            photo.setAlbums(albums);
-            albums.forEach(album -> album.addPhoto(photo));
-        }
-
-        if (description != null) {
-            photo.setDescription(description);
-        }
+        photo.setDescription(description);
 
         LOGGER.debug("Updated photo (id={}) for animals [{}] and albums [{}]", photo.getId(),
                 photo.getAnimals().stream().map(Animal::getName).collect(Collectors.joining(",")),
