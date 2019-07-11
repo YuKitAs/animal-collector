@@ -61,7 +61,6 @@ class EditPhotoActivity : AppCompatActivity() {
                     .subscribe({
                         setAlbumList()
                         setAnimalList()
-                        setAddButtonListener()
                         setSaveButtonListener()
                     }, {
                         Log.e(TAG,
@@ -71,9 +70,11 @@ class EditPhotoActivity : AppCompatActivity() {
         } else {
             setAlbumList()
             setAnimalList()
-            setAddButtonListener()
             setSaveButtonListener()
         }
+
+        setAddButtonListener()
+        setCancelButtonListener()
     }
 
     override fun onResume() {
@@ -91,6 +92,11 @@ class EditPhotoActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         disposable.clear()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        deletePhoto()
     }
 
     private fun setAlbumsAndAnimalsOfPhoto(albums: List<Album>, animals: List<Animal>) {
@@ -190,6 +196,25 @@ class EditPhotoActivity : AppCompatActivity() {
         btnAddAnimal.setOnClickListener {
             startActivity(Intent(this, CreateAnimalActivity::class.java))
         }
+    }
+
+    private fun setCancelButtonListener() {
+        btnCancelPhotoEdit.setOnClickListener {
+            if (isCreating) {
+                deletePhoto()
+            }
+
+            finish()
+        }
+    }
+
+    private fun deletePhoto() {
+        disposable.add(apiService.deletePhoto(photoId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    Log.d(TAG, "Deleted unsaved photo '$photoId'")
+                })
     }
 
     private fun getSelectedAlbumIds(): ArrayList<String> {
