@@ -33,6 +33,7 @@ class CreateAlbumActivity : AppCompatActivity() {
 
         setCategoryList()
         setSaveButtonListener()
+        setCancelButtonListener()
     }
 
     override fun onDestroy() {
@@ -84,6 +85,12 @@ class CreateAlbumActivity : AppCompatActivity() {
                                 Log.d(TAG, "Created album: $album")
                                 finish()
                             })
+        }
+    }
+
+    private fun setCancelButtonListener() {
+        btnCancelAlbumCreation.setOnClickListener {
+            finish()
         }
     }
 }

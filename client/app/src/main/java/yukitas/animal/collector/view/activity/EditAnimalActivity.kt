@@ -72,6 +72,8 @@ class EditAnimalActivity : AppCompatActivity() {
                                 })
             }
         }
+
+        setCancelButtonListener()
     }
 
     override fun onDestroy() {
@@ -81,5 +83,9 @@ class EditAnimalActivity : AppCompatActivity() {
 
     private fun parseTagsFromText(tags: Editable): List<String> {
         return tags.split("\\s+".toRegex()).map { it.trim() }
+    }
+
+    private fun setCancelButtonListener() {
+        btnCancelAnimalEdit.setOnClickListener { finish() }
     }
 }

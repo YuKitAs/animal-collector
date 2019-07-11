@@ -34,6 +34,7 @@ class CreateAnimalActivity : AppCompatActivity() {
 
         setCategoriesDropdown()
         setSaveButtonListener()
+        setCancelButtonListener()
     }
 
     override fun onDestroy() {
@@ -86,6 +87,12 @@ class CreateAnimalActivity : AppCompatActivity() {
                                 Log.d(TAG, "Created animal: $animal")
                                 finish()
                             })
+        }
+    }
+
+    private fun setCancelButtonListener() {
+        btnCancelAnimalCreation.setOnClickListener {
+            finish()
         }
     }
 

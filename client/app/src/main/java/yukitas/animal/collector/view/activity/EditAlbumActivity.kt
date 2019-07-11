@@ -65,10 +65,16 @@ class EditAlbumActivity : AppCompatActivity() {
                                 })
             }
         }
+
+        setCancelButtonListener()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         disposable.clear()
+    }
+
+    private fun setCancelButtonListener() {
+        btnCancelAlbumEdit.setOnClickListener { finish() }
     }
 }
