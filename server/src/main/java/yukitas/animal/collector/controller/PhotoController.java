@@ -40,9 +40,12 @@ public class PhotoController {
     }
 
     @GetMapping("/albums/{album_id}/photos/latest")
-    public ResponseEntity<Photo> getLatestPhotoByAlbum(@PathVariable("album_id") UUID albumId) {
-        return photoService.getLatestPhotoByAlbum(albumId)
-                .map(photo -> new ResponseEntity<>(photo, HttpStatus.OK))
+    public ResponseEntity<Photo> getLatestPhotoByAlbum(@PathVariable("album_id") UUID albumId,
+            @RequestParam(value = "width", required = false) Integer width,
+            @RequestParam(value = "height", required = false) Integer height) {
+        Optional<Photo> photoOptional = (width != null && height != null) ? photoService.getLatestPhotoByAlbum(albumId,
+                width, height) : photoService.getLatestPhotoByAlbum(albumId);
+        return photoOptional.map(photo -> new ResponseEntity<>(photo, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 

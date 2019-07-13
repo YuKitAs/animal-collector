@@ -12,6 +12,8 @@ public interface PhotoService {
 
     Optional<Photo> getLatestPhotoByAlbum(UUID albumId);
 
+    Optional<Photo> getLatestPhotoByAlbum(UUID albumId, int width, int height);
+
     List<Photo> getPhotosByAnimal(UUID animalId);
 
     Optional<Photo> getLatestPhotoByAnimal(UUID animalId);

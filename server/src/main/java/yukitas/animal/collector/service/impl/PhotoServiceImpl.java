@@ -59,6 +59,18 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
+    public Optional<Photo> getLatestPhotoByAlbum(UUID albumId, int width, int height) {
+        Optional<Photo> photoOptional = getLatestPhotoByAlbum(albumId);
+        if (photoOptional.isPresent()) {
+            Photo photo = photoOptional.get();
+            byte[] thumbnailContent = convertToThumbnail(photo.getContent(), width, height);
+            photo.setContent(thumbnailContent);
+            return Optional.of(photo);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public List<Photo> getPhotosByAnimal(UUID animalId) {
         return new ArrayList<>(findAnimalById(animalId).getPhotos());
     }
@@ -176,7 +188,7 @@ public class PhotoServiceImpl implements PhotoService {
         albums.forEach(album -> album.addPhoto(photo));
     }
 
-    // crop and scale photo based on specified width & height
+    // crop and scale photo based on specified thumbnail width & height
     private byte[] convertToThumbnail(byte[] photoContent, int width, int height) {
         ByteArrayInputStream in = new ByteArrayInputStream(photoContent);
         try {
@@ -186,9 +198,10 @@ public class PhotoServiceImpl implements PhotoService {
             int originalHeight = original.getHeight();
             double originalRatio = originalWidth / (double) originalHeight;
 
+            // do nothing when either of the side lengths provided is invalid
             if (width <= 0 || height <= 0 || width > originalWidth || height > originalHeight) {
-                width = originalWidth;
-                height = originalHeight;
+                LOGGER.warn(String.format("Invalid side length: width=%s, height=%s", width, height));
+                return photoContent;
             }
 
             double ratio = width / (double) height;
@@ -201,11 +214,11 @@ public class PhotoServiceImpl implements PhotoService {
             if (ratio > originalRatio) {
                 cropWidth = originalWidth;
                 cropHeight = (int) (cropWidth / ratio);
-                y = (originalHeight - height) / 2;
+                y = (originalHeight - cropHeight) / 2;
             } else {
                 cropHeight = originalHeight;
                 cropWidth = (int) (cropHeight * ratio);
-                x = (originalWidth - width) / 2;
+                x = (originalWidth - cropWidth) / 2;
             }
 
             BufferedImage cropped = original.getSubimage(x, y, cropWidth, cropHeight);
