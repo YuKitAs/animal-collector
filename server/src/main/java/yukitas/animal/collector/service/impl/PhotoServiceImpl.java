@@ -3,6 +3,8 @@ package yukitas.animal.collector.service.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -59,6 +61,7 @@ public class PhotoServiceImpl implements PhotoService {
         return photos.isEmpty() ? Optional.empty() : Optional.of(photos.get(0));
     }
 
+    @Cacheable("photo")
     @Override
     public Photo getPhoto(UUID id) {
         return findPhotoById(id);
@@ -78,6 +81,7 @@ public class PhotoServiceImpl implements PhotoService {
         return photo.getId();
     }
 
+    @CacheEvict(value = "photo", key = "#id")
     @Override
     public void updatePhoto(UUID id, Set<UUID> animalIds, Set<UUID> albumIds, String description) {
         LOGGER.trace("Updating photo '{}' with [animalIds={}, albumIds={}, description='{}']", id, animalIds, albumIds,
@@ -97,6 +101,7 @@ public class PhotoServiceImpl implements PhotoService {
         photoRepository.save(photo);
     }
 
+    @CacheEvict(value = "photo")
     @Override
     public void deletePhoto(UUID id) {
         findPhotoById(id);
