@@ -16,6 +16,7 @@ import java.util.*
 
 class AnimalPhotosFragment : PhotosFragment() {
     private val TAG = AnimalPhotosFragment::class.java.simpleName
+
     private lateinit var animal: Animal
 
     override fun setPhotos() {
@@ -37,7 +38,7 @@ class AnimalPhotosFragment : PhotosFragment() {
                 }))
 
         disposable.add(
-                apiService.getPhotosByAnimal(animalId)
+                apiService.getPhotosByAnimal(animalId, THUMBNAIL_SIDE_LENGTH, THUMBNAIL_SIDE_LENGTH)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {

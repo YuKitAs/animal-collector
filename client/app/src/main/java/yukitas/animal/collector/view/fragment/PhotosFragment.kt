@@ -15,21 +15,18 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.media.ExifInterface
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
-import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.adapter.PhotosAdapter
 import java.io.File
 import java.io.FileOutputStream
@@ -40,18 +37,17 @@ import java.util.*
 /**
  *  Photos in a selected album or animal
  */
-abstract class PhotosFragment : Fragment() {
+abstract class PhotosFragment : BaseFragment() {
     private val TAG = PhotosFragment::class.java.simpleName
+
     private val RESULT_LOAD_IMAGE = 1
     private val MAX_SIDE_LENGTH = 1080
+    protected val THUMBNAIL_SIDE_LENGTH = 400
 
     protected lateinit var binding: yukitas.animal.collector.databinding.FragmentPhotosBinding
     protected lateinit var photosAdapter: PhotosAdapter
     protected lateinit var albumId: String
     protected lateinit var animalId: String
-
-    protected val apiService by lazy { ApiService.create() }
-    protected val disposable = CompositeDisposable()
 
     override fun onCreateView(
             inflater: LayoutInflater,

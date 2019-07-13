@@ -3,32 +3,26 @@ package yukitas.animal.collector.view.fragment
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_DESC
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
 import yukitas.animal.collector.databinding.FragmentPhotoDetailBinding
-import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.utility.toBitmap
 import yukitas.animal.collector.view.activity.EditPhotoActivity
 
-class PhotoDetailFragment : Fragment() {
+class PhotoDetailFragment : BaseFragment() {
     private val TAG = PhotoDetailFragment::class.java.simpleName
 
     private lateinit var binding: FragmentPhotoDetailBinding
     private lateinit var photoId: String
-
-    private val apiService by lazy { ApiService.create() }
-    private val disposable = CompositeDisposable()
 
     override fun onCreateView(
             inflater: LayoutInflater,

@@ -15,6 +15,7 @@ import yukitas.animal.collector.view.activity.EditPhotoActivity
 
 class AlbumPhotosFragment : PhotosFragment() {
     private val TAG = AlbumPhotosFragment::class.java.simpleName
+
     private lateinit var album: Album
 
     override fun setPhotos() {
@@ -36,7 +37,7 @@ class AlbumPhotosFragment : PhotosFragment() {
                 }))
 
         disposable.add(
-                apiService.getPhotosByAlbum(albumId)
+                apiService.getPhotosByAlbum(albumId, THUMBNAIL_SIDE_LENGTH, THUMBNAIL_SIDE_LENGTH)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {

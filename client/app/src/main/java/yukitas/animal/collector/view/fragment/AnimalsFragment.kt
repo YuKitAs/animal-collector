@@ -4,14 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
@@ -19,20 +17,17 @@ import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_ID
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.Photo
-import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.activity.EditAnimalActivity
 import yukitas.animal.collector.view.activity.PhotoActivity
 import yukitas.animal.collector.view.adapter.AnimalsAdapter
 import java.util.*
 import java.util.stream.Collectors
 
-class AnimalsFragment : Fragment() {
+class AnimalsFragment : CollectionFragment() {
     private val TAG = AnimalsFragment::class.java.simpleName
 
     private lateinit var binding: yukitas.animal.collector.databinding.FragmentAnimalsBinding
     private lateinit var animalsAdapter: AnimalsAdapter
-    private val apiService by lazy { ApiService.create() }
-    private val disposable = CompositeDisposable()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -77,7 +72,8 @@ class AnimalsFragment : Fragment() {
     @SuppressLint("CheckResult")
     private fun setThumbnails(animals: List<Animal>) {
         val animalThumbnailMaps: List<Maybe<Map<String, Photo?>>> = animals.stream().map { animal ->
-            apiService.getAnimalThumbnail(animal.id).map { photo ->
+            apiService.getAnimalThumbnail(animal.id, THUMBNAIL_SIDE_LENGTH,
+                    THUMBNAIL_SIDE_LENGTH).map { photo ->
                 Collections.singletonMap(animal.id, photo)
             }.defaultIfEmpty(Collections.singletonMap(animal.id, null as Photo?))
         }.collect(Collectors.toList())

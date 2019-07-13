@@ -4,14 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
@@ -20,20 +18,17 @@ import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
 import yukitas.animal.collector.databinding.FragmentAlbumsBinding
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Photo
-import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.activity.EditAlbumActivity
 import yukitas.animal.collector.view.activity.PhotoActivity
 import yukitas.animal.collector.view.adapter.AlbumsAdapter
 import java.util.*
 import java.util.stream.Collectors
 
-class AlbumsFragment : Fragment() {
+class AlbumsFragment : CollectionFragment() {
     private val TAG = AlbumsFragment::class.java.simpleName
 
     private lateinit var binding: FragmentAlbumsBinding
     private lateinit var albumsAdapter: AlbumsAdapter
-    private val apiService by lazy { ApiService.create() }
-    private val disposable = CompositeDisposable()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -78,7 +73,8 @@ class AlbumsFragment : Fragment() {
     @SuppressLint("CheckResult")
     private fun setThumbnails(albums: List<Album>) {
         val albumThumbnailMaps: List<Maybe<Map<String, Photo?>>> = albums.stream().map { album ->
-            apiService.getAlbumThumbnail(album.id).map { photo ->
+            apiService.getAlbumThumbnail(album.id, THUMBNAIL_SIDE_LENGTH,
+                    THUMBNAIL_SIDE_LENGTH).map { photo ->
                 Collections.singletonMap(album.id, photo)
             }.defaultIfEmpty(Collections.singletonMap(album.id, null as Photo?))
         }.collect(Collectors.toList())
