@@ -38,16 +38,20 @@ interface ApiService {
     fun getAlbumsByPhoto(@Path("photoId") photoId: String): Observable<List<Album>>
 
     @GET("albums/{albumId}/photos")
-    fun getPhotosByAlbum(@Path("albumId") albumId: String): Observable<List<Photo>>
+    fun getPhotosByAlbum(@Path("albumId") albumId: String, @Query("width") width: Int, @Query(
+            "height") height: Int): Observable<List<Photo>>
 
     @GET("albums/{albumId}/photos/latest")
-    fun getAlbumThumbnail(@Path("albumId") albumId: String): Maybe<Photo>
+    fun getAlbumThumbnail(@Path("albumId") albumId: String, @Query("width") width: Int, @Query(
+            "height") height: Int): Maybe<Photo>
 
     @GET("animals/{animalId}/photos")
-    fun getPhotosByAnimal(@Path("animalId") animalId: String): Observable<List<Photo>>
+    fun getPhotosByAnimal(@Path("animalId") animalId: String, @Query("width") width: Int, @Query(
+            "height") height: Int): Observable<List<Photo>>
 
     @GET("animals/{animalId}/photos/latest")
-    fun getAnimalThumbnail(@Path("animalId") animalId: String): Maybe<Photo>
+    fun getAnimalThumbnail(@Path("animalId") animalId: String, @Query("width") width: Int, @Query(
+            "height") height: Int): Maybe<Photo>
 
     @GET("photos/{photoId}")
     fun getPhotoById(@Path("photoId") id: String): Single<Photo>
