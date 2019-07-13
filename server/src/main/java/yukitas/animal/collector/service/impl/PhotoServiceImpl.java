@@ -7,8 +7,16 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import javax.imageio.ImageIO;
 
 import yukitas.animal.collector.model.Album;
 import yukitas.animal.collector.model.Animal;
@@ -59,6 +67,18 @@ public class PhotoServiceImpl implements PhotoService {
     public Optional<Photo> getLatestPhotoByAnimal(UUID animalId) {
         List<Photo> photos = getPhotosByAnimal(animalId);
         return photos.isEmpty() ? Optional.empty() : Optional.of(photos.get(0));
+    }
+
+    @Override
+    public Optional<Photo> getLatestPhotoByAnimal(UUID animalId, int width, int height) {
+        Optional<Photo> photoOptional = getLatestPhotoByAnimal(animalId);
+        if (photoOptional.isPresent()) {
+            Photo photo = photoOptional.get();
+            byte[] thumbnailContent = convertToThumbnail(photo.getContent(), width, height);
+            photo.setContent(thumbnailContent);
+            return Optional.of(photo);
+        }
+        return Optional.empty();
     }
 
     @Cacheable("photo")
@@ -154,5 +174,53 @@ public class PhotoServiceImpl implements PhotoService {
     private void updatePhotoAlbums(Photo photo, Set<Album> albums) {
         photo.setAlbums(albums);
         albums.forEach(album -> album.addPhoto(photo));
+    }
+
+    // crop and scale photo based on specified width & height
+    private byte[] convertToThumbnail(byte[] photoContent, int width, int height) {
+        ByteArrayInputStream in = new ByteArrayInputStream(photoContent);
+        try {
+            BufferedImage original = ImageIO.read(in);
+
+            int originalWidth = original.getWidth();
+            int originalHeight = original.getHeight();
+            double originalRatio = originalWidth / (double) originalHeight;
+
+            if (width <= 0 || height <= 0 || width > originalWidth || height > originalHeight) {
+                width = originalWidth;
+                height = originalHeight;
+            }
+
+            double ratio = width / (double) height;
+
+            int cropWidth;
+            int cropHeight;
+            int x = 0;
+            int y = 0;
+
+            if (ratio > originalRatio) {
+                cropWidth = originalWidth;
+                cropHeight = (int) (cropWidth / ratio);
+                y = (originalHeight - height) / 2;
+            } else {
+                cropHeight = originalHeight;
+                cropWidth = (int) (cropHeight * ratio);
+                x = (originalWidth - width) / 2;
+            }
+
+            BufferedImage cropped = original.getSubimage(x, y, cropWidth, cropHeight);
+            BufferedImage scaled = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            scaled.getGraphics()
+                    .drawImage(cropped.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, new Color(0, 0, 0),
+                            null);
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            ImageIO.write(scaled, "jpg", out);
+
+            return out.toByteArray();
+        } catch (IOException e) {
+            LOGGER.error("IOException in scaling photo: {}", e.getMessage());
+            return new byte[]{};
+        }
     }
 }

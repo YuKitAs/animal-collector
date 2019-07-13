@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -51,9 +52,12 @@ public class PhotoController {
     }
 
     @GetMapping("/animals/{animal_id}/photos/latest")
-    public ResponseEntity<Photo> getLatestPhotoByAnimal(@PathVariable("animal_id") UUID animalId) {
-        return photoService.getLatestPhotoByAnimal(animalId)
-                .map(photo -> new ResponseEntity<>(photo, HttpStatus.OK))
+    public ResponseEntity<Photo> getLatestPhotoByAnimal(@PathVariable("animal_id") UUID animalId,
+            @RequestParam(value = "width", required = false) Integer width,
+            @RequestParam(value = "height", required = false) Integer height) {
+        Optional<Photo> photoOptional = (width != null && height != null) ? photoService.getLatestPhotoByAnimal(
+                animalId, width, height) : photoService.getLatestPhotoByAnimal(animalId);
+        return photoOptional.map(photo -> new ResponseEntity<>(photo, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 

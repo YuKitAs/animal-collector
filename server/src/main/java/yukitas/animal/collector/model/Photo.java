@@ -89,6 +89,10 @@ public class Photo {
         return content;
     }
 
+    public void setContent(byte[] content) {
+        this.content = content;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }

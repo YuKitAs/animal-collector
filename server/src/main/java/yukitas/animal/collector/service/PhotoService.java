@@ -16,6 +16,8 @@ public interface PhotoService {
 
     Optional<Photo> getLatestPhotoByAnimal(UUID animalId);
 
+    Optional<Photo> getLatestPhotoByAnimal(UUID animalId, int width, int height);
+
     Photo getPhoto(UUID id);
 
     UUID createPhoto(Photo.Builder builder, byte[] content);
