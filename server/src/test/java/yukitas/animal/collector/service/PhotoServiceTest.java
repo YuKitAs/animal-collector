@@ -5,11 +5,16 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.*;
 
+import javax.imageio.ImageIO;
+
+import yukitas.animal.collector.model.Animal;
 import yukitas.animal.collector.model.Photo;
 import yukitas.animal.collector.repository.AlbumRepository;
 import yukitas.animal.collector.repository.AnimalRepository;
@@ -19,11 +24,13 @@ import yukitas.animal.collector.service.exception.InvalidDataException;
 import yukitas.animal.collector.service.exception.RequiredDataNotProvidedException;
 import yukitas.animal.collector.service.impl.PhotoServiceImpl;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 public class PhotoServiceTest extends AbstractServiceTest {
     private static final UUID PHOTO_ID = UUID.randomUUID();
+    private static final UUID ANIMAL_ID = UUID.randomUUID();
 
     @InjectMocks
     private PhotoServiceImpl photoService;
@@ -93,5 +100,79 @@ public class PhotoServiceTest extends AbstractServiceTest {
     public void deletePhoto_PhotoNotFound() {
         assertThatThrownBy(() -> photoService.deletePhoto(INVALID_ID)).isInstanceOf(EntityNotFoundException.class)
                 .hasMessage(PHOTO_NOT_FOUND_MESSAGE);
+    }
+
+    @Test
+    public void getPortraitPhotoThumbnail() throws IOException {
+        Animal animal = new Animal.Builder().build();
+        Photo photo = new Photo.Builder().build();
+        photo.setContent(getPhotoContent("photo-100x200.jpg"));
+        animal.getPhotos().add(photo);
+
+        when(animalRepository.findById(ANIMAL_ID)).thenReturn(Optional.of(animal));
+
+        Optional<Photo> thumbnail = photoService.getLatestPhotoByAnimal(ANIMAL_ID, 20, 20);
+        assert thumbnail.isPresent();
+
+        BufferedImage thumbnailContent = ImageIO.read(new ByteArrayInputStream(thumbnail.get().getContent()));
+        assertThat(thumbnailContent.getWidth()).isEqualTo(20);
+        assertThat(thumbnailContent.getHeight()).isEqualTo(20);
+    }
+
+    @Test
+    public void getLandscapePhotoThumbnail() throws IOException {
+        Animal animal = new Animal.Builder().build();
+        Photo photo = new Photo.Builder().build();
+        photo.setContent(getPhotoContent("photo-200x100.jpg"));
+        animal.getPhotos().add(photo);
+
+        when(animalRepository.findById(ANIMAL_ID)).thenReturn(Optional.of(animal));
+
+        Optional<Photo> thumbnail = photoService.getLatestPhotoByAnimal(ANIMAL_ID, 20, 20);
+        assert thumbnail.isPresent();
+
+        BufferedImage thumbnailContent = ImageIO.read(new ByteArrayInputStream(thumbnail.get().getContent()));
+        assertThat(thumbnailContent.getWidth()).isEqualTo(20);
+        assertThat(thumbnailContent.getHeight()).isEqualTo(20);
+    }
+
+    @Test
+    public void getPhotoThumbnail_IgnoringNegativeSideLength() throws IOException {
+        Animal animal = new Animal.Builder().build();
+        Photo photo = new Photo.Builder().build();
+        photo.setContent(getPhotoContent("photo-100x200.jpg"));
+        animal.getPhotos().add(photo);
+
+        when(animalRepository.findById(ANIMAL_ID)).thenReturn(Optional.of(animal));
+
+        Optional<Photo> thumbnail = photoService.getLatestPhotoByAnimal(ANIMAL_ID, 20, -1);
+        assert thumbnail.isPresent();
+
+        BufferedImage thumbnailContent = ImageIO.read(new ByteArrayInputStream(thumbnail.get().getContent()));
+        assertThat(thumbnailContent.getWidth()).isEqualTo(100);
+        assertThat(thumbnailContent.getHeight()).isEqualTo(200);
+    }
+
+    @Test
+    public void getPhotoThumbnail_IgnoringTooLargeSideLength() throws IOException {
+        Animal animal = new Animal.Builder().build();
+        Photo photo = new Photo.Builder().build();
+        photo.setContent(getPhotoContent("photo-200x100.jpg"));
+        animal.getPhotos().add(photo);
+
+        when(animalRepository.findById(ANIMAL_ID)).thenReturn(Optional.of(animal));
+
+        Optional<Photo> thumbnail = photoService.getLatestPhotoByAnimal(ANIMAL_ID, 300, 20);
+        assert thumbnail.isPresent();
+
+        BufferedImage thumbnailContent = ImageIO.read(new ByteArrayInputStream(thumbnail.get().getContent()));
+        assertThat(thumbnailContent.getWidth()).isEqualTo(200);
+        assertThat(thumbnailContent.getHeight()).isEqualTo(100);
+    }
+
+    private byte[] getPhotoContent(String photoFile) throws IOException {
+        return Files.readAllBytes(new File(
+                Objects.requireNonNull(getClass().getClassLoader().getResource("fixtures/images/" + photoFile))
+                        .getFile()).toPath());
     }
 }

@@ -20,7 +20,7 @@ public class PhotoControllerTest extends AbstractControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("content", new ClassPathResource("fixtures/photo.png"));
+        body.add("content", new ClassPathResource("fixtures/images/photo.jpg"));
 
         ResponseEntity<CreatePhotoResponse> response = getTestRestTemplate().postForEntity("/photos",
                 new HttpEntity<>(body, headers), CreatePhotoResponse.class);
