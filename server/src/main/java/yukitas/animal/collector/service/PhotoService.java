@@ -10,11 +10,15 @@ import yukitas.animal.collector.model.Photo;
 public interface PhotoService {
     List<Photo> getPhotosByAlbum(UUID albumId);
 
+    List<Photo> getPhotosByAlbum(UUID albumId, int width, int height);
+
     Optional<Photo> getLatestPhotoByAlbum(UUID albumId);
 
     Optional<Photo> getLatestPhotoByAlbum(UUID albumId, int width, int height);
 
     List<Photo> getPhotosByAnimal(UUID animalId);
+
+    List<Photo> getPhotosByAnimal(UUID animalId, int width, int height);
 
     Optional<Photo> getLatestPhotoByAnimal(UUID animalId);
 

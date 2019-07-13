@@ -53,6 +53,13 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
+    public List<Photo> getPhotosByAlbum(UUID albumId, int width, int height) {
+        return getPhotosByAlbum(albumId).stream()
+                .peek(photo -> photo.setContent(convertToThumbnail(photo.getContent(), width, height)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Optional<Photo> getLatestPhotoByAlbum(UUID albumId) {
         List<Photo> photos = getPhotosByAlbum(albumId);
         return photos.isEmpty() ? Optional.empty() : Optional.of(photos.get(0));
@@ -73,6 +80,13 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public List<Photo> getPhotosByAnimal(UUID animalId) {
         return new ArrayList<>(findAnimalById(animalId).getPhotos());
+    }
+
+    @Override
+    public List<Photo> getPhotosByAnimal(UUID animalId, int width, int height) {
+        return getPhotosByAnimal(animalId).stream()
+                .peek(photo -> photo.setContent(convertToThumbnail(photo.getContent(), width, height)))
+                .collect(Collectors.toList());
     }
 
     @Override

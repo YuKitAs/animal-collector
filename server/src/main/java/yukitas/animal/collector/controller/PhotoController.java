@@ -35,8 +35,11 @@ public class PhotoController {
     }
 
     @GetMapping("/albums/{album_id}/photos")
-    public List<Photo> getPhotosByAlbum(@PathVariable("album_id") UUID albumId) {
-        return photoService.getPhotosByAlbum(albumId);
+    public List<Photo> getPhotosByAlbum(@PathVariable("album_id") UUID albumId,
+            @RequestParam(value = "width", required = false) Integer width,
+            @RequestParam(value = "height", required = false) Integer height) {
+        return (width != null && height != null) ? photoService.getPhotosByAlbum(albumId, width,
+                height) : photoService.getPhotosByAlbum(albumId);
     }
 
     @GetMapping("/albums/{album_id}/photos/latest")
@@ -50,8 +53,11 @@ public class PhotoController {
     }
 
     @GetMapping("/animals/{animal_id}/photos")
-    public List<Photo> getPhotosByAnimal(@PathVariable("animal_id") UUID animalId) {
-        return photoService.getPhotosByAnimal(animalId);
+    public List<Photo> getPhotosByAnimal(@PathVariable("animal_id") UUID animalId,
+            @RequestParam(value = "width", required = false) Integer width,
+            @RequestParam(value = "height", required = false) Integer height) {
+        return (width != null && height != null) ? photoService.getPhotosByAnimal(animalId, width,
+                height) : photoService.getPhotosByAnimal(animalId);
     }
 
     @GetMapping("/animals/{animal_id}/photos/latest")
