@@ -124,7 +124,9 @@ class EditPhotoActivity : AppCompatActivity() {
                                     albums.stream().map { album -> album.name }.collect(
                                             Collectors.toList()).toTypedArray())
 
-                            if (!isCreating) {
+                            if (isCreating) {
+                                selectCurrentAlbum()
+                            } else {
                                 selectAlbumsOfPhoto()
                             }
                         }, {
@@ -146,13 +148,49 @@ class EditPhotoActivity : AppCompatActivity() {
                                     animals.stream().map { animal -> animal.name }.collect(
                                             Collectors.toList()).toTypedArray())
 
-                            if (!isCreating) {
+                            if (isCreating) {
+                                selectCurrentAnimal()
+                            } else {
                                 selectAnimalsOfPhoto()
                             }
                         }, {
                             Log.e(TAG, "Some errors occurred while fetching all animals: $it")
                             it.printStackTrace()
                         }))
+    }
+
+    private fun selectCurrentAlbum() {
+        val albumId = intent.getStringExtra(Constants.ARG_ALBUM_ID)
+        Log.d(TAG, "Current album: $albumId")
+        if (albumId != null) {
+            val adapter = (multiselectionAlbum as ListView).adapter
+            for (i in 0 until adapter.count) {
+                val album = albums.find { album ->
+                    album.id == albumId
+                }
+                if (album != null && album.name == adapter.getItem(i)) {
+                    Log.d(TAG, "Select current album ${adapter.getItem(i)}")
+                    (multiselectionAlbum as ListView).setItemChecked(i, true)
+                }
+            }
+        }
+    }
+
+    private fun selectCurrentAnimal() {
+        val animalId = intent.getStringExtra(Constants.ARG_ANIMAL_ID)
+        Log.d(TAG, "Current animal: $animalId")
+        if (animalId != null) {
+            val adapter = (multiselectionAnimal as ListView).adapter
+            for (i in 0 until adapter.count) {
+                val animal = animals.find { animal ->
+                    animal.id == animalId
+                }
+                if (animal != null && animal.name == adapter.getItem(i)) {
+                    Log.d(TAG, "Select current animal ${adapter.getItem(i)}")
+                    (multiselectionAnimal as ListView).setItemChecked(i, true)
+                }
+            }
+        }
     }
 
     private fun selectAlbumsOfPhoto() {

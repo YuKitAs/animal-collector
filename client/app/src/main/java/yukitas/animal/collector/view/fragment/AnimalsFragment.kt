@@ -12,7 +12,6 @@ import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
-import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_ID
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
 import yukitas.animal.collector.model.Animal
@@ -104,7 +103,6 @@ class AnimalsFragment : CollectionFragment() {
             val bundle = Bundle()
             val animal = animalsAdapter.animals[position]
             bundle.putString(ARG_ANIMAL_ID, animal.id)
-            bundle.putBoolean(Constants.ARG_IS_CREATING, true)
 
             val intent = Intent(activity, PhotoActivity::class.java).apply {
                 putExtras(bundle)
