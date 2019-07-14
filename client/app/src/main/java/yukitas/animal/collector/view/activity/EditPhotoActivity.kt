@@ -274,7 +274,6 @@ class EditPhotoActivity : AppCompatActivity() {
         return true
     }
 
-
     private fun updatePhoto(albumIds: List<String>, animalIds: List<String>) {
         Log.d(TAG, "Updating photo '$photoId' with albums '$albumIds' and animals '$animalIds'")
 

@@ -35,6 +35,6 @@ class PhotosAdapter(private val context: Context) : BaseAdapter() {
         binding.photo = photo
         binding.imagePhotoThumbnail.setImageBitmap(toBitmap(photo.content))
 
-        return convertView ?: binding.root
+        return binding.root
     }
 }

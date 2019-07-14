@@ -81,7 +81,7 @@ abstract class PhotosFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        // refresh fragment
+        // reset photos
         setPhotos()
     }
 

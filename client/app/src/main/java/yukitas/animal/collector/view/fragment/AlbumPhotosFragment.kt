@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_photos.*
@@ -18,7 +21,10 @@ class AlbumPhotosFragment : PhotosFragment() {
 
     private lateinit var album: Album
 
-    override fun setPhotos() {
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?): View {
         albumId = activity.intent!!.extras!!.getString(Constants.ARG_ALBUM_ID)!!
         Log.d(TAG, "Selected album: $albumId")
 
@@ -36,6 +42,10 @@ class AlbumPhotosFragment : PhotosFragment() {
                     Log.e(TAG, "Some errors occurred: $it")
                 }))
 
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun setPhotos() {
         disposable.add(
                 apiService.getPhotosByAlbum(albumId, THUMBNAIL_SIDE_LENGTH, THUMBNAIL_SIDE_LENGTH)
                         .subscribeOn(Schedulers.io())

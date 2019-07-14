@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_photos.*
@@ -19,7 +22,11 @@ class AnimalPhotosFragment : PhotosFragment() {
 
     private lateinit var animal: Animal
 
-    override fun setPhotos() {
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
         animalId = activity.intent!!.extras!!.getString(Constants.ARG_ANIMAL_ID)!!
         Log.d(TAG, "Selected animal: $animalId")
 
@@ -37,6 +44,10 @@ class AnimalPhotosFragment : PhotosFragment() {
                     Log.e(TAG, "Some errors occurred: $it")
                 }))
 
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun setPhotos() {
         disposable.add(
                 apiService.getPhotosByAnimal(animalId, THUMBNAIL_SIDE_LENGTH, THUMBNAIL_SIDE_LENGTH)
                         .subscribeOn(Schedulers.io())
@@ -65,9 +76,9 @@ class AnimalPhotosFragment : PhotosFragment() {
             bundle.putString(Constants.ARG_ANIMAL_NAME, animal.name)
             bundle.putStringArrayList(Constants.ARG_ANIMAL_TAGS, ArrayList(animal.tags))
 
-            val intent = Intent(activity, EditAnimalActivity::class.java)
-            intent.putExtras(bundle)
-
+            val intent = Intent(activity, EditAnimalActivity::class.java).apply {
+                putExtras(bundle)
+            }
             activity.startActivity(intent)
         }
     }
