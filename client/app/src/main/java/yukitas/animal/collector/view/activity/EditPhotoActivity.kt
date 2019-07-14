@@ -96,7 +96,10 @@ class EditPhotoActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        deletePhoto()
+
+        if (isCreating) {
+            deletePhoto()
+        }
     }
 
     private fun setAlbumsAndAnimalsOfPhoto(albums: List<Album>, animals: List<Animal>) {
