@@ -152,6 +152,8 @@ public class PhotoServiceImpl implements PhotoService {
     public void deletePhoto(UUID id) {
         findPhotoById(id);
 
+        LOGGER.debug("Deleting photo '{}'", id);
+
         photoRepository.deleteById(id);
     }
 
