@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
 
 import yukitas.animal.collector.model.Animal;
 import yukitas.animal.collector.model.Category;
+import yukitas.animal.collector.model.Photo;
 import yukitas.animal.collector.repository.AnimalRepository;
 import yukitas.animal.collector.repository.CategoryRepository;
 import yukitas.animal.collector.repository.PhotoRepository;
 import yukitas.animal.collector.service.AnimalService;
-import yukitas.animal.collector.service.PhotoService;
 import yukitas.animal.collector.service.exception.EntityNotFoundException;
 
 @Service
@@ -25,15 +25,13 @@ public class AnimalServiceImpl implements AnimalService {
     private static final String ENTITY_NAME = "animal";
 
     private final CategoryRepository categoryRepository;
-    private final PhotoService photoService;
     private final AnimalRepository animalRepository;
     private final PhotoRepository photoRepository;
 
     @Autowired
-    public AnimalServiceImpl(CategoryRepository categoryRepository, PhotoService photoService,
-            AnimalRepository animalRepository, PhotoRepository photoRepository) {
+    public AnimalServiceImpl(CategoryRepository categoryRepository, AnimalRepository animalRepository,
+            PhotoRepository photoRepository) {
         this.categoryRepository = categoryRepository;
-        this.photoService = photoService;
         this.animalRepository = animalRepository;
         this.photoRepository = photoRepository;
     }
@@ -55,7 +53,11 @@ public class AnimalServiceImpl implements AnimalService {
     public List<Animal> getAnimalsByPhoto(UUID photoId) {
         return animalRepository.findAll()
                 .stream()
-                .filter(animal -> animal.getPhotos().contains(photoService.getPhoto(photoId)))
+                .filter(animal -> animal.getPhotos()
+                        .stream()
+                        .map(Photo::getId)
+                        .collect(Collectors.toSet())
+                        .contains(photoId))
                 .collect(Collectors.toList());
     }
 
