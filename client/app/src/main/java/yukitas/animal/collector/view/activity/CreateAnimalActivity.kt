@@ -1,5 +1,7 @@
 package yukitas.animal.collector.view.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
@@ -13,6 +15,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_create_animal.*
 import kotlinx.android.synthetic.main.activity_main.*
 import yukitas.animal.collector.R
+import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.model.dto.SaveAnimalRequest
 import yukitas.animal.collector.networking.ApiService
 import java.util.stream.Collectors
@@ -85,6 +88,11 @@ class CreateAnimalActivity : AppCompatActivity() {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe { animal ->
                                 Log.d(TAG, "Created animal: $animal")
+
+                                val data = Intent().apply {
+                                    putExtra(Constants.ARG_ANIMAL_NAME, animal.name)
+                                }
+                                setResult(Activity.RESULT_OK, data)
                                 finish()
                             })
         }

@@ -1,5 +1,7 @@
 package yukitas.animal.collector.view.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -12,6 +14,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_create_album.*
 import kotlinx.android.synthetic.main.activity_main.*
 import yukitas.animal.collector.R
+import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.model.dto.SaveAlbumRequest
 import yukitas.animal.collector.networking.ApiService
 import java.util.stream.Collectors
@@ -83,6 +86,11 @@ class CreateAlbumActivity : AppCompatActivity() {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe { album ->
                                 Log.d(TAG, "Created album: $album")
+
+                                val data = Intent().apply {
+                                    putExtra(Constants.ARG_ALBUM_NAME, album.name)
+                                }
+                                setResult(Activity.RESULT_OK, data)
                                 finish()
                             })
         }

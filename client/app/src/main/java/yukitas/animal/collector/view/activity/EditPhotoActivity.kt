@@ -1,5 +1,6 @@
 package yukitas.animal.collector.view.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -34,8 +35,13 @@ class EditPhotoActivity : AppCompatActivity() {
     private var animals: List<Animal> = emptyList()
     private var albumsOfPhoto: List<Album> = emptyList()
     private var animalsOfPhoto: List<Animal> = emptyList()
+    private var newAlbumName: String? = null
+    private var newAnimalName: String? = null
     private var isCreating = true
     private lateinit var photoId: String
+
+    private val RESULT_CREATE_ALBUM = 2
+    private val RESULT_CREATE_ANIMAL = 3
 
     private val apiService by lazy { ApiService.create() }
     private val disposable = CompositeDisposable()
@@ -102,6 +108,19 @@ class EditPhotoActivity : AppCompatActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        // it will be called before onResume, the names can only be selected after resetting the lists
+        if (requestCode == RESULT_CREATE_ALBUM && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                newAlbumName = data.getStringExtra(Constants.ARG_ALBUM_NAME)
+            }
+        } else if (requestCode == RESULT_CREATE_ANIMAL && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                newAnimalName = data.getStringExtra(Constants.ARG_ANIMAL_NAME)
+            }
+        }
+    }
+
     private fun setAlbumsAndAnimalsOfPhoto(albums: List<Album>, animals: List<Animal>) {
         Log.d(TAG,
                 "Fetched albums for photo $photoId: ${albums.stream().map { album -> album.name }.collect(
@@ -132,6 +151,10 @@ class EditPhotoActivity : AppCompatActivity() {
                             } else {
                                 selectAlbumsOfPhoto()
                             }
+
+                            newAlbumName?.let {
+                                selectItemByName((multiselectionAlbum as ListView), it)
+                            }
                         }, {
                             Log.e(TAG, "Some errors occurred while fetching all albums: $it")
                             it.printStackTrace()
@@ -156,6 +179,10 @@ class EditPhotoActivity : AppCompatActivity() {
                             } else {
                                 selectAnimalsOfPhoto()
                             }
+
+                            newAnimalName?.let {
+                                selectItemByName((multiselectionAnimal as ListView), it)
+                            }
                         }, {
                             Log.e(TAG, "Some errors occurred while fetching all animals: $it")
                             it.printStackTrace()
@@ -166,15 +193,11 @@ class EditPhotoActivity : AppCompatActivity() {
         val albumId = intent.getStringExtra(Constants.ARG_ALBUM_ID)
         Log.d(TAG, "Current album: $albumId")
         if (albumId != null) {
-            val adapter = (multiselectionAlbum as ListView).adapter
-            for (i in 0 until adapter.count) {
-                val album = albums.find { album ->
-                    album.id == albumId
-                }
-                if (album != null && album.name == adapter.getItem(i)) {
-                    Log.d(TAG, "Select current album ${adapter.getItem(i)}")
-                    (multiselectionAlbum as ListView).setItemChecked(i, true)
-                }
+            val album = albums.find { album ->
+                album.id == albumId
+            }
+            if (album != null) {
+                selectItemByName((multiselectionAlbum as ListView), album.name)
             }
         }
     }
@@ -183,37 +206,43 @@ class EditPhotoActivity : AppCompatActivity() {
         val animalId = intent.getStringExtra(Constants.ARG_ANIMAL_ID)
         Log.d(TAG, "Current animal: $animalId")
         if (animalId != null) {
-            val adapter = (multiselectionAnimal as ListView).adapter
-            for (i in 0 until adapter.count) {
-                val animal = animals.find { animal ->
-                    animal.id == animalId
-                }
-                if (animal != null && animal.name == adapter.getItem(i)) {
-                    Log.d(TAG, "Select current animal ${adapter.getItem(i)}")
-                    (multiselectionAnimal as ListView).setItemChecked(i, true)
-                }
+            val animal = animals.find { animal ->
+                animal.id == animalId
+            }
+            if (animal != null) {
+                selectItemByName((multiselectionAnimal as ListView), animal.name)
+            }
+        }
+    }
+
+    private fun selectItemByName(multiselection: ListView, name: String) {
+        val adapter = multiselection.adapter
+        for (i in 0 until adapter.count) {
+            if (adapter.getItem(i) == name) {
+                Log.d(TAG, "Select item ${adapter.getItem(i)}")
+                multiselection.setItemChecked(i, true)
             }
         }
     }
 
     private fun selectAlbumsOfPhoto() {
-        val adapter = (multiselectionAlbum as ListView).adapter
-        for (i in 0 until adapter.count) {
-            if (albumsOfPhoto.stream().map { album -> album.name }.collect(
-                            Collectors.toSet()).contains(adapter.getItem(i))) {
-                Log.d(TAG, "Select album ${adapter.getItem(i)}")
-                (multiselectionAlbum as ListView).setItemChecked(i, true)
-            }
-        }
+        selectItemsByNames((multiselectionAlbum as ListView),
+                albumsOfPhoto.stream().map { album -> album.name }.collect(
+                        Collectors.toSet()))
     }
 
     private fun selectAnimalsOfPhoto() {
-        val adapter = (multiselectionAnimal as ListView).adapter
+        selectItemsByNames((multiselectionAnimal as ListView),
+                animalsOfPhoto.stream().map { animal -> animal.name }.collect(
+                        Collectors.toSet()))
+    }
+
+    private fun selectItemsByNames(multiselection: ListView, names: Set<String>) {
+        val adapter = multiselection.adapter
         for (i in 0 until adapter.count) {
-            if (animalsOfPhoto.stream().map { animal -> animal.name }.collect(
-                            Collectors.toSet()).contains(adapter.getItem(i))) {
-                Log.d(TAG, "Select animal ${adapter.getItem(i)}")
-                (multiselectionAnimal as ListView).setItemChecked(i, true)
+            if (names.contains(adapter.getItem(i))) {
+                Log.d(TAG, "Select item ${adapter.getItem(i)}")
+                multiselection.setItemChecked(i, true)
             }
         }
     }
@@ -231,11 +260,13 @@ class EditPhotoActivity : AppCompatActivity() {
 
     private fun setAddButtonListener() {
         btnAddAlbum.setOnClickListener {
-            startActivity(Intent(this, CreateAlbumActivity::class.java))
+            startActivityForResult(Intent(this, CreateAlbumActivity::class.java),
+                    RESULT_CREATE_ALBUM)
         }
 
         btnAddAnimal.setOnClickListener {
-            startActivity(Intent(this, CreateAnimalActivity::class.java))
+            startActivityForResult(Intent(this, CreateAnimalActivity::class.java),
+                    RESULT_CREATE_ANIMAL)
         }
     }
 
