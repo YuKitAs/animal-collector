@@ -95,7 +95,7 @@ class PhotoDetailFragment : BaseFragment() {
         binding.btnDeletePhoto.setOnClickListener {
             val builder = AlertDialog.Builder(activity)
             builder.apply {
-                setMessage(R.string.message_delete_photo_confirm)
+                setTitle(R.string.message_delete_confirm_photo)
                 setPositiveButton(R.string.btn_confirm_positive
                 ) { _, _ ->
                     Log.d(TAG, "Deleting photo '$photoId'")
