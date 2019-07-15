@@ -83,18 +83,6 @@ class EditPhotoActivity : AppCompatActivity() {
         setCancelButtonListener()
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        if (albums.isNotEmpty()) {
-            setAlbumList()
-        }
-
-        if (animals.isNotEmpty()) {
-            setAnimalList()
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         disposable.clear()
@@ -109,15 +97,17 @@ class EditPhotoActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        // it will be called before onResume, the names can only be selected after resetting the lists
+        // the names should be set before resetting the lists so that they can be selected as well
         if (requestCode == RESULT_CREATE_ALBUM && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 newAlbumName = data.getStringExtra(Constants.ARG_ALBUM_NAME)
             }
+            setAlbumList()
         } else if (requestCode == RESULT_CREATE_ANIMAL && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 newAnimalName = data.getStringExtra(Constants.ARG_ANIMAL_NAME)
             }
+            setAnimalList()
         }
     }
 
