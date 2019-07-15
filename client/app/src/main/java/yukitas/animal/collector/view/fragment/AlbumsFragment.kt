@@ -72,6 +72,11 @@ class AlbumsFragment : CollectionFragment() {
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("CheckResult")
     private fun setThumbnails(albums: List<Album>) {
+        if (albums.isEmpty()) {
+            albumsAdapter.albums = albums
+            return
+        }
+
         val albumThumbnailMaps: List<Maybe<Map<String, Photo?>>> = albums.stream().map { album ->
             apiService.getAlbumThumbnail(album.id, THUMBNAIL_SIDE_LENGTH,
                     THUMBNAIL_SIDE_LENGTH).map { photo ->

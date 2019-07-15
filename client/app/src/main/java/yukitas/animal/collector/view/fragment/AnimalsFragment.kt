@@ -70,6 +70,11 @@ class AnimalsFragment : CollectionFragment() {
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("CheckResult")
     private fun setThumbnails(animals: List<Animal>) {
+        if (animals.isEmpty()) {
+            animalsAdapter.animals = animals
+            return
+        }
+
         val animalThumbnailMaps: List<Maybe<Map<String, Photo?>>> = animals.stream().map { animal ->
             apiService.getAnimalThumbnail(animal.id, THUMBNAIL_SIDE_LENGTH,
                     THUMBNAIL_SIDE_LENGTH).map { photo ->
