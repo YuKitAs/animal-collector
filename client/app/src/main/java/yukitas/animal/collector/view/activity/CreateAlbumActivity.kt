@@ -88,7 +88,7 @@ class CreateAlbumActivity : AppCompatActivity() {
                                 Log.d(TAG, "Created album: $album")
 
                                 val data = Intent().apply {
-                                    putExtra(Constants.ARG_ALBUM_NAME, album.name)
+                                    putExtra(Constants.ARG_ALBUM_ID, album.id)
                                 }
                                 setResult(Activity.RESULT_OK, data)
                                 finish()

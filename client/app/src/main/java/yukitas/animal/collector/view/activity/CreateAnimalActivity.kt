@@ -90,7 +90,7 @@ class CreateAnimalActivity : AppCompatActivity() {
                                 Log.d(TAG, "Created animal: $animal")
 
                                 val data = Intent().apply {
-                                    putExtra(Constants.ARG_ANIMAL_NAME, animal.name)
+                                    putExtra(Constants.ARG_ANIMAL_ID, animal.id)
                                 }
                                 setResult(Activity.RESULT_OK, data)
                                 finish()
