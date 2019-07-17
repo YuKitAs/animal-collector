@@ -49,6 +49,8 @@ abstract class PhotosFragment : BaseFragment() {
     protected lateinit var albumId: String
     protected lateinit var animalId: String
 
+    private var isActionButtonOpen = false
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -62,6 +64,7 @@ abstract class PhotosFragment : BaseFragment() {
 
         setPhotos()
 
+        setActionButtonListener()
         setAddPhotoButtonListener()
 
         gridView.setOnItemClickListener { _, _, position, _ ->
@@ -93,6 +96,17 @@ abstract class PhotosFragment : BaseFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             postPhoto(processPhoto(readPhotoFromStorage(data.data!!)))
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        if (requestCode == RESULT_LOAD_IMAGE) {
+            startActivityForResult(Intent(Intent.ACTION_PICK,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RESULT_LOAD_IMAGE)
+        } else {
+            Toast.makeText(activity, "Permission denied to read your external storage",
+                    Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -218,15 +232,30 @@ abstract class PhotosFragment : BaseFragment() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
-                                            grantResults: IntArray) {
-        if (requestCode == RESULT_LOAD_IMAGE) {
-            startActivityForResult(Intent(Intent.ACTION_PICK,
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI), RESULT_LOAD_IMAGE)
-        } else {
-            Toast.makeText(activity, "Permission denied to read your external storage",
-                    Toast.LENGTH_SHORT).show()
+    private fun setActionButtonListener() {
+        binding.btnAction.setOnClickListener {
+            if (!isActionButtonOpen) {
+                openActionMenu()
+            } else {
+                closeActionMenu()
+            }
         }
+    }
+
+    private fun closeActionMenu() {
+        isActionButtonOpen = false
+        binding.btnAddPhoto.animate().translationY(0f)
+        binding.btnEditCollection.animate().translationY(0f)
+        binding.btnDeleteCollection.animate().translationY(0f)
+    }
+
+    private fun openActionMenu() {
+        isActionButtonOpen = true
+        binding.btnAddPhoto.animate().translationY(-resources.getDimension(R.dimen.standard_65))
+        binding.btnEditCollection.animate().translationY(
+                -resources.getDimension(R.dimen.standard_130))
+        binding.btnDeleteCollection.animate().translationY(
+                -resources.getDimension(R.dimen.standard_195))
     }
 
     protected abstract fun startEditPhotoActivity(photoId: String)
