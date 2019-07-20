@@ -25,7 +25,7 @@ class AlbumPhotosFragment : PhotosFragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?): View {
-        albumId = activity.intent!!.extras!!.getString(Constants.ARG_ALBUM_ID)!!
+        albumId = activity.intent.getStringExtra(Constants.ARG_ALBUM_ID)!!
         Log.d(TAG, "Selected album: $albumId")
 
         disposable.add(apiService.getAlbumById(albumId)

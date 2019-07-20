@@ -27,7 +27,7 @@ class AnimalPhotosFragment : PhotosFragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {
-        animalId = activity.intent!!.extras!!.getString(Constants.ARG_ANIMAL_ID)!!
+        animalId = activity.intent.getStringExtra(Constants.ARG_ANIMAL_ID)!!
         Log.d(TAG, "Selected animal: $animalId")
 
         disposable.add(apiService.getAnimalById(animalId)
