@@ -19,12 +19,12 @@ class PhotoActivity : AppCompatActivity() {
             when (AnimalCollectorApplication.currentViewMode) {
                 ViewMode.ALBUM -> {
                     supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, AlbumPhotosFragment())
+                            .replace(R.id.fragment_photos_container, AlbumPhotosFragment())
                             .commit()
                 }
                 ViewMode.ANIMAL -> {
                     supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, AnimalPhotosFragment())
+                            .replace(R.id.fragment_photos_container, AnimalPhotosFragment())
                             .commit()
                 }
             }
