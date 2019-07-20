@@ -73,7 +73,7 @@ abstract class PhotosFragment : BaseFragment() {
             activity.intent.putExtras(bundle)
 
             activity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container,
+                    .replace(R.id.fragment_photos_container,
                             PhotoDetailFragment())
                     .addToBackStack("photos")
                     .commit()
