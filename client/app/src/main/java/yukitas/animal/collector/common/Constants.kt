@@ -11,5 +11,7 @@ class Constants {
         const val ARG_PHOTO_ID = "photo_id"
         const val ARG_PHOTO_DESC = "photo_desc"
         const val ARG_IS_CREATING = "is_creating"
+        const val ARG_SELECTED_ALBUM_IDS = "selected_album_ids"
+        const val ARG_SELECTED_ANIMAL_IDS = "selected_animal_ids"
     }
 }

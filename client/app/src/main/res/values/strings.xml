@@ -6,6 +6,7 @@
     <string name="content_desc_animal">Animal</string>
     <string name="label_albums">Albums</string>
     <string name="label_animals">Animals</string>
+    <string name="text_none">None</string>
     <!-- Input hints -->
     <string name="hint_album_name">Album name</string>
     <string name="hint_animal_name">Animal name</string>
@@ -25,10 +26,12 @@
     <string name="btn_confirm_negative">not now</string>
     <string name="btn_new_animal">New Animal</string>
     <string name="btn_new_album">New Album</string>
+    <string name="btn_confirm">confirm</string>
     <!-- Dialog messages -->
     <string name="message_delete_confirm">Are you sure you want to delete this %1$s?\n</string>
     <string name="message_delete_confirm_animal">Photos which are only associated with this animal would also be removed from other albums.</string>
     <string name="message_delete_confirm_photo">Are you sure you want to delete this photo from all collections?</string>
     <string name="warning_select_no_animal">Please select at least one animal!</string>
     <string name="warning_select_invalid_collections">At least one album AND one animal should belong to the same category!</string>
+    <string name="btn_select">select</string>
 </resources>

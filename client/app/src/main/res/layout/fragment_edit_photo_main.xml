@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:paddingLeft="50dp"
+    android:paddingRight="50dp"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent">
+
+    <TextView
+        android:id="@+id/label_select_albums"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/label_albums"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textSelectedAlbums"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_none"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btnSelectAlbums"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:height="30dp"
+        android:background="@color/colorPrimary"
+        android:minHeight="0dp"
+        android:text="@string/btn_select" />
+
+    <TextView
+        android:id="@+id/label_select_animals"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/label_animals"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textSelectedAnimals"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_none"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btnSelectAnimals"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:height="30dp"
+        android:background="@color/colorPrimary"
+        android:minHeight="0dp"
+        android:text="@string/btn_select" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_photo_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/inputPhotoDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_photo_desc"
+            android:inputType="text"
+            android:maxLength="200"
+            android:textSize="18sp" />
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancelPhotoEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:background="@color/colorPrimary"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/btnSavePhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@color/colorPrimary"
+            android:text="@string/btn_save" />
+    </LinearLayout>
+</LinearLayout>

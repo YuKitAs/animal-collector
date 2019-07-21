@@ -1,0 +1,136 @@
+package yukitas.animal.collector.view.fragment
+
+import android.app.Activity
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.ListView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_select_collection.*
+import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.model.Animal
+import yukitas.animal.collector.view.activity.CreateAnimalActivity
+import yukitas.animal.collector.view.adapter.CollectionArrayAdapter
+import java.util.stream.Collectors
+
+class SelectAnimalFragment : SelectCollectionFragment() {
+    private val TAG = SelectAnimalFragment::class.java.simpleName
+
+    // all animals
+    private var animals: List<Animal> = emptyList()
+    // animals fetched by photo
+    private var photoAnimals: List<Animal> = emptyList()
+
+    private var newAnimalId: String? = null
+
+    private val RESULT_CREATE_ANIMAL = 3
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        btnAddCollection.text = getString(yukitas.animal.collector.R.string.btn_new_animal)
+
+        if (!isCreating) {
+            disposable.add(apiService.getAnimalsByPhoto(photoId).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ animals ->
+                        Log.d(TAG,
+                                "Fetched animals for photo $photoId: ${animals.stream().map { animal -> animal.name }.collect(
+                                        Collectors.toList())}")
+                        photoAnimals = animals
+
+                        // only set lists after all animals are fetched, in order to pre-select photo animals
+                        setList()
+                    }, {
+                        Log.e(TAG,
+                                "Some errors occurred when fetching animals of photo $photoId: $it")
+                        it.printStackTrace()
+                    }))
+        } else {
+            setList()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RESULT_CREATE_ANIMAL && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                newAnimalId = data.getStringExtra(Constants.ARG_ANIMAL_ID)
+                Log.d(TAG, "Newly created animal id: $newAnimalId")
+            }
+            setList()
+        }
+    }
+
+    override fun setList() {
+        val selectedAnimalIds = activity.intent.getStringArrayListExtra(
+                Constants.ARG_SELECTED_ANIMAL_IDS).orEmpty()
+
+        disposable.add(
+                apiService.getAllAnimals()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ animals ->
+                            this.animals = animals
+
+                            val multiSelectAnimalList = multiSelectListCollection as ListView
+                            multiSelectAnimalList.adapter = CollectionArrayAdapter(activity,
+                                    android.R.layout.simple_list_item_multiple_choice,
+                                    android.R.id.text1,
+                                    ArrayList(animals))
+
+                            if (selectedAnimalIds.isNotEmpty()) {
+                                Log.d(TAG, "Selecting selected animals: $selectedAnimalIds")
+                                selectItemsByCollectionIds(multiSelectAnimalList,
+                                        selectedAnimalIds.toSet())
+                            } else {
+                                if (isCreating) {
+                                    selectCurrentAnimal(multiSelectAnimalList)
+                                } else {
+                                    selectPhotoAnimals(multiSelectAnimalList)
+                                }
+                            }
+
+                            newAnimalId?.let {
+                                selectItemByCollectionId(multiSelectAnimalList, it)
+                            }
+                        }, {
+                            Log.e(TAG, "Some errors occurred while fetching all animals: $it")
+                            it.printStackTrace()
+                        }))
+    }
+
+    private fun selectCurrentAnimal(multiSelectList: ListView) {
+        activity.intent.getStringExtra(Constants.ARG_ANIMAL_ID)?.let {
+            Log.d(TAG, "Current animal: $it")
+            selectItemByCollectionId(multiSelectList, it)
+        }
+    }
+
+    private fun selectPhotoAnimals(multiselection: ListView) {
+        selectItemsByCollectionIds(multiselection,
+                photoAnimals.stream().map { animal -> animal.id }.collect(
+                        Collectors.toSet()))
+    }
+
+    override fun createNewCollection() {
+        // save currently selected items
+        activity.intent.putExtra(Constants.ARG_SELECTED_ANIMAL_IDS,
+                getSelectedCollectionIds((multiSelectListCollection as ListView)))
+
+        startActivityForResult(Intent(activity, CreateAnimalActivity::class.java),
+                RESULT_CREATE_ANIMAL)
+    }
+
+    override fun confirmSelectedCollections() {
+        // save currently selected items
+        activity.intent.putExtra(Constants.ARG_SELECTED_ANIMAL_IDS,
+                getSelectedCollectionIds((multiSelectListCollection as ListView)))
+
+        activity.supportFragmentManager.beginTransaction()
+                .replace(yukitas.animal.collector.R.id.fragment_edit_photo_container,
+                        EditPhotoMainFragment())
+                .commit()
+    }
+}
