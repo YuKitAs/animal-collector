@@ -24,10 +24,10 @@ import java.util.stream.Collectors
 class EditPhotoMainFragment : BaseFragment() {
     private val TAG = EditPhotoMainFragment::class.java.simpleName
 
-    private var selectedAlbumIds: List<String> = emptyList()
+    private lateinit var selectedAlbumIds: List<String>
     private var selectedAlbums: MutableList<Album> = ArrayList()
 
-    private var selectedAnimalIds: List<String> = emptyList()
+    private lateinit var selectedAnimalIds: List<String>
     private var selectedAnimals: MutableList<Animal> = ArrayList()
 
     private var isCreating = true
@@ -88,26 +88,7 @@ class EditPhotoMainFragment : BaseFragment() {
 
     @SuppressLint("CheckResult")
     private fun setSelectedAlbums() {
-        selectedAlbumIds = activity.intent.getStringArrayListExtra(ARG_SELECTED_ALBUM_IDS).orEmpty()
-
-        if (selectedAlbumIds.isNotEmpty()) {
-            // retrieve selected albums by ids for validation
-            Single.zip(selectedAlbumIds.stream().map { albumId ->
-                apiService.getAlbumById(albumId)
-            }.collect(Collectors.toList()).asIterable()) { obj -> obj }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        it.forEach { album ->
-                            selectedAlbums.add(album as Album)
-                        }
-
-                        textSelectedAlbums.text = selectedAlbums.stream().map { album -> album.name }.collect(
-                                Collectors.toList()).joinToString(", ")
-                    }) {
-                        Log.e(TAG, "Some errors occurred: $it")
-                    }
-        } else {
+        if (activity.intent.getStringArrayListExtra(ARG_SELECTED_ALBUM_IDS) == null) {
             if (isCreating) {
                 activity.intent.getStringExtra(Constants.ARG_ALBUM_ID)?.let {
                     // show current album
@@ -120,10 +101,12 @@ class EditPhotoMainFragment : BaseFragment() {
                                         textSelectedAlbums.text = it.name
 
                                         selectedAlbumIds = arrayListOf(it.id)
+                                        // update selected album ids
                                         activity.intent.putExtra(ARG_SELECTED_ALBUM_IDS,
                                                 selectedAlbumIds as ArrayList)
                                     }) {
                                         Log.e(TAG, "Some errors occurred: $it")
+                                        it.printStackTrace()
                                     })
                 }
             } else {
@@ -131,12 +114,13 @@ class EditPhotoMainFragment : BaseFragment() {
                 disposable.add(apiService.getAlbumsByPhoto(photoId).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ albums ->
-                            textSelectedAlbums.text = albums.stream().map { album -> album.name }.collect(
+                            textSelectedAlbums.text = if (albums.isEmpty()) getString(
+                                    R.string.text_none) else albums.stream().map { album -> album.name }.collect(
                                     Collectors.toList()).joinToString(", ")
 
                             selectedAlbumIds = albums.stream().map { album -> album.id }.collect(
                                     Collectors.toList())
-
+                            // update selected album ids
                             activity.intent.putExtra(ARG_SELECTED_ALBUM_IDS,
                                     selectedAlbumIds as ArrayList)
                         }, {
@@ -145,32 +129,38 @@ class EditPhotoMainFragment : BaseFragment() {
                             it.printStackTrace()
                         }))
             }
+        } else {
+            selectedAlbumIds = activity.intent.getStringArrayListExtra(ARG_SELECTED_ALBUM_IDS)
+
+            if (selectedAlbumIds.isEmpty()) {
+                textSelectedAlbums.text = getString(R.string.text_none)
+                return
+            }
+
+            // retrieve selected albums by ids for validation
+            Single.zip(selectedAlbumIds.stream().map { albumId ->
+                apiService.getAlbumById(albumId)
+            }.collect(Collectors.toList()).asIterable()) { obj -> obj }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        it.forEach { album ->
+                            selectedAlbums.add(album as Album)
+                        }
+
+                        textSelectedAlbums.text = if (selectedAlbums.isEmpty()) getString(
+                                R.string.text_none) else selectedAlbums.stream().map { album -> album.name }.collect(
+                                Collectors.toList()).joinToString(", ")
+                    }) {
+                        Log.e(TAG, "Some errors occurred: $it")
+                        it.printStackTrace()
+                    }
         }
     }
 
     @SuppressLint("CheckResult")
     private fun setSelectedAnimals() {
-        selectedAnimalIds = activity.intent.getStringArrayListExtra(
-                ARG_SELECTED_ANIMAL_IDS).orEmpty()
-
-        if (selectedAnimalIds.isNotEmpty()) {
-            // retrieve selected animals by ids for validation
-            Single.zip(selectedAnimalIds.stream().map { animalId ->
-                apiService.getAnimalById(animalId)
-            }.collect(Collectors.toList()).asIterable()) { obj -> obj }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        it.forEach { animal ->
-                            selectedAnimals.add(animal as Animal)
-                        }
-
-                        textSelectedAnimals.text = selectedAnimals.stream().map { animal -> animal.name }.collect(
-                                Collectors.toSet()).joinToString(", ")
-                    }) {
-                        Log.e(TAG, "Some errors occurred: $it")
-                    }
-        } else {
+        if (activity.intent.getStringArrayListExtra(ARG_SELECTED_ANIMAL_IDS) == null) {
             if (isCreating) {
                 activity.intent.getStringExtra(Constants.ARG_ANIMAL_ID)?.let {
                     // show current animal
@@ -183,10 +173,12 @@ class EditPhotoMainFragment : BaseFragment() {
                                         textSelectedAnimals.text = it.name
 
                                         selectedAnimalIds = arrayListOf(it.id)
+                                        // update selected animal ids
                                         activity.intent.putExtra(ARG_SELECTED_ANIMAL_IDS,
                                                 selectedAnimalIds as ArrayList)
                                     }) {
                                         Log.e(TAG, "Some errors occurred: $it")
+                                        it.printStackTrace()
                                     })
                 }
             } else {
@@ -194,11 +186,13 @@ class EditPhotoMainFragment : BaseFragment() {
                 disposable.add(apiService.getAnimalsByPhoto(photoId).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ animals ->
-                            textSelectedAnimals.text = animals.stream().map { album -> album.name }.collect(
+                            textSelectedAnimals.text = if (animals.isEmpty()) getString(
+                                    R.string.text_none) else animals.stream().map { animal -> animal.name }.collect(
                                     Collectors.toList()).joinToString(", ")
 
                             selectedAnimalIds = animals.stream().map { animal -> animal.id }.collect(
                                     Collectors.toList())
+                            // update selected animal ids
                             activity.intent.putExtra(ARG_SELECTED_ANIMAL_IDS,
                                     selectedAnimalIds as ArrayList)
                         }, {
@@ -207,6 +201,32 @@ class EditPhotoMainFragment : BaseFragment() {
                             it.printStackTrace()
                         }))
             }
+        } else {
+            selectedAnimalIds = activity.intent.getStringArrayListExtra(ARG_SELECTED_ANIMAL_IDS)
+
+            if (selectedAnimalIds.isEmpty()) {
+                textSelectedAnimals.text = getString(R.string.text_none)
+                return
+            }
+
+            // retrieve selected animals by ids for validation
+            Single.zip(selectedAnimalIds.stream().map { animalId ->
+                apiService.getAnimalById(animalId)
+            }.collect(Collectors.toList()).asIterable()) { obj -> obj }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        it.forEach { animal ->
+                            selectedAnimals.add(animal as Animal)
+                        }
+
+                        textSelectedAnimals.text = if (selectedAnimals.isEmpty()) getString(
+                                R.string.text_none) else selectedAnimals.stream().map { animal -> animal.name }.collect(
+                                Collectors.toSet()).joinToString(", ")
+                    }) {
+                        Log.e(TAG, "Some errors occurred: $it")
+                        it.printStackTrace()
+                    }
         }
     }
 

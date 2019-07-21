@@ -13,15 +13,12 @@ import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.view.activity.CreateAnimalActivity
 import yukitas.animal.collector.view.adapter.CollectionArrayAdapter
-import java.util.stream.Collectors
 
 class SelectAnimalFragment : SelectCollectionFragment() {
     private val TAG = SelectAnimalFragment::class.java.simpleName
 
     // all animals
     private var animals: List<Animal> = emptyList()
-    // animals fetched by photo
-    private var photoAnimals: List<Animal> = emptyList()
 
     private var newAnimalId: String? = null
 
@@ -32,25 +29,7 @@ class SelectAnimalFragment : SelectCollectionFragment() {
 
         btnAddCollection.text = getString(yukitas.animal.collector.R.string.btn_new_animal)
 
-        if (!isCreating) {
-            disposable.add(apiService.getAnimalsByPhoto(photoId).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ animals ->
-                        Log.d(TAG,
-                                "Fetched animals for photo $photoId: ${animals.stream().map { animal -> animal.name }.collect(
-                                        Collectors.toList())}")
-                        photoAnimals = animals
-
-                        // only set lists after all animals are fetched, in order to pre-select photo animals
-                        setList()
-                    }, {
-                        Log.e(TAG,
-                                "Some errors occurred when fetching animals of photo $photoId: $it")
-                        it.printStackTrace()
-                    }))
-        } else {
-            setList()
-        }
+        setList()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -81,15 +60,9 @@ class SelectAnimalFragment : SelectCollectionFragment() {
                                     ArrayList(animals))
 
                             if (selectedAnimalIds.isNotEmpty()) {
-                                Log.d(TAG, "Selecting selected animals: $selectedAnimalIds")
+                                Log.d(TAG, "Selected animals: $selectedAnimalIds")
                                 selectItemsByCollectionIds(multiSelectAnimalList,
                                         selectedAnimalIds.toSet())
-                            } else {
-                                if (isCreating) {
-                                    selectCurrentAnimal(multiSelectAnimalList)
-                                } else {
-                                    selectPhotoAnimals(multiSelectAnimalList)
-                                }
                             }
 
                             newAnimalId?.let {
@@ -101,21 +74,8 @@ class SelectAnimalFragment : SelectCollectionFragment() {
                         }))
     }
 
-    private fun selectCurrentAnimal(multiSelectList: ListView) {
-        activity.intent.getStringExtra(Constants.ARG_ANIMAL_ID)?.let {
-            Log.d(TAG, "Current animal: $it")
-            selectItemByCollectionId(multiSelectList, it)
-        }
-    }
-
-    private fun selectPhotoAnimals(multiselection: ListView) {
-        selectItemsByCollectionIds(multiselection,
-                photoAnimals.stream().map { animal -> animal.id }.collect(
-                        Collectors.toSet()))
-    }
-
     override fun createNewCollection() {
-        // save currently selected items
+        // save currently selected animal ids
         activity.intent.putExtra(Constants.ARG_SELECTED_ANIMAL_IDS,
                 getSelectedCollectionIds((multiSelectListCollection as ListView)))
 
@@ -124,7 +84,7 @@ class SelectAnimalFragment : SelectCollectionFragment() {
     }
 
     override fun confirmSelectedCollections() {
-        // save currently selected items
+        // save currently selected animal ids
         activity.intent.putExtra(Constants.ARG_SELECTED_ANIMAL_IDS,
                 getSelectedCollectionIds((multiSelectListCollection as ListView)))
 

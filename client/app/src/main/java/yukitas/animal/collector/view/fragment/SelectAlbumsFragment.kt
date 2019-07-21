@@ -15,15 +15,12 @@ import yukitas.animal.collector.common.Constants.Companion.ARG_SELECTED_ALBUM_ID
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.view.activity.CreateAlbumActivity
 import yukitas.animal.collector.view.adapter.CollectionArrayAdapter
-import java.util.stream.Collectors
 
 class SelectAlbumsFragment : SelectCollectionFragment() {
     private val TAG = SelectAlbumsFragment::class.java.simpleName
 
     // all albums
     private var albums: List<Album> = emptyList()
-    // albums fetched by photo
-    private var photoAlbums: List<Album> = emptyList()
 
     private var newAlbumId: String? = null
 
@@ -34,25 +31,7 @@ class SelectAlbumsFragment : SelectCollectionFragment() {
 
         btnAddCollection.text = getString(R.string.btn_new_album)
 
-        if (!isCreating) {
-            disposable.add(apiService.getAlbumsByPhoto(photoId).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ albums ->
-                        Log.d(TAG,
-                                "Fetched albums for photo $photoId: ${albums.stream().map { album -> album.name }.collect(
-                                        Collectors.toList())}")
-                        photoAlbums = albums
-
-                        // only set lists after all albums are fetched, in order to pre-select photo albums
-                        setList()
-                    }, {
-                        Log.e(TAG,
-                                "Some errors occurred when fetching albums of photo $photoId: $it")
-                        it.printStackTrace()
-                    }))
-        } else {
-            setList()
-        }
+        setList()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -82,15 +61,9 @@ class SelectAlbumsFragment : SelectCollectionFragment() {
                                     ArrayList(albums))
 
                             if (selectedAlbumIds.isNotEmpty()) {
-                                Log.d(TAG, "Selecting selected albums: $selectedAlbumIds")
+                                Log.d(TAG, "Selected albums: $selectedAlbumIds")
                                 selectItemsByCollectionIds(multiSelectAlbumList,
                                         selectedAlbumIds.toSet())
-                            } else {
-                                if (isCreating) {
-                                    selectCurrentAlbum(multiSelectAlbumList)
-                                } else {
-                                    selectPhotoAlbums(multiSelectAlbumList)
-                                }
                             }
 
                             newAlbumId?.let {
@@ -102,21 +75,8 @@ class SelectAlbumsFragment : SelectCollectionFragment() {
                         }))
     }
 
-    private fun selectCurrentAlbum(multiSelectList: ListView) {
-        activity.intent.getStringExtra(Constants.ARG_ALBUM_ID)?.let {
-            Log.d(TAG, "Current album: $it")
-            selectItemByCollectionId(multiSelectList, it)
-        }
-    }
-
-    private fun selectPhotoAlbums(multiSelectList: ListView) {
-        selectItemsByCollectionIds(multiSelectList,
-                photoAlbums.stream().map { album -> album.id }.collect(
-                        Collectors.toSet()))
-    }
-
     override fun createNewCollection() {
-        // save currently selected items
+        // save currently selected album ids
         activity.intent.putExtra(ARG_SELECTED_ALBUM_IDS,
                 getSelectedCollectionIds((multiSelectListCollection as ListView)))
 
@@ -125,7 +85,7 @@ class SelectAlbumsFragment : SelectCollectionFragment() {
     }
 
     override fun confirmSelectedCollections() {
-        // save currently selected items
+        // save currently selected album ids
         activity.intent.putExtra(ARG_SELECTED_ALBUM_IDS,
                 getSelectedCollectionIds((multiSelectListCollection as ListView)))
 
