@@ -50,7 +50,10 @@ class EditPhotoMainFragment : BaseFragment() {
         setSelectedAnimals()
 
         if (!isCreating) {
+            labelEditPhoto.setText(R.string.label_update_photo)
             inputPhotoDesc.setText(activity.intent.getStringExtra(ARG_PHOTO_DESC))
+        } else {
+            labelEditPhoto.setText(R.string.label_create_photo)
         }
 
         btnSelectAlbums.setOnClickListener {

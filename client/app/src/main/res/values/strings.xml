@@ -20,6 +20,8 @@
     <string name="label_select_category">Select a category</string>
     <string name="label_select_animals">Select Animals (required)</string>
     <string name="label_select_albums">Select Albums</string>
+    <string name="label_create_photo">Create Photo</string>
+    <string name="label_update_photo">Update Photo</string>
     <!-- Button labels -->
     <string name="btn_save">save</string>
     <string name="btn_confirm_positive">yes</string>
