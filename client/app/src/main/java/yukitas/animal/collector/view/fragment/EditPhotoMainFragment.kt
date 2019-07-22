@@ -231,8 +231,10 @@ class EditPhotoMainFragment : BaseFragment() {
     }
 
     private fun savePhoto() {
-        if (validSelections(selectedAlbumIds, selectedAnimalIds)) {
-            updatePhoto(selectedAlbumIds, selectedAnimalIds)
+        val validAlbumIds = if (::selectedAlbumIds.isInitialized) selectedAlbumIds else emptyList()
+        val validAnimalIds = if (::selectedAnimalIds.isInitialized) selectedAnimalIds else emptyList()
+        if (validSelections(validAlbumIds, validAnimalIds)) {
+            updatePhoto(validAlbumIds, validAnimalIds)
         }
     }
 
