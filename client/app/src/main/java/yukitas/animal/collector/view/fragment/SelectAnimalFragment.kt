@@ -61,8 +61,7 @@ class SelectAnimalFragment : SelectCollectionFragment() {
 
                             if (selectedAnimalIds.isNotEmpty()) {
                                 Log.d(TAG, "Selected animals: $selectedAnimalIds")
-                                selectItemsByCollectionIds(multiSelectAnimalList,
-                                        selectedAnimalIds.toSet())
+                                selectItemsByCollectionIds(multiSelectAnimalList, selectedAnimalIds)
                             }
 
                             newAnimalId?.let {

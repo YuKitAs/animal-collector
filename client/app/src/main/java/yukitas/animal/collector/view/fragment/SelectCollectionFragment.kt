@@ -14,8 +14,8 @@ import yukitas.animal.collector.view.adapter.CollectionArrayAdapter
 abstract class SelectCollectionFragment : BaseFragment() {
     private val TAG = SelectCollectionFragment::class.java.simpleName
 
-    protected lateinit var photoId: String
-    protected var isCreating = true
+    private lateinit var photoId: String
+    private var isCreating = true
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -55,7 +55,7 @@ abstract class SelectCollectionFragment : BaseFragment() {
         }
     }
 
-    protected fun selectItemsByCollectionIds(multiSelectList: ListView, ids: Set<String>) {
+    protected fun selectItemsByCollectionIds(multiSelectList: ListView, ids: List<String>) {
         val adapter = multiSelectList.adapter as CollectionArrayAdapter
         for (i in 0 until adapter.count) {
             if (ids.contains(adapter.getItem(i).id)) {

@@ -62,8 +62,7 @@ class SelectAlbumsFragment : SelectCollectionFragment() {
 
                             if (selectedAlbumIds.isNotEmpty()) {
                                 Log.d(TAG, "Selected albums: $selectedAlbumIds")
-                                selectItemsByCollectionIds(multiSelectAlbumList,
-                                        selectedAlbumIds.toSet())
+                                selectItemsByCollectionIds(multiSelectAlbumList, selectedAlbumIds)
                             }
 
                             newAlbumId?.let {
