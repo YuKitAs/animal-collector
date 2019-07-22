@@ -43,8 +43,7 @@ class SelectAnimalFragment : SelectCollectionFragment() {
     }
 
     override fun setList() {
-        val selectedAnimalIds = activity.intent.getStringArrayListExtra(
-                Constants.ARG_SELECTED_ANIMAL_IDS).orEmpty()
+        val selectedAnimalIds = selectionViewModel.selectedAnimalIds
 
         disposable.add(
                 apiService.getAllAnimals()
@@ -59,7 +58,7 @@ class SelectAnimalFragment : SelectCollectionFragment() {
                                     android.R.id.text1,
                                     ArrayList(animals))
 
-                            if (selectedAnimalIds.isNotEmpty()) {
+                            if (!selectedAnimalIds.isNullOrEmpty()) {
                                 Log.d(TAG, "Selected animals: $selectedAnimalIds")
                                 selectItemsByCollectionIds(multiSelectAnimalList, selectedAnimalIds)
                             }
@@ -74,18 +73,16 @@ class SelectAnimalFragment : SelectCollectionFragment() {
     }
 
     override fun createNewCollection() {
-        // save currently selected animal ids
-        activity.intent.putExtra(Constants.ARG_SELECTED_ANIMAL_IDS,
-                getSelectedCollectionIds((multiSelectListCollection as ListView)))
+        selectionViewModel.selectAnimals(getSelectedCollections(
+                (multiSelectListCollection as ListView)).filterIsInstance<Animal>())
 
         startActivityForResult(Intent(activity, CreateAnimalActivity::class.java),
                 RESULT_CREATE_ANIMAL)
     }
 
     override fun confirmSelectedCollections() {
-        // save currently selected animal ids
-        activity.intent.putExtra(Constants.ARG_SELECTED_ANIMAL_IDS,
-                getSelectedCollectionIds((multiSelectListCollection as ListView)))
+        selectionViewModel.selectAnimals(getSelectedCollections(
+                (multiSelectListCollection as ListView)).filterIsInstance<Animal>())
 
         activity.supportFragmentManager.beginTransaction()
                 .replace(yukitas.animal.collector.R.id.fragment_edit_photo_container,

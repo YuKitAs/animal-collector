@@ -1,5 +1,6 @@
 package yukitas.animal.collector.view.fragment
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,13 +10,24 @@ import android.widget.ListView
 import kotlinx.android.synthetic.main.fragment_select_collection.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.model.Collection
 import yukitas.animal.collector.view.adapter.CollectionArrayAdapter
+import yukitas.animal.collector.viewmodel.SelectionViewModel
 
 abstract class SelectCollectionFragment : BaseFragment() {
     private val TAG = SelectCollectionFragment::class.java.simpleName
 
     private lateinit var photoId: String
     private var isCreating = true
+    protected lateinit var selectionViewModel: SelectionViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        selectionViewModel = activity?.run {
+            ViewModelProviders.of(this)[SelectionViewModel::class.java]
+        } ?: throw Exception("Invalid EditPhotoActivity")
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -65,16 +77,16 @@ abstract class SelectCollectionFragment : BaseFragment() {
         }
     }
 
-    protected fun getSelectedCollectionIds(multiSelectList: ListView): ArrayList<String> {
+    protected fun getSelectedCollections(multiSelectList: ListView): List<Collection> {
         val selectedCollectionPositions = multiSelectList.checkedItemPositions
 
-        return ArrayList<String>().apply {
+        return ArrayList<Collection>().apply {
             for (i in 0 until selectedCollectionPositions.size()) {
                 if (selectedCollectionPositions.valueAt(i)) {
                     val selectedCollection = (multiSelectList.adapter as CollectionArrayAdapter).getItem(
                             selectedCollectionPositions.keyAt(i))
                     Log.d(TAG, "Selected collection: ${selectedCollection.name}")
-                    add(selectedCollection.id)
+                    add(selectedCollection)
                 }
             }
         }
