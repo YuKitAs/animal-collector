@@ -28,7 +28,7 @@ class SelectAlbumsFragment : SelectCollectionFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnAddCollection.text = getString(R.string.btn_new_album)
+        labelSelectCollection.text = getString(R.string.label_select_albums)
 
         setList()
     }

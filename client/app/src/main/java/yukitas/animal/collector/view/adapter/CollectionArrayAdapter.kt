@@ -1,6 +1,7 @@
 package yukitas.animal.collector.view.adapter
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,8 @@ class CollectionArrayAdapter(context: Context, var resource: Int, var textViewRe
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(resource, parent, false)
             view.findViewById<TextView>(textViewResourceId).text = getItem(position).name
+            view.findViewById<TextView>(textViewResourceId).setTextSize(TypedValue.COMPLEX_UNIT_SP,
+                    20f)
         } else {
             view = convertView
         }

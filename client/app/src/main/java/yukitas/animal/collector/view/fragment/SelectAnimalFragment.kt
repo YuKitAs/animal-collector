@@ -27,7 +27,8 @@ class SelectAnimalFragment : SelectCollectionFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnAddCollection.text = getString(yukitas.animal.collector.R.string.btn_new_animal)
+        labelSelectCollection.text = getString(
+                yukitas.animal.collector.R.string.label_select_animals)
 
         setList()
     }
