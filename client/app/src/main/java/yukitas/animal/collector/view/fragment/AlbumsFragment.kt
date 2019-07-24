@@ -14,6 +14,7 @@ import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
+import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_NAME
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
 import yukitas.animal.collector.databinding.FragmentAlbumsBinding
 import yukitas.animal.collector.model.Album
@@ -110,6 +111,7 @@ class AlbumsFragment : CollectionFragment() {
             val bundle = Bundle()
             val album = albumsAdapter.albums[position]
             bundle.putString(ARG_ALBUM_ID, album.id)
+            bundle.putString(ARG_ALBUM_NAME, album.name)
 
             val intent = Intent(activity, PhotoActivity::class.java).apply {
                 putExtras(bundle)

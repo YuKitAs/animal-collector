@@ -46,8 +46,6 @@ abstract class PhotosFragment : BaseFragment() {
 
     protected lateinit var binding: yukitas.animal.collector.databinding.FragmentPhotosBinding
     protected lateinit var photosAdapter: PhotosAdapter
-    protected lateinit var albumId: String
-    protected lateinit var animalId: String
 
     private var isActionButtonOpen = false
 

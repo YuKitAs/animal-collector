@@ -12,37 +12,40 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_photos.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
-import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.view.activity.EditAlbumActivity
 import yukitas.animal.collector.view.activity.EditPhotoActivity
 
 class AlbumPhotosFragment : PhotosFragment() {
     private val TAG = AlbumPhotosFragment::class.java.simpleName
 
-    private lateinit var album: Album
+    private lateinit var albumId: String
+    private lateinit var albumName: String
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?): View {
         albumId = activity.intent.getStringExtra(Constants.ARG_ALBUM_ID)!!
+        albumName = activity.intent.getStringExtra(Constants.ARG_ALBUM_NAME)!!
+
         Log.d(TAG, "Selected album: $albumId")
 
-        disposable.add(apiService.getAlbumById(albumId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    album = it
-
-                    textCollectionName.text = it.name.toUpperCase()
-
-                    setEditButtonListener()
-                    setDeleteButtonListener()
-                }, {
-                    Log.e(TAG, "Some errors occurred: $it")
-                }))
-
         return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        textCollectionName.text = albumName.toUpperCase()
+
+        setEditButtonListener()
+        setDeleteButtonListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        updateAlbum()
     }
 
     override fun setPhotos() {
@@ -70,8 +73,8 @@ class AlbumPhotosFragment : PhotosFragment() {
         binding.btnEditCollection.setOnClickListener {
             val bundle = Bundle()
             bundle.putBoolean(Constants.ARG_IS_CREATING, false)
-            bundle.putString(Constants.ARG_ALBUM_ID, album.id)
-            bundle.putString(Constants.ARG_ALBUM_NAME, album.name)
+            bundle.putString(Constants.ARG_ALBUM_ID, albumId)
+            bundle.putString(Constants.ARG_ALBUM_NAME, albumName)
 
             val intent = Intent(activity, EditAlbumActivity::class.java).apply {
                 putExtras(bundle)
@@ -88,7 +91,6 @@ class AlbumPhotosFragment : PhotosFragment() {
                 setTitle(String.format(getString(R.string.message_delete_confirm), "album"))
                 setPositiveButton(R.string.btn_confirm_positive
                 ) { _, _ ->
-                    val albumId = album.id
                     Log.d(TAG, "Deleting album '$albumId'")
 
                     disposable.add(
@@ -107,5 +109,18 @@ class AlbumPhotosFragment : PhotosFragment() {
             }
             builder.show()
         }
+    }
+
+    private fun updateAlbum() {
+        disposable.add(apiService.getAlbumById(albumId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    albumName = it.name
+
+                    textCollectionName.text = albumName.toUpperCase()
+                }, {
+                    Log.e(TAG, "Some errors occurred: $it")
+                }))
     }
 }

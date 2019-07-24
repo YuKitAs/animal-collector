@@ -12,7 +12,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_photos.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
-import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.view.activity.EditAnimalActivity
 import yukitas.animal.collector.view.activity.EditPhotoActivity
 import java.util.*
@@ -20,7 +19,9 @@ import java.util.*
 class AnimalPhotosFragment : PhotosFragment() {
     private val TAG = AnimalPhotosFragment::class.java.simpleName
 
-    private lateinit var animal: Animal
+    private lateinit var animalId: String
+    private lateinit var animalName: String
+    private lateinit var animalTags: List<String>
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -28,23 +29,27 @@ class AnimalPhotosFragment : PhotosFragment() {
             savedInstanceState: Bundle?
     ): View {
         animalId = activity.intent.getStringExtra(Constants.ARG_ANIMAL_ID)!!
+        animalName = activity.intent.getStringExtra(Constants.ARG_ANIMAL_NAME)!!
+        animalTags = activity.intent.getStringArrayExtra(Constants.ARG_ANIMAL_TAGS).asList()
+
         Log.d(TAG, "Selected animal: $animalId")
 
-        disposable.add(apiService.getAnimalById(animalId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    animal = it
-
-                    textCollectionName.text = it.name.toUpperCase()
-
-                    setEditButtonListener()
-                    setDeleteButtonListener()
-                }, {
-                    Log.e(TAG, "Some errors occurred: $it")
-                }))
-
         return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        textCollectionName.text = animalName.toUpperCase()
+
+        setEditButtonListener()
+        setDeleteButtonListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        updateAnimal()
     }
 
     override fun setPhotos() {
@@ -72,9 +77,9 @@ class AnimalPhotosFragment : PhotosFragment() {
         binding.btnEditCollection.setOnClickListener {
             val bundle = Bundle()
             bundle.putBoolean(Constants.ARG_IS_CREATING, false)
-            bundle.putString(Constants.ARG_ANIMAL_ID, animal.id)
-            bundle.putString(Constants.ARG_ANIMAL_NAME, animal.name)
-            bundle.putStringArrayList(Constants.ARG_ANIMAL_TAGS, ArrayList(animal.tags))
+            bundle.putString(Constants.ARG_ANIMAL_ID, animalId)
+            bundle.putString(Constants.ARG_ANIMAL_NAME, animalName)
+            bundle.putStringArrayList(Constants.ARG_ANIMAL_TAGS, ArrayList(animalTags))
 
             val intent = Intent(activity, EditAnimalActivity::class.java).apply {
                 putExtras(bundle)
@@ -92,7 +97,6 @@ class AnimalPhotosFragment : PhotosFragment() {
                 setMessage(R.string.message_delete_confirm_animal)
                 setPositiveButton(R.string.btn_confirm_positive
                 ) { _, _ ->
-                    val animalId = animal.id
                     Log.d(TAG, "Deleting animal '$animalId'")
 
                     disposable.add(
@@ -110,5 +114,19 @@ class AnimalPhotosFragment : PhotosFragment() {
             }
             builder.show()
         }
+    }
+
+    private fun updateAnimal() {
+        disposable.add(apiService.getAnimalById(animalId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    animalName = it.name
+                    animalTags = it.tags
+
+                    textCollectionName.text = animalName.toUpperCase()
+                }, {
+                    Log.e(TAG, "Some errors occurred: $it")
+                }))
     }
 }
