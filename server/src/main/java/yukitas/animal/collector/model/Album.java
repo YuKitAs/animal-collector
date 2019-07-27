@@ -32,7 +32,7 @@ public class Album {
     private String name;
 
     @ManyToMany(mappedBy = "albums")
-    @OrderBy("created_at DESC")
+    @OrderBy("last_modified DESC")
     @JsonIgnore
     private Set<Photo> photos = new HashSet<>();
 
