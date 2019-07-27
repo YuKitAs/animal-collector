@@ -35,7 +35,8 @@ ALTER TABLE public.animals OWNER TO postgres;
 CREATE TABLE IF NOT EXISTS public.photos (
     id uuid NOT NULL,
     content bytea,
-    created_at timestamp without time zone,
+    created_at timestamp with time zone,
+    last_modified timestamp without time zone,
     description character varying(255),
     address character varying(255),
     latitude double precision,
@@ -71,7 +72,7 @@ ALTER TABLE public.photo_album OWNER TO postgres;
 CREATE OR REPLACE FUNCTION delete_obsolete_photos() RETURNS trigger AS
 '
     BEGIN
-      DELETE FROM photos WHERE created_at < NOW() - INTERVAL ''15 minute''
+      DELETE FROM photos WHERE last_modified < NOW() - INTERVAL ''15 minute''
           AND (id NOT IN (SELECT photo_id FROM photo_animal))
           AND (id NOT IN (SELECT photo_id FROM photo_album));
       RETURN NULL;
