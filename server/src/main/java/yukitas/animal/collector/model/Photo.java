@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -39,7 +40,9 @@ public class Photo {
     @Size(max = 255)
     private String description;
 
-    private Instant createdAt;
+    private OffsetDateTime createdAt;
+
+    private Instant lastModified;
 
     @Embedded
     private Location location;
@@ -47,13 +50,14 @@ public class Photo {
     private Photo() {
     }
 
-    private Photo(Set<Animal> animals, Set<Album> albums, byte[] content, String description, Instant createdAt,
-            Location location) {
+    private Photo(Set<Animal> animals, Set<Album> albums, byte[] content, String description, OffsetDateTime createdAt,
+            Instant lastModified, Location location) {
         this.animals = animals;
         this.albums = albums;
         this.content = content;
         this.description = description;
         this.createdAt = createdAt;
+        this.lastModified = lastModified;
         this.location = location;
     }
 
@@ -93,8 +97,16 @@ public class Photo {
         this.content = content;
     }
 
-    public Instant getCreatedAt() {
+    public OffsetDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public Instant getLastModified() {
+        return lastModified;
+    }
+
+    public void updateLastModified() {
+        this.lastModified = Instant.now();
     }
 
     public Location getLocation() {
@@ -115,6 +127,7 @@ public class Photo {
         private byte[] content = null;
         private String description = null;
         private Location location = null;
+        private OffsetDateTime createdAt = null;
 
         public Builder setAnimals(Set<Animal> animals) {
             this.animals = animals;
@@ -141,8 +154,13 @@ public class Photo {
             return this;
         }
 
+        public Builder setCreatedAt(OffsetDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
         public Photo build() {
-            return new Photo(animals, albums, content, description, Instant.now(), location);
+            return new Photo(animals, albums, content, description, createdAt, Instant.now(), location);
         }
     }
 }

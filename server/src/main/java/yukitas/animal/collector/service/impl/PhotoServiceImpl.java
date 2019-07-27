@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -114,12 +115,13 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public UUID createPhoto(Photo.Builder builder, byte[] content) {
-        LOGGER.trace("Creating photo...");
+    public UUID createPhoto(Photo.Builder builder, byte[] content, OffsetDateTime createdAt) {
+        LOGGER.trace("Creating photo with original creation time {}", createdAt);
 
         Photo photo = photoRepository.save(builder.setContent(content)
                 .setLocation(new Location(-90 + 180 * new Random().nextDouble(),
                         -180 + 360 * new Random().nextDouble())) // FIXME
+                .setCreatedAt(createdAt)
                 .build());
 
         LOGGER.debug("Created photo (id={})", photo.getId());
@@ -139,6 +141,7 @@ public class PhotoServiceImpl implements PhotoService {
         updatePhotoAlbums(photo, getValidAlbums(albumIds));
 
         photo.setDescription(description);
+        photo.updateLastModified();
 
         LOGGER.debug("Updated photo (id={}) for animals [{}] and albums [{}]", photo.getId(),
                 photo.getAnimals().stream().map(Animal::getName).collect(Collectors.joining(",")),

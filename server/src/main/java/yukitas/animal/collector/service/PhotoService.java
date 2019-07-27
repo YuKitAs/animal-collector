@@ -1,5 +1,6 @@
 package yukitas.animal.collector.service;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -26,7 +27,7 @@ public interface PhotoService {
 
     Photo getPhoto(UUID id);
 
-    UUID createPhoto(Photo.Builder builder, byte[] content);
+    UUID createPhoto(Photo.Builder builder, byte[] content, OffsetDateTime createdAt);
 
     void updatePhoto(UUID id, Set<UUID> animalIds, Set<UUID> albumIds, String description);
 

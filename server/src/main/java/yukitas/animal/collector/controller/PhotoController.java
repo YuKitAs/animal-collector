@@ -1,12 +1,19 @@
 package yukitas.animal.collector.controller;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,8 +37,15 @@ public class PhotoController {
 
     @PostMapping("/photos")
     @ResponseStatus(HttpStatus.CREATED)
-    public CreatePhotoResponse createPhoto(@Valid @RequestParam("content") MultipartFile content) throws IOException {
-        return new CreatePhotoResponse(photoService.createPhoto(CreatePhotoRequest.builder(), content.getBytes()));
+    public CreatePhotoResponse createPhoto(@Valid @RequestParam("content") MultipartFile content,
+            @RequestParam("created_at") String createdAt) throws IOException {
+        ObjectMapper mapper = Jackson2ObjectMapperBuilder.json()
+                .modules(new JavaTimeModule())
+                .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
+                        DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
+                .build();
+        return new CreatePhotoResponse(photoService.createPhoto(CreatePhotoRequest.builder(), content.getBytes(),
+                mapper.readValue(createdAt, OffsetDateTime.class)));
     }
 
     @GetMapping("/albums/{album_id}/photos")
