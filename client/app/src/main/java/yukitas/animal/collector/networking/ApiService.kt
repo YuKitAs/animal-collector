@@ -81,7 +81,8 @@ interface ApiService {
 
     @Multipart
     @POST("photos")
-    fun createPhoto(@Part photo: MultipartBody.Part): Single<SavePhotoResponse>
+    fun createPhoto(@Part photo: MultipartBody.Part, @Part(
+            "created_at") createdAt: String): Single<SavePhotoResponse>
 
     /**
      * PUT

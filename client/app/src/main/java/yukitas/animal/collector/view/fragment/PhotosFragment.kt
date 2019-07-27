@@ -32,6 +32,10 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.nio.file.Files
+import java.nio.file.attribute.BasicFileAttributes
+import java.time.Instant
+import java.time.OffsetDateTime
 import java.util.*
 
 /**
@@ -93,7 +97,8 @@ abstract class PhotosFragment : BaseFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
-            postPhoto(processPhoto(readPhotoFromStorage(data.data!!)))
+            val photoPath = readPhotoFromStorage(data.data!!)
+            postPhoto(processPhoto(photoPath), getCreationTime(photoPath))
         }
     }
 
@@ -116,7 +121,8 @@ abstract class PhotosFragment : BaseFragment() {
         val photoPath = cursor.getString(columnIndex)
         cursor.close()
 
-        Log.d(TAG, "Photo path in storage: $photoPath")
+        Log.d(TAG, "Photo path in storage: '$photoPath'")
+
         return photoPath
     }
 
@@ -175,7 +181,18 @@ abstract class PhotosFragment : BaseFragment() {
                 matrix, true)
     }
 
-    private fun postPhoto(photo: Bitmap) {
+    private fun getCreationTime(photoPath: String): OffsetDateTime {
+        val photoAttrs = Files.readAttributes(File(photoPath).toPath(),
+                BasicFileAttributes::class.java)
+        val creationTime = OffsetDateTime.ofInstant(
+                Instant.ofEpochMilli(photoAttrs.creationTime().toMillis()),
+                TimeZone.getDefault().toZoneId())
+
+        Log.d(TAG, "Photo created at $creationTime [${TimeZone.getDefault().id}]")
+        return creationTime
+    }
+
+    private fun postPhoto(photo: Bitmap, creationTime: OffsetDateTime) {
         val wrapper = ContextWrapper(context)
 
         var file = wrapper.getDir(context.cacheDir.name, Context.MODE_PRIVATE)
@@ -194,13 +211,16 @@ abstract class PhotosFragment : BaseFragment() {
         val outputPhotoPath = Uri.parse(file.absolutePath).path
         Log.d(TAG, "Photo to send: $outputPhotoPath")
 
-        uploadPhoto(outputPhotoPath, RequestBody.create(MediaType.parse("image/*"), file))
+        uploadPhoto(outputPhotoPath, RequestBody.create(MediaType.parse("image/*"), file),
+                creationTime)
     }
 
-    private fun uploadPhoto(photoFilePath: String?, requestFile: RequestBody) {
+    private fun uploadPhoto(photoFilePath: String?, requestFile: RequestBody,
+                            creationTime: OffsetDateTime) {
         disposable.add(
                 apiService.createPhoto(
-                        MultipartBody.Part.createFormData("content", photoFilePath, requestFile))
+                        MultipartBody.Part.createFormData("content", photoFilePath, requestFile),
+                        creationTime.toString())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
