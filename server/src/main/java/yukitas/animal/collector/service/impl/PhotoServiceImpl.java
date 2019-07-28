@@ -116,7 +116,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public UUID createPhoto(Photo.Builder builder, byte[] content, OffsetDateTime createdAt) {
-        LOGGER.trace("Creating photo with original creation time {}", createdAt);
+        LOGGER.debug("Creating photo with original creation time {}", createdAt);
 
         Photo photo = photoRepository.save(builder.setContent(content)
                 .setLocation(new Location(-90 + 180 * new Random().nextDouble(),

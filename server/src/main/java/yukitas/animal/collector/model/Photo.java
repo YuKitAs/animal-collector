@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.time.Clock;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -46,6 +47,11 @@ public class Photo {
 
     private OffsetDateTime createdAt;
 
+    // PostgreSQL will only store OffsetDateTime in UTC, so a separate column to store the original offset is needed
+    // for calculating the original createdAt
+    @JsonIgnore
+    private Integer createdAtOffset;
+
     private OffsetDateTime lastModified;
 
     @Embedded
@@ -55,12 +61,13 @@ public class Photo {
     }
 
     private Photo(Set<Animal> animals, Set<Album> albums, byte[] content, String description, OffsetDateTime createdAt,
-            OffsetDateTime lastModified, Location location) {
+            Integer createdAtOffset, OffsetDateTime lastModified, Location location) {
         this.animals = animals;
         this.albums = albums;
         this.content = content;
         this.description = description;
         this.createdAt = createdAt;
+        this.createdAtOffset = createdAtOffset;
         this.lastModified = lastModified;
         this.location = location;
     }
@@ -102,7 +109,7 @@ public class Photo {
     }
 
     public OffsetDateTime getCreatedAt() {
-        return createdAt;
+        return createdAt.toInstant().atOffset(ZoneOffset.ofTotalSeconds(createdAtOffset));
     }
 
     public OffsetDateTime getLastModified() {
@@ -133,6 +140,7 @@ public class Photo {
         private String description = null;
         private Location location = null;
         private OffsetDateTime createdAt = null;
+        private Integer createdAtOffset = null;
 
         public Builder setAnimals(Set<Animal> animals) {
             this.animals = animals;
@@ -161,12 +169,13 @@ public class Photo {
 
         public Builder setCreatedAt(OffsetDateTime createdAt) {
             this.createdAt = createdAt;
+            this.createdAtOffset = createdAt.getOffset().getTotalSeconds();
             return this;
         }
 
         public Photo build() {
-            return new Photo(animals, albums, content, description, createdAt, OffsetDateTime.now(Clock.systemUTC()),
-                    location);
+            return new Photo(animals, albums, content, description, createdAt, createdAtOffset,
+                    OffsetDateTime.now(Clock.systemUTC()), location);
         }
     }
 }
