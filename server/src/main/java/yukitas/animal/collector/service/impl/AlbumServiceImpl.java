@@ -3,6 +3,8 @@ package yukitas.animal.collector.service.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,6 +62,7 @@ public class AlbumServiceImpl implements AlbumService {
                 .collect(Collectors.toList());
     }
 
+    @Cacheable("album")
     @Override
     public Album getAlbum(UUID id) {
         return findAlbumById(id);
@@ -72,6 +75,7 @@ public class AlbumServiceImpl implements AlbumService {
                 new Album.Builder().setCategory(findCategoryById(categoryId)).setName(name).build());
     }
 
+    @CacheEvict(value = "album", key = "#id")
     @Override
     public Album updateAlbum(UUID id, String name) {
         LOGGER.trace("Updating album '{}' with [name='{}']", id, name);
@@ -85,6 +89,7 @@ public class AlbumServiceImpl implements AlbumService {
         return albumRepository.save(album);
     }
 
+    @CacheEvict(value = "album")
     @Override
     public void deleteAlbum(UUID id) {
         Album album = findAlbumById(id);

@@ -3,6 +3,8 @@ package yukitas.animal.collector.service.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -61,6 +63,7 @@ public class AnimalServiceImpl implements AnimalService {
                 .collect(Collectors.toList());
     }
 
+    @Cacheable("animal")
     @Override
     public Animal getAnimal(UUID id) {
         return findAnimalById(id);
@@ -73,6 +76,7 @@ public class AnimalServiceImpl implements AnimalService {
                 new Animal.Builder().setCategory(findCategoryById(categoryId)).setName(name).setTags(tags).build());
     }
 
+    @CacheEvict(value = "animal", key = "#id")
     @Override
     public Animal updateAnimal(UUID id, String name, String[] tags) {
         LOGGER.trace("Updating animal '{}' with [name='{}', tags={}]", id, name, tags);
@@ -88,6 +92,7 @@ public class AnimalServiceImpl implements AnimalService {
         return animalRepository.save(animal);
     }
 
+    @CacheEvict(value = "animal")
     @Override
     public void deleteAnimal(UUID id) {
         Animal animal = findAnimalById(id);
@@ -95,8 +100,7 @@ public class AnimalServiceImpl implements AnimalService {
         animal.getPhotos().forEach(photo -> {
             photo.removeAnimal(animal);
             if (photo.getAnimals().isEmpty()) {
-                LOGGER.debug("Pre-remove photo (id={}) which is only associated with animal (id={})", photo.getId(),
-                        id);
+                LOGGER.debug("Pre-remove photo (id={}) which is only associated with animal (id={})", photo.getId(), id);
                 photoRepository.deleteById(photo.getId());
             }
         });
