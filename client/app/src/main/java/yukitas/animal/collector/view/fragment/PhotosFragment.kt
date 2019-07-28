@@ -262,13 +262,23 @@ abstract class PhotosFragment : BaseFragment() {
 
     private fun closeActionMenu() {
         isActionButtonOpen = false
+
         binding.btnAddPhoto.animate().translationY(0f)
         binding.btnEditCollection.animate().translationY(0f)
         binding.btnDeleteCollection.animate().translationY(0f)
+
+        binding.btnAddPhoto.visibility = View.INVISIBLE
+        binding.btnEditCollection.visibility = View.INVISIBLE
+        binding.btnDeleteCollection.visibility = View.INVISIBLE
     }
 
     private fun openActionMenu() {
         isActionButtonOpen = true
+
+        binding.btnAddPhoto.visibility = View.VISIBLE
+        binding.btnEditCollection.visibility = View.VISIBLE
+        binding.btnDeleteCollection.visibility = View.VISIBLE
+
         binding.btnAddPhoto.animate().translationY(-resources.getDimension(R.dimen.standard_65))
         binding.btnEditCollection.animate().translationY(
                 -resources.getDimension(R.dimen.standard_130))
