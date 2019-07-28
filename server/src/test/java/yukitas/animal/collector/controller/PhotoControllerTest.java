@@ -46,6 +46,7 @@ public class PhotoControllerTest extends AbstractControllerTest {
             assertThat(photo.getId()).isEqualTo(PHOTO_CAT_1_ID);
             assertThat(photo.getContent()).isEqualTo(PHOTO_CAT_1_CONTENT);
             assertThat(photo.getDescription()).isEqualTo(PHOTO_CAT_1_DESCRIPTION);
+            // can't calculate getCreatedAt() here because createdAtOffset won't be serialized -> null
             assertThat(photo.getOriginalCreatedAt()).isEqualTo(
                     LocalDateTime.of(2019, 6, 1, 3, 0, 0).atOffset(ZoneOffset.ofHours(3)));
         });
