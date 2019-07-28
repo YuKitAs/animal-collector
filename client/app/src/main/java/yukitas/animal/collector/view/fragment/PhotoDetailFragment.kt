@@ -17,6 +17,9 @@ import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
 import yukitas.animal.collector.databinding.FragmentPhotoDetailBinding
 import yukitas.animal.collector.utility.toBitmap
 import yukitas.animal.collector.view.activity.EditPhotoActivity
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 
 class PhotoDetailFragment : BaseFragment() {
     private val TAG = PhotoDetailFragment::class.java.simpleName
@@ -59,10 +62,23 @@ class PhotoDetailFragment : BaseFragment() {
                         .subscribe({
                             binding.photo = it
                             binding.photoContent.setImageBitmap(toBitmap(it.content))
+                            binding.photoDate.text = formatDateTime(it.createdAt)
+
                             setAnimals()
                         }, {
                             Log.e(TAG, "Some errors occurred: $it")
                         }))
+    }
+
+    private fun formatDateTime(createdAt: String): String {
+        // convert String to OffsetDateTime
+        val createdAtOffsetDateTime = OffsetDateTime.parse(createdAt,
+                DateTimeFormatterBuilder().append(
+                        DateTimeFormatter.ISO_OFFSET_DATE_TIME).toFormatter())
+
+        // convert OffsetDateTime to formatted LocalDateTime
+        return createdAtOffsetDateTime.toLocalDateTime().format(
+                DateTimeFormatter.ofPattern("LLL dd, yyyy HH:mm"))
     }
 
     private fun setAnimals() {
