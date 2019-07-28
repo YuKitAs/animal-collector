@@ -2,9 +2,11 @@ package yukitas.animal.collector.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.time.Instant;
+import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +18,8 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "photos")
 public class Photo {
+    private static final Logger LOGGER = LogManager.getLogger(Photo.class);
+
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
@@ -42,7 +46,7 @@ public class Photo {
 
     private OffsetDateTime createdAt;
 
-    private Instant lastModified;
+    private OffsetDateTime lastModified;
 
     @Embedded
     private Location location;
@@ -51,7 +55,7 @@ public class Photo {
     }
 
     private Photo(Set<Animal> animals, Set<Album> albums, byte[] content, String description, OffsetDateTime createdAt,
-            Instant lastModified, Location location) {
+            OffsetDateTime lastModified, Location location) {
         this.animals = animals;
         this.albums = albums;
         this.content = content;
@@ -101,12 +105,13 @@ public class Photo {
         return createdAt;
     }
 
-    public Instant getLastModified() {
+    public OffsetDateTime getLastModified() {
         return lastModified;
     }
 
     public void updateLastModified() {
-        this.lastModified = Instant.now();
+        lastModified = OffsetDateTime.now(Clock.systemUTC());
+        LOGGER.debug("Last modified at {}", lastModified);
     }
 
     public Location getLocation() {
@@ -160,7 +165,8 @@ public class Photo {
         }
 
         public Photo build() {
-            return new Photo(animals, albums, content, description, createdAt, Instant.now(), location);
+            return new Photo(animals, albums, content, description, createdAt, OffsetDateTime.now(Clock.systemUTC()),
+                    location);
         }
     }
 }

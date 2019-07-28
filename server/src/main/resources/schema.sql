@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS public.photos (
     id uuid NOT NULL,
     content bytea,
     created_at timestamp with time zone,
-    last_modified timestamp without time zone,
+    last_modified timestamp with time zone,
     description character varying(255),
     address character varying(255),
     latitude double precision,
