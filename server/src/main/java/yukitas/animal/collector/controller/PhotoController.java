@@ -1,14 +1,8 @@
 package yukitas.animal.collector.controller;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +14,7 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import yukitas.animal.collector.configuration.JacksonConfig;
 import yukitas.animal.collector.controller.dto.CreatePhotoRequest;
 import yukitas.animal.collector.controller.dto.CreatePhotoResponse;
 import yukitas.animal.collector.controller.dto.UpdatePhotoRequest;
@@ -29,23 +24,20 @@ import yukitas.animal.collector.service.PhotoService;
 @RestController
 public class PhotoController {
     private final PhotoService photoService;
+    private final JacksonConfig jacksonConfig;
 
     @Autowired
-    public PhotoController(PhotoService photoService) {
+    public PhotoController(PhotoService photoService, JacksonConfig jacksonConfig) {
         this.photoService = photoService;
+        this.jacksonConfig = jacksonConfig;
     }
 
     @PostMapping("/photos")
     @ResponseStatus(HttpStatus.CREATED)
     public CreatePhotoResponse createPhoto(@Valid @RequestParam("content") MultipartFile content,
             @RequestParam("created_at") String createdAt) throws IOException {
-        ObjectMapper mapper = Jackson2ObjectMapperBuilder.json()
-                .modules(new JavaTimeModule())
-                .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
-                        DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
-                .build();
         return new CreatePhotoResponse(photoService.createPhoto(CreatePhotoRequest.builder(), content.getBytes(),
-                mapper.readValue(createdAt, OffsetDateTime.class)));
+                jacksonConfig.objectMapper().readValue(createdAt, OffsetDateTime.class)));
     }
 
     @GetMapping("/albums/{album_id}/photos")

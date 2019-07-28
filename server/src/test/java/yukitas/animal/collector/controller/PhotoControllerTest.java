@@ -6,6 +6,9 @@ import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Objects;
 
 import yukitas.animal.collector.controller.dto.CreatePhotoResponse;
@@ -21,6 +24,7 @@ public class PhotoControllerTest extends AbstractControllerTest {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("content", new ClassPathResource("fixtures/images/photo.jpg"));
+        body.add("created_at", OffsetDateTime.now());
 
         ResponseEntity<CreatePhotoResponse> response = getTestRestTemplate().postForEntity("/photos",
                 new HttpEntity<>(body, headers), CreatePhotoResponse.class);
@@ -42,6 +46,8 @@ public class PhotoControllerTest extends AbstractControllerTest {
             assertThat(photo.getId()).isEqualTo(PHOTO_CAT_1_ID);
             assertThat(photo.getContent()).isEqualTo(PHOTO_CAT_1_CONTENT);
             assertThat(photo.getDescription()).isEqualTo(PHOTO_CAT_1_DESCRIPTION);
+            assertThat(photo.getOriginalCreatedAt()).isEqualTo(
+                    LocalDateTime.of(2019, 6, 1, 3, 0, 0).atOffset(ZoneOffset.ofHours(3)));
         });
     }
 

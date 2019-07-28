@@ -112,6 +112,11 @@ public class Photo {
         return createdAt.toInstant().atOffset(ZoneOffset.ofTotalSeconds(createdAtOffset));
     }
 
+    @JsonIgnore
+    public OffsetDateTime getOriginalCreatedAt() {
+        return createdAt;
+    }
+
     public OffsetDateTime getLastModified() {
         return lastModified;
     }

@@ -18,8 +18,9 @@ import java.util.UUID;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @SqlGroup({ //
-        @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:before_test_script.sql"),
-        @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:after_test_script.sql")})
+        @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = {"classpath:schema.sql",
+                "classpath" + ":before_test_script.sql"}), @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+        , scripts = "classpath:after_test_script.sql")})
 public abstract class AbstractControllerTest {
     @Autowired
     private TestRestTemplate testRestTemplate;

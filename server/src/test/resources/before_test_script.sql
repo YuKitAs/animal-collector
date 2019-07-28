@@ -44,22 +44,24 @@ null,
 ON CONFLICT (id)
 DO NOTHING;
 
-INSERT INTO photos (id, content, created_at, description, address, latitude, longitude)
+INSERT INTO photos (id, content, created_at, created_at_offset, description, address, latitude, longitude)
 VALUES
 ('00000000-0000-0000-0001-000000000000',
 '00000000',
-'2019-01-01T00:00:00.123456Z',
+'2019-06-01T00:00:00+00:00',
+10800,
 'This photo contains animal-cat-1 and exists in album-cat-1',
 'Somewhere on the earth',
 0, 0)
 ON CONFLICT (id)
 DO NOTHING;
 
-INSERT INTO photos (id, content, created_at, description, address, latitude, longitude)
+INSERT INTO photos (id, content, created_at, created_at_offset, description, address, latitude, longitude)
 VALUES
 ('00000000-0000-0000-0001-000000000001',
 '00000001',
-'2019-01-01T00:00:00.123456Z',
+'2019-06-01T00:00:00+00:00',
+10800,
 'This photo contains animal-dog and exists in album-dog',
 'Somewhere on the earth',
 -1, 1)
