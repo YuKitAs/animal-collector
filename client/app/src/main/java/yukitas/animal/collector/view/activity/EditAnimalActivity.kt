@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.util.Log
+import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -43,6 +44,9 @@ class EditAnimalActivity : AppCompatActivity() {
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe { animal ->
                                     Log.d(TAG, "Created animal: $animal")
+                                    Toast.makeText(this,
+                                            getString(R.string.message_create_animal_success),
+                                            Toast.LENGTH_SHORT).show()
                                     // return to MainActivity
                                     finish()
                                 })
@@ -67,6 +71,9 @@ class EditAnimalActivity : AppCompatActivity() {
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe {
                                     Log.d(TAG, "Updated animal")
+                                    Toast.makeText(this,
+                                            getString(R.string.message_update_animal_success),
+                                            Toast.LENGTH_SHORT).show()
                                     // return to MainActivity
                                     finish()
                                 })

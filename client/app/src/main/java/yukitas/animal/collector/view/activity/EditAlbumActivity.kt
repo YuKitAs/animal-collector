@@ -3,6 +3,7 @@ package yukitas.animal.collector.view.activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -42,6 +43,9 @@ class EditAlbumActivity : AppCompatActivity() {
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe { album ->
                                     Log.d(TAG, "Created album: $album")
+                                    Toast.makeText(this,
+                                            getString(R.string.message_create_album_success),
+                                            Toast.LENGTH_SHORT).show()
                                     // return to MainActivity
                                     finish()
                                 })
@@ -60,6 +64,9 @@ class EditAlbumActivity : AppCompatActivity() {
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe {
                                     Log.d(TAG, "Updated album")
+                                    Toast.makeText(this,
+                                            getString(R.string.message_update_album_success),
+                                            Toast.LENGTH_SHORT).show()
                                     // return to MainActivity
                                     finish()
                                 })

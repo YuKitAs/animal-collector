@@ -287,6 +287,10 @@ class EditPhotoMainFragment : BaseFragment() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             Log.d(TAG, "Updated photo '$photoId'")
+                            Toast.makeText(activity, if (isCreating) getString(
+                                    R.string.message_create_photo_success) else getString(
+                                    R.string.message_update_photo_success),
+                                    Toast.LENGTH_SHORT).show()
                             activity.finish()
                         }, {
                             Log.e(TAG, "Some errors occurred while updating photo '$photoId': $it")

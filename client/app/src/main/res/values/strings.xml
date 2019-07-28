@@ -37,4 +37,13 @@
     <string name="message_delete_confirm_photo">Are you sure you want to delete this photo from all collections?</string>
     <string name="warning_select_no_animal">Please select at least one animal!</string>
     <string name="warning_select_invalid_collections">At least one album AND one animal should belong to the same category!</string>
+    <string name="message_create_photo_success">Photo uploaded.</string>
+    <string name="message_update_photo_success">Photo updated.</string>
+    <string name="message_delete_photo_success">Photo deleted.</string>
+    <string name="message_create_album_success">Album created.</string>
+    <string name="message_update_album_success">Album updated.</string>
+    <string name="message_delete_album_success">Album deleted.</string>
+    <string name="message_create_animal_success">Animal created.</string>
+    <string name="message_update_animal_success">Animal updated.</string>
+    <string name="message_delete_animal_success">Animal deleted.</string>
 </resources>

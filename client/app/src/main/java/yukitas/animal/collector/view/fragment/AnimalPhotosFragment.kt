@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_photos.*
@@ -105,6 +106,9 @@ class AnimalPhotosFragment : PhotosFragment() {
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe {
                                         Log.d(TAG, "Deleted animal '$animalId'")
+                                        Toast.makeText(activity,
+                                                getString(R.string.message_delete_animal_success),
+                                                Toast.LENGTH_SHORT).show()
                                         activity.onBackPressed()
                                     })
                 }
