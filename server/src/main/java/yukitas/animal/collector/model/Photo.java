@@ -1,14 +1,11 @@
 package yukitas.animal.collector.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.Clock;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -30,14 +27,12 @@ public class Photo {
     @JoinTable(name = "photo_animal", joinColumns = {@JoinColumn(name = "photo_id")}, inverseJoinColumns =
             {@JoinColumn(name = "animal_id")})
     @OrderBy("name")
-    @JsonIgnore
     private Set<Animal> animals = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "photo_album", joinColumns = @JoinColumn(name = "photo_id"), inverseJoinColumns =
     @JoinColumn(name = "album_id"))
     @OrderBy("name")
-    @JsonIgnore
     private Set<Album> albums = new HashSet<>();
 
     private byte[] content;
@@ -49,7 +44,6 @@ public class Photo {
 
     // PostgreSQL will only store OffsetDateTime in UTC, so a separate column to store the original offset is needed
     // for calculating the original createdAt
-    @JsonIgnore
     private Integer createdAtOffset;
 
     private OffsetDateTime lastModified;
@@ -109,12 +103,11 @@ public class Photo {
     }
 
     public OffsetDateTime getCreatedAt() {
-        return createdAt.toInstant().atOffset(ZoneOffset.ofTotalSeconds(createdAtOffset));
+        return createdAt;
     }
 
-    @JsonIgnore
-    public OffsetDateTime getOriginalCreatedAt() {
-        return createdAt;
+    public Integer getCreatedAtOffset() {
+        return createdAtOffset;
     }
 
     public OffsetDateTime getLastModified() {
