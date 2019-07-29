@@ -28,6 +28,14 @@ class PhotoDetailFragment : BaseFragment() {
     private lateinit var binding: FragmentPhotoDetailBinding
     private lateinit var photoId: String
 
+    private var shouldUpdateOnResume = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        shouldUpdateOnResume = false
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -38,7 +46,10 @@ class PhotoDetailFragment : BaseFragment() {
 
         photoId = activity.intent.getStringExtra(ARG_PHOTO_ID)
 
-        setPhoto()
+        if (!shouldUpdateOnResume) {
+            setPhoto()
+        }
+
         setDeleteButtonListener()
         setEditButtonListener()
 
@@ -47,7 +58,13 @@ class PhotoDetailFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        setPhoto()
+
+        if (shouldUpdateOnResume) {
+            Log.v(TAG, "Updating photo onResume")
+            setPhoto()
+        } else {
+            shouldUpdateOnResume = true
+        }
     }
 
     override fun onDestroy() {

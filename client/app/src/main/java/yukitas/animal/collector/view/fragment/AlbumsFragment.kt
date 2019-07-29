@@ -31,6 +31,14 @@ class AlbumsFragment : CollectionFragment() {
     private lateinit var binding: FragmentAlbumsBinding
     private lateinit var albumsAdapter: AlbumsAdapter
 
+    private var shouldUpdateOnResume = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        shouldUpdateOnResume = false
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -40,7 +48,10 @@ class AlbumsFragment : CollectionFragment() {
         albumsAdapter = AlbumsAdapter(context)
         binding.gridAlbums.adapter = albumsAdapter
 
-        setAlbums()
+        if (!shouldUpdateOnResume) {
+            setAlbums()
+        }
+
         setAddButtonListener()
 
         return binding.root
@@ -48,7 +59,13 @@ class AlbumsFragment : CollectionFragment() {
 
     override fun onResume() {
         super.onResume()
-        setAlbums()
+
+        if (shouldUpdateOnResume) {
+            Log.v(TAG, "Updating albums onResume")
+            setAlbums()
+        } else {
+            shouldUpdateOnResume = true
+        }
     }
 
     override fun onDestroy() {

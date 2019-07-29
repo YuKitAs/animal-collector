@@ -52,6 +52,13 @@ abstract class PhotosFragment : BaseFragment() {
     protected lateinit var photosAdapter: PhotosAdapter
 
     private var isActionButtonOpen = false
+    private var shouldUpdateOnResume = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        shouldUpdateOnResume = false
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -64,7 +71,9 @@ abstract class PhotosFragment : BaseFragment() {
         photosAdapter = PhotosAdapter(context)
         gridView.adapter = photosAdapter
 
-        setPhotos()
+        if (!shouldUpdateOnResume) {
+            setPhotos()
+        }
 
         setActionButtonListener()
         setAddPhotoButtonListener()
@@ -86,8 +95,13 @@ abstract class PhotosFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        // reset photos
-        setPhotos()
+
+        if (shouldUpdateOnResume) {
+            Log.v(TAG, "Updating photos onResume")
+            setPhotos()
+        } else {
+            shouldUpdateOnResume = true
+        }
     }
 
     override fun onDestroy() {

@@ -30,6 +30,14 @@ class AnimalsFragment : CollectionFragment() {
     private lateinit var binding: yukitas.animal.collector.databinding.FragmentAnimalsBinding
     private lateinit var animalsAdapter: AnimalsAdapter
 
+    private var shouldUpdateOnResume = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        shouldUpdateOnResume = false
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -39,7 +47,10 @@ class AnimalsFragment : CollectionFragment() {
         animalsAdapter = AnimalsAdapter(context)
         binding.listAnimals.adapter = animalsAdapter
 
-        setAnimals()
+        if (!shouldUpdateOnResume) {
+            setAnimals()
+        }
+
         setAddButtonListener()
 
         return binding.root
@@ -47,7 +58,13 @@ class AnimalsFragment : CollectionFragment() {
 
     override fun onResume() {
         super.onResume()
-        setAnimals()
+
+        if (shouldUpdateOnResume) {
+            Log.v(TAG, "Updating animals onResume")
+            setAnimals()
+        } else {
+            shouldUpdateOnResume = true
+        }
     }
 
     override fun onDestroy() {
