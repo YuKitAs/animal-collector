@@ -51,6 +51,8 @@ public abstract class AbstractControllerTest {
     static final String PHOTO_CAT_1_DESCRIPTION = "This photo contains animal-cat-1 and exists in album-cat-1";
     static final String PHOTO_DOG_DESCRIPTION = "This photo contains animal-dog and exists in album-dog";
 
+    static final String LOCATION_ADDR = "Somewhere on the earth";
+
     TestRestTemplate getTestRestTemplate() {
         return testRestTemplate;
     }

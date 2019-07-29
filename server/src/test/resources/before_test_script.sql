@@ -60,7 +60,7 @@ INSERT INTO photos (id, content, created_at, created_at_offset, description, add
 VALUES
 ('00000000-0000-0000-0001-000000000001',
 '00000001',
-'2019-06-01T00:00:00+00:00',
+'2019-06-02T02:00:00+00:00',
 10800,
 'This photo contains animal-dog and exists in album-dog',
 'Somewhere on the earth',
