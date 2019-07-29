@@ -55,6 +55,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public List<Photo> getPhotosByAlbum(UUID albumId, int width, int height) {
+        LOGGER.trace("Retrieving photos by album id '{}' with width={} and height={}", albumId, width, height);
         return getPhotosByAlbum(albumId).stream()
                 .peek(photo -> photo.setContent(convertToThumbnail(photo.getContent(), width, height)))
                 .collect(Collectors.toList());
@@ -85,6 +86,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public List<Photo> getPhotosByAnimal(UUID animalId, int width, int height) {
+        LOGGER.trace("Retrieving photos by animal id '{}' with width={} and height={}", animalId, width, height);
         return getPhotosByAnimal(animalId).stream()
                 .peek(photo -> photo.setContent(convertToThumbnail(photo.getContent(), width, height)))
                 .collect(Collectors.toList());
@@ -111,6 +113,7 @@ public class PhotoServiceImpl implements PhotoService {
     @Cacheable("photo")
     @Override
     public Photo getPhoto(UUID id) {
+        LOGGER.trace("Retrieving photo by id '{}'", id);
         return findPhotoById(id);
     }
 
