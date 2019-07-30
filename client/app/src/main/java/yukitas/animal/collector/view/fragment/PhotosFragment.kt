@@ -10,6 +10,7 @@ import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -27,6 +28,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
+import yukitas.animal.collector.model.Location
 import yukitas.animal.collector.view.adapter.PhotosAdapter
 import java.io.File
 import java.io.FileOutputStream
@@ -112,7 +114,7 @@ abstract class PhotosFragment : BaseFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
             val photoPath = readPhotoFromStorage(data.data!!)
-            postPhoto(processPhoto(photoPath), getCreationTime(photoPath))
+            postPhoto(processPhoto(photoPath), getCreationTime(photoPath), getLocation(photoPath))
         }
     }
 
@@ -206,7 +208,23 @@ abstract class PhotosFragment : BaseFragment() {
         return creationTime
     }
 
-    private fun postPhoto(photo: Bitmap, creationTime: OffsetDateTime) {
+    private fun getLocation(photoPath: String): Location {
+        val exif = ExifInterface(photoPath)
+
+        val latitude = exif.latLong[0]
+        val longitude = exif.latLong[1]
+        Log.d(TAG, "Photo lat: $latitude, long: $longitude")
+
+        val address = Geocoder(activity, Locale.getDefault()).getFromLocation(latitude, longitude,
+                1)[0] ?: return Location(latitude, longitude, "Somewhere on the earth")
+        Log.d(TAG, "Photo address: $address")
+
+        val city = address.locality
+        val country = address.countryName
+        return Location(latitude, longitude, "$city, $country")
+    }
+
+    private fun postPhoto(photo: Bitmap, creationTime: OffsetDateTime, location: Location) {
         val wrapper = ContextWrapper(context)
 
         var file = wrapper.getDir(context.cacheDir.name, Context.MODE_PRIVATE)
@@ -226,15 +244,16 @@ abstract class PhotosFragment : BaseFragment() {
         Log.d(TAG, "Photo to send: $outputPhotoPath")
 
         uploadPhoto(outputPhotoPath, RequestBody.create(MediaType.parse("image/*"), file),
-                creationTime)
+                creationTime, location)
     }
 
     private fun uploadPhoto(photoFilePath: String?, requestFile: RequestBody,
-                            creationTime: OffsetDateTime) {
+                            creationTime: OffsetDateTime, location: Location) {
         disposable.add(
                 apiService.createPhoto(
                         MultipartBody.Part.createFormData("content", photoFilePath, requestFile),
-                        creationTime.toString())
+                        creationTime.toString(), location.latitude, location.longitude,
+                        location.address)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
