@@ -1,5 +1,8 @@
 package yukitas.animal.collector.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Embeddable;
 
 @Embeddable
@@ -13,9 +16,12 @@ public class Location {
     private Location() {
     }
 
-    public Location(double latitude, double longitude) {
+    @JsonCreator
+    public Location(@JsonProperty("latitude") double latitude, @JsonProperty("longitude") double longitude,
+            @JsonProperty("address") String address) {
         this.latitude = latitude;
         this.longitude = longitude;
+        this.address = address;
     }
 
     public Double getLatitude() {
@@ -27,7 +33,7 @@ public class Location {
     }
 
     public String getAddress() {
-        return "Somewhere on the earth";
+        return address;
     }
 
     @Override

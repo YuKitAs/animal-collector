@@ -118,12 +118,12 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public UUID createPhoto(Photo.Builder builder, byte[] content, OffsetDateTime createdAt) {
+    public UUID createPhoto(Photo.Builder builder, byte[] content, OffsetDateTime createdAt, Location location) {
         LOGGER.debug("Creating photo with original creation time {}", createdAt);
 
         Photo photo = photoRepository.save(builder.setContent(content)
-                .setLocation(new Location(-90 + 180 * new Random().nextDouble(),
-                        -180 + 360 * new Random().nextDouble())) // FIXME
+                .setLocation(new Location(location.getLatitude(), location.getLongitude(),
+                        stripAddress(location.getAddress())))
                 .setCreatedAt(createdAt)
                 .build());
 
@@ -257,5 +257,13 @@ public class PhotoServiceImpl implements PhotoService {
             LOGGER.error("IOException in scaling photo: {}", e.getMessage());
             return new byte[]{};
         }
+    }
+
+    // remove leading/trailing double quotes and whitespaces
+    private String stripAddress(String address) {
+        if (address.charAt(0) == '"' && address.charAt(address.length() - 1) == '"') {
+            return address.substring(1, address.length() - 1).strip();
+        }
+        return address.strip();
     }
 }

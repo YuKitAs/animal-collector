@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import yukitas.animal.collector.model.Location;
 import yukitas.animal.collector.model.Photo;
 
 public interface PhotoService {
@@ -27,7 +28,7 @@ public interface PhotoService {
 
     Photo getPhoto(UUID id);
 
-    UUID createPhoto(Photo.Builder builder, byte[] content, OffsetDateTime createdAt);
+    UUID createPhoto(Photo.Builder builder, byte[] content, OffsetDateTime createdAt, Location location);
 
     void updatePhoto(UUID id, Set<UUID> animalIds, Set<UUID> albumIds, String description);
 

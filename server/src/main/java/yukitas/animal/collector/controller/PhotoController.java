@@ -20,6 +20,7 @@ import yukitas.animal.collector.controller.dto.CreatePhotoRequest;
 import yukitas.animal.collector.controller.dto.CreatePhotoResponse;
 import yukitas.animal.collector.controller.dto.GetPhotoResponse;
 import yukitas.animal.collector.controller.dto.UpdatePhotoRequest;
+import yukitas.animal.collector.model.Location;
 import yukitas.animal.collector.model.Photo;
 import yukitas.animal.collector.service.PhotoService;
 
@@ -37,9 +38,11 @@ public class PhotoController {
     @PostMapping("/photos")
     @ResponseStatus(HttpStatus.CREATED)
     public CreatePhotoResponse createPhoto(@Valid @RequestParam("content") MultipartFile content,
-            @RequestParam("created_at") String createdAt) throws IOException {
+            @RequestParam("created_at") String createdAt, @RequestParam("latitude") Double latitude,
+            @RequestParam("longitude") Double longitude, @RequestParam("address") String address) throws IOException {
         return new CreatePhotoResponse(photoService.createPhoto(CreatePhotoRequest.builder(), content.getBytes(),
-                jacksonConfig.objectMapper().readValue(createdAt, OffsetDateTime.class)));
+                jacksonConfig.objectMapper().readValue(createdAt, OffsetDateTime.class),
+                new Location(latitude, longitude, address)));
     }
 
     @GetMapping("/albums/{album_id}/photos")

@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Objects;
+import java.util.Random;
 
 import yukitas.animal.collector.controller.dto.CreatePhotoResponse;
 import yukitas.animal.collector.controller.dto.GetPhotoResponse;
@@ -25,6 +26,9 @@ public class PhotoControllerTest extends AbstractControllerTest {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("content", new ClassPathResource("fixtures/images/photo.jpg"));
         body.add("created_at", OffsetDateTime.now());
+        body.add("latitude", -90 + 180 * new Random().nextDouble());
+        body.add("longitude", -180 + 360 * new Random().nextDouble());
+        body.add("address", LOCATION_ADDR);
 
         ResponseEntity<CreatePhotoResponse> response = getTestRestTemplate().postForEntity("/photos",
                 new HttpEntity<>(body, headers), CreatePhotoResponse.class);
@@ -77,8 +81,10 @@ public class PhotoControllerTest extends AbstractControllerTest {
                 GetPhotoResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).satisfies(
-                photo -> assertThat(photo.getContent()).isEqualTo(PHOTO_CAT_1_CONTENT));
+        assertThat(response.getBody()).satisfies(photo -> {
+            assertThat(photo.getContent()).isEqualTo(PHOTO_CAT_1_CONTENT);
+            assertThat(photo.getLocation().getAddress()).isEqualTo(LOCATION_ADDR);
+        });
     }
 
     @Test
