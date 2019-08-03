@@ -40,9 +40,9 @@ public class PhotoController {
     public CreatePhotoResponse createPhoto(@Valid @RequestParam("content") MultipartFile content,
             @RequestParam("created_at") String createdAt, @RequestParam("latitude") Double latitude,
             @RequestParam("longitude") Double longitude, @RequestParam("address") String address) throws IOException {
-        return new CreatePhotoResponse(photoService.createPhoto(CreatePhotoRequest.builder(), content.getBytes(),
+        return photoService.createPhoto(CreatePhotoRequest.builder(), content.getBytes(),
                 jacksonConfig.objectMapper().readValue(createdAt, OffsetDateTime.class),
-                new Location(latitude, longitude, address)));
+                new Location(latitude, longitude, address));
     }
 
     @GetMapping("/albums/{album_id}/photos")

@@ -35,6 +35,7 @@ public class PhotoControllerTest extends AbstractControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(Objects.requireNonNull(response.getBody()).getId()).isNotNull();
+        assertThat(response.getBody().getDetectedCategory()).isNotNull();
     }
 
     @Test

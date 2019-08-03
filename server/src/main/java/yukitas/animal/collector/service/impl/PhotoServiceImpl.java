@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
+import yukitas.animal.collector.controller.dto.CreatePhotoResponse;
 import yukitas.animal.collector.model.Album;
 import yukitas.animal.collector.model.Animal;
 import yukitas.animal.collector.model.Location;
@@ -30,6 +31,8 @@ import yukitas.animal.collector.service.PhotoService;
 import yukitas.animal.collector.service.exception.EntityNotFoundException;
 import yukitas.animal.collector.service.exception.InvalidDataException;
 import yukitas.animal.collector.service.exception.RequiredDataNotProvidedException;
+import yukitas.animal.collector.service.utility.Category;
+import yukitas.animal.collector.service.utility.PhotoDetector;
 
 @Service
 public class PhotoServiceImpl implements PhotoService {
@@ -118,7 +121,8 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public UUID createPhoto(Photo.Builder builder, byte[] content, OffsetDateTime createdAt, Location location) {
+    public CreatePhotoResponse createPhoto(Photo.Builder builder, byte[] content, OffsetDateTime createdAt,
+            Location location) throws IOException {
         LOGGER.debug("Creating photo with original creation time {}", createdAt);
 
         Photo photo = photoRepository.save(builder.setContent(content)
@@ -129,7 +133,10 @@ public class PhotoServiceImpl implements PhotoService {
 
         LOGGER.debug("Created photo (id={})", photo.getId());
 
-        return photo.getId();
+        Category category = new PhotoDetector().computeCategory(content, 0.5);
+        LOGGER.debug("Detected category: {}", category);
+
+        return new CreatePhotoResponse.Builder().setId(photo.getId()).setCategory(category).build();
     }
 
     @CacheEvict(value = "photo", key = "#id")
@@ -265,5 +272,9 @@ public class PhotoServiceImpl implements PhotoService {
             return address.substring(1, address.length() - 1).strip();
         }
         return address.strip();
+    }
+
+    private Category predicateCategory(byte[] photoContent) throws IOException {
+        return new PhotoDetector().computeCategory(photoContent, 0.5);
     }
 }
