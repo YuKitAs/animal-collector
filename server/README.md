@@ -16,7 +16,9 @@
         postgres=# \c ani_co_dev
         ```
 
-2. Run application:
+2. Download and place pre-trained model zip file under `src/main/resources`
+
+3. Run application with profile `ide`:
 
     ```console
     $ ./gradlew bootRun
