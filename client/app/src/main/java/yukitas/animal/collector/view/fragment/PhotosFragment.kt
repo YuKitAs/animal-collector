@@ -255,6 +255,8 @@ abstract class PhotosFragment : BaseFragment() {
 
     private fun uploadPhoto(photoFilePath: String?, requestFile: RequestBody,
                             creationTime: OffsetDateTime, location: Location) {
+        binding.layoutDetectionProgress.visibility = View.VISIBLE
+
         disposable.add(
                 apiService.createPhoto(
                         MultipartBody.Part.createFormData("content", photoFilePath, requestFile),
@@ -267,6 +269,9 @@ abstract class PhotosFragment : BaseFragment() {
                             val detectedCategory = response.detectedCategory
                             Log.d(TAG,
                                     "Created photo with id '$photoId' and detected category: $detectedCategory")
+
+                            binding.layoutDetectionProgress.visibility = View.GONE
+
                             startEditPhotoActivity(photoId, detectedCategory)
                         }, {
                             Log.e(TAG, "Some errors occurred: $it")
