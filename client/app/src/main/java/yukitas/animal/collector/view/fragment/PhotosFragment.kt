@@ -80,6 +80,9 @@ abstract class PhotosFragment : BaseFragment() {
         setActionButtonListener()
         setAddPhotoButtonListener()
 
+        binding.btnAction.visibility = View.VISIBLE
+        closeActionMenu()
+
         gridView.setOnItemClickListener { _, _, position, _ ->
             val bundle = Bundle()
             bundle.putString(ARG_PHOTO_ID, photosAdapter.photos[position].id)
@@ -256,6 +259,9 @@ abstract class PhotosFragment : BaseFragment() {
     private fun uploadPhoto(photoFilePath: String?, requestFile: RequestBody,
                             creationTime: OffsetDateTime, location: Location) {
         binding.layoutDetectionProgress.visibility = View.VISIBLE
+
+        closeActionMenu()
+        binding.btnAction.visibility = View.INVISIBLE
 
         disposable.add(
                 apiService.createPhoto(
