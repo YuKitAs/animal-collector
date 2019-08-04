@@ -1,5 +1,7 @@
 package yukitas.animal.collector.view.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
@@ -47,7 +49,11 @@ class EditAnimalActivity : AppCompatActivity() {
                                     Toast.makeText(this,
                                             getString(R.string.message_create_animal_success),
                                             Toast.LENGTH_SHORT).show()
-                                    // return to MainActivity
+
+                                    val data = Intent().apply {
+                                        putExtra(Constants.ARG_ANIMAL_ID, animal.id)
+                                    }
+                                    setResult(Activity.RESULT_OK, data)
                                     finish()
                                 })
             }

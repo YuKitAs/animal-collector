@@ -142,8 +142,9 @@ class AnimalsFragment : CollectionFragment() {
             val bundle = Bundle()
             bundle.putString(ARG_CATEGORY_ID, arguments.getString(ARG_CATEGORY_ID))
 
-            val intent = Intent(activity, EditAnimalActivity::class.java)
-            intent.putExtras(bundle)
+            val intent = Intent(activity, EditAnimalActivity::class.java).apply {
+                putExtras(bundle)
+            }
 
             activity.startActivity(intent)
         }

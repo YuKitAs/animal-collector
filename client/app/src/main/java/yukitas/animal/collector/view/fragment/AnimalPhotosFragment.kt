@@ -63,10 +63,11 @@ class AnimalPhotosFragment : PhotosFragment() {
                         })
     }
 
-    override fun startEditPhotoActivity(photoId: String) {
+    override fun startEditPhotoActivity(photoId: String, detectedCategory: String) {
         val bundle = Bundle()
         bundle.putString(Constants.ARG_PHOTO_ID, photoId)
         bundle.putString(Constants.ARG_ANIMAL_ID, animalId)
+        bundle.putString(Constants.ARG_DETECTED_CATEGORY, detectedCategory)
 
         val intent = Intent(activity, EditPhotoActivity::class.java).apply {
             putExtras(bundle)
