@@ -5,7 +5,8 @@ import yukitas.animal.collector.common.ViewMode
 
 class AnimalCollectorApplication : Application() {
     companion object {
-        var currentViewMode = ViewMode.ALBUM
+        // default view mode on start
+        var currentViewMode = ViewMode.ANIMAL
         var currentCategoryIndex = 0
     }
 }

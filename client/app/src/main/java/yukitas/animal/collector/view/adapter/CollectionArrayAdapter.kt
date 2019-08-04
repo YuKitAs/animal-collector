@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import yukitas.animal.collector.model.Collection
 
-class CollectionArrayAdapter(context: Context, var resource: Int, var textViewResourceId: Int,
+class CollectionArrayAdapter(context: Context, private var resource: Int, private var textViewResourceId: Int,
                              private var collections: ArrayList<Collection>) : ArrayAdapter<Collection>(
         context,
         resource, textViewResourceId, collections) {

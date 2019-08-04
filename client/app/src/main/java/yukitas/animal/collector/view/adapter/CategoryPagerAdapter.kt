@@ -22,8 +22,8 @@ class CategoryPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) 
 
     override fun getItem(i: Int): Fragment {
         val fragment = when (AnimalCollectorApplication.currentViewMode) {
-            ViewMode.ALBUM -> AlbumsFragment()
             ViewMode.ANIMAL -> AnimalsFragment()
+            ViewMode.ALBUM -> AlbumsFragment()
         }
 
         fragment.arguments = Bundle().apply {
@@ -33,6 +33,6 @@ class CategoryPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) 
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        return categories[position].name
+        return categories[position].name.capitalize()
     }
 }

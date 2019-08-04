@@ -60,8 +60,8 @@ class MainActivity : AppCompatActivity() {
         return object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
-                    0 -> AnimalCollectorApplication.currentViewMode = ViewMode.ALBUM
-                    1 -> AnimalCollectorApplication.currentViewMode = ViewMode.ANIMAL
+                    0 -> AnimalCollectorApplication.currentViewMode = ViewMode.ANIMAL
+                    1 -> AnimalCollectorApplication.currentViewMode = ViewMode.ALBUM
                 }
 
                 // reset adapter in order to invoke getItem() when position is not changed
