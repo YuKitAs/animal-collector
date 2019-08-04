@@ -38,8 +38,10 @@ public class PhotoController {
     @PostMapping("/photos")
     @ResponseStatus(HttpStatus.CREATED)
     public CreatePhotoResponse createPhoto(@Valid @RequestParam("content") MultipartFile content,
-            @RequestParam("created_at") String createdAt, @RequestParam("latitude") Double latitude,
-            @RequestParam("longitude") Double longitude, @RequestParam("address") String address) throws IOException {
+            @RequestParam("created_at") String createdAt,
+            @RequestParam(value = "latitude", required = false) Double latitude,
+            @RequestParam(value = "longitude", required = false) Double longitude,
+            @RequestParam(value = "address", required = false) String address) throws IOException {
         return photoService.createPhoto(CreatePhotoRequest.builder(), content.getBytes(),
                 jacksonConfig.objectMapper().readValue(createdAt, OffsetDateTime.class),
                 new Location(latitude, longitude, address));

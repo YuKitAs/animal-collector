@@ -17,11 +17,20 @@ public class Location {
     }
 
     @JsonCreator
-    public Location(@JsonProperty("latitude") double latitude, @JsonProperty("longitude") double longitude,
+    public Location(@JsonProperty("latitude") Double latitude, @JsonProperty("longitude") Double longitude,
             @JsonProperty("address") String address) {
         this.latitude = latitude;
         this.longitude = longitude;
-        this.address = address;
+
+        if (address != null && !address.isBlank()) {
+            this.address = address;
+        } else {
+            if (latitude != null && longitude != null) {
+                this.address = String.format("%s, %s", latitude, longitude);
+            } else {
+                this.address = "Somewhere on the earth";
+            }
+        }
     }
 
     public Double getLatitude() {
