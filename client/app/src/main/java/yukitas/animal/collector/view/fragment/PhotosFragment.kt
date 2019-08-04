@@ -211,13 +211,19 @@ abstract class PhotosFragment : BaseFragment() {
     private fun getLocation(photoPath: String): Location {
         val exif = ExifInterface(photoPath)
 
-        val latitude = exif.latLong[0]
-        val longitude = exif.latLong[1]
+        val latitude = if (exif.latLong != null) exif.latLong[0] else null
+        val longitude = if (exif.latLong != null) exif.latLong[1] else null
+
         Log.d(TAG, "Photo lat: $latitude, long: $longitude")
 
+        if (latitude == null || longitude == null) {
+            return Location(null, null, null)
+        }
+
         val address = Geocoder(activity, Locale.getDefault()).getFromLocation(latitude, longitude,
-                1)[0] ?: return Location(latitude, longitude, "Somewhere on the earth")
-        Log.d(TAG, "Photo address: $address")
+                1)[0] ?: return Location(latitude, longitude, null)
+
+        Log.d(TAG, "Photo address from lat and long: $address")
 
         val city = address.locality
         val country = address.countryName
@@ -258,8 +264,10 @@ abstract class PhotosFragment : BaseFragment() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
                             val photoId = response.id
-                            Log.d(TAG, "Created photo with id '$photoId'")
-                            startEditPhotoActivity(photoId)
+                            val detectedCategory = response.detectedCategory
+                            Log.d(TAG,
+                                    "Created photo with id '$photoId' and detected category: $detectedCategory")
+                            startEditPhotoActivity(photoId, detectedCategory)
                         }, {
                             Log.e(TAG, "Some errors occurred: $it")
                         }))
@@ -319,7 +327,7 @@ abstract class PhotosFragment : BaseFragment() {
                 -resources.getDimension(R.dimen.standard_195))
     }
 
-    protected abstract fun startEditPhotoActivity(photoId: String)
+    protected abstract fun startEditPhotoActivity(photoId: String, detectedCategory: String)
 
     protected abstract fun setPhotos()
 

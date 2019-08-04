@@ -83,8 +83,8 @@ interface ApiService {
     @POST("photos")
     fun createPhoto(@Part photo: MultipartBody.Part, @Part(
             "created_at") createdAt: String, @Part(
-            "latitude") latitude: Double, @Part("longitude") longitude: Double, @Part(
-            "address") address: String): Single<SavePhotoResponse>
+            "latitude") latitude: Double?, @Part("longitude") longitude: Double?, @Part(
+            "address") address: String?): Single<SavePhotoResponse>
 
     /**
      * PUT
