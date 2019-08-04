@@ -133,7 +133,7 @@ public class PhotoServiceImpl implements PhotoService {
 
         LOGGER.debug("Created photo (id={})", photo.getId());
 
-        Category category = new PhotoDetector().computeCategory(content, 0.5);
+        Category category = new PhotoDetector().computeCategory(content, 0.7);
         LOGGER.debug("Detected category: {}", category);
 
         return new CreatePhotoResponse.Builder().setId(photo.getId()).setCategory(category).build();
