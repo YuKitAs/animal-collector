@@ -57,7 +57,7 @@ class AnimalsAdapter(private val context: Context) : BaseAdapter() {
                 tagView.text = it
                 binding.layoutAnimalTags.addView(tagView)
 
-                val spaceView = LayoutInflater.from(context).inflate(R.layout.template_space,
+                val spaceView = LayoutInflater.from(context).inflate(R.layout.template_horizontal_space,
                         parent, false)
                 binding.layoutAnimalTags.addView(spaceView)
             }

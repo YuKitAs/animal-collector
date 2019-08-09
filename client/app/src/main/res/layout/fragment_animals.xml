@@ -11,16 +11,16 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/bg">
 
         <ListView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/list_animals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/bg"
             android:gravity="center"
             android:horizontalSpacing="10dp"
-            android:padding="5dp"
             android:verticalSpacing="24dp" />
 
         <android.support.design.widget.FloatingActionButton

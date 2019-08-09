@@ -17,7 +17,7 @@
             android:id="@+id/grid_albums"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
+            android:background="@color/bg"
             android:columnWidth="150dp"
             android:gravity="center"
             android:horizontalSpacing="10dp"
