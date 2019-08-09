@@ -24,12 +24,21 @@ class EditPhotoActivity : AppCompatActivity() {
     private val apiService by lazy { ApiService.create() }
     private val disposable = CompositeDisposable()
 
+    private var isCreating = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_photo)
         setSupportActionBar(toolbar)
 
-        showDialog(savedInstanceState)
+        isCreating = intent.getBooleanExtra(Constants.ARG_IS_CREATING, true)
+        if (isCreating) {
+            showDialog(savedInstanceState)
+        } else {
+            if (savedInstanceState == null) {
+                attachEditPhotoFragment()
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -37,7 +46,7 @@ class EditPhotoActivity : AppCompatActivity() {
 
         val photoId = intent.getStringExtra(Constants.ARG_PHOTO_ID)
 
-        if (intent.getBooleanExtra(Constants.ARG_IS_CREATING, true)) {
+        if (isCreating) {
             disposable.add(apiService.deletePhoto(photoId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -60,10 +69,7 @@ class EditPhotoActivity : AppCompatActivity() {
                 setMessage(R.string.message_detected_category_unknown)
                 setPositiveButton(android.R.string.ok) { _, _ ->
                     if (savedInstanceState == null) {
-                        supportFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_edit_photo_container,
-                                        EditPhotoMainFragment())
-                                .commit()
+                        attachEditPhotoFragment()
                     }
                 }
             }
@@ -95,5 +101,12 @@ class EditPhotoActivity : AppCompatActivity() {
             }
             builder.show()
         }
+    }
+
+    private fun attachEditPhotoFragment() {
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_edit_photo_container,
+                        EditPhotoMainFragment())
+                .commit()
     }
 }
