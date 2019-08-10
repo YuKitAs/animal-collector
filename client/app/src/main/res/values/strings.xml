@@ -12,7 +12,7 @@
     <!-- Input hints -->
     <string name="hint_album_name">Album name</string>
     <string name="hint_animal_name">Animal name</string>
-    <string name="hint_animal_tags">Tags (separated by spaces)</string>
+    <string name="hint_animal_tags">Tags (space-separated)</string>
     <string name="hint_photo_desc">Description (max 200)</string>
     <!-- Text labels -->
     <string name="label_create_animal">Create Animal</string>
