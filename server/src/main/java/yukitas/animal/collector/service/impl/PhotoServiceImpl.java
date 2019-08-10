@@ -225,6 +225,8 @@ public class PhotoServiceImpl implements PhotoService {
 
             int originalWidth = original.getWidth();
             int originalHeight = original.getHeight();
+            LOGGER.debug(String.format("Original size: width=%s, height=%s", originalWidth, originalHeight));
+
             double originalRatio = originalWidth / (double) originalHeight;
 
             // do nothing when either of the side lengths provided is invalid
