@@ -115,8 +115,8 @@ class AnimalsFragment : CollectionFragment() {
                         Log.d(TAG,
                                 "Set thumbnail ${animalThumbnailMap[animal.id]} for animal ${animal.name}")
                     }
-                    // update animals
-                    animalsAdapter.animals = animals
+                    // update animals (sorted by last modified)
+                    animalsAdapter.animals = animals.reversed()
                 }) {
                     Log.e(TAG, "Some errors occurred: $it")
                 }

@@ -116,8 +116,8 @@ class AlbumsFragment : CollectionFragment() {
                         Log.d(TAG,
                                 "Set thumbnail ${albumThumbnailMap[album.id]} for album ${album.name}")
                     }
-                    // update albums
-                    albumsAdapter.albums = albums
+                    // update albums (sorted by last modified)
+                    albumsAdapter.albums = albums.reversed()
                 }) {
                     Log.e(TAG, "Some errors occurred: $it")
                 }
