@@ -1,5 +1,6 @@
 package yukitas.animal.collector.view.fragment
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -13,9 +14,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_photos.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
-import yukitas.animal.collector.view.activity.EditAnimalActivity
 import yukitas.animal.collector.view.activity.EditPhotoActivity
-import java.util.*
 
 class AnimalPhotosFragment : PhotosFragment() {
     private val TAG = AnimalPhotosFragment::class.java.simpleName
@@ -23,6 +22,8 @@ class AnimalPhotosFragment : PhotosFragment() {
     private lateinit var animalId: String
     private lateinit var animalName: String
     private lateinit var animalTags: List<String>
+
+    private val RESULT_EDIT_ANIMAL = 1
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -53,6 +54,12 @@ class AnimalPhotosFragment : PhotosFragment() {
         updateAnimal()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RESULT_EDIT_ANIMAL && resultCode == Activity.RESULT_OK) {
+            onResume()
+        }
+    }
+
     override fun setPhotos() {
         disposable.add(
                 apiService.getPhotosByAnimal(animalId, THUMBNAIL_SIDE_LENGTH, THUMBNAIL_SIDE_LENGTH)
@@ -77,16 +84,10 @@ class AnimalPhotosFragment : PhotosFragment() {
 
     override fun setEditButtonListener() {
         binding.btnEditCollection.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putBoolean(Constants.ARG_IS_CREATING, false)
-            bundle.putString(Constants.ARG_ANIMAL_ID, animalId)
-            bundle.putString(Constants.ARG_ANIMAL_NAME, animalName)
-            bundle.putStringArrayList(Constants.ARG_ANIMAL_TAGS, ArrayList(animalTags))
-
-            val intent = Intent(activity, EditAnimalActivity::class.java).apply {
-                putExtras(bundle)
-            }
-            activity.startActivity(intent)
+            val editAnimalDialog = EditAnimalDialogFragment()
+            editAnimalDialog.setTargetFragment(this, RESULT_EDIT_ANIMAL)
+            editAnimalDialog.show(activity.supportFragmentManager,
+                    EditAnimalDialogFragment::class.java.simpleName)
         }
     }
 

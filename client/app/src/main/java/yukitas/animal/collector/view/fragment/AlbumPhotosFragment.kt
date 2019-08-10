@@ -1,5 +1,6 @@
 package yukitas.animal.collector.view.fragment
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -13,7 +14,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_photos.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
-import yukitas.animal.collector.view.activity.EditAlbumActivity
 import yukitas.animal.collector.view.activity.EditPhotoActivity
 
 class AlbumPhotosFragment : PhotosFragment() {
@@ -21,6 +21,8 @@ class AlbumPhotosFragment : PhotosFragment() {
 
     private lateinit var albumId: String
     private lateinit var albumName: String
+
+    private val RESULT_EDIT_ALBUM = 1
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -49,6 +51,12 @@ class AlbumPhotosFragment : PhotosFragment() {
         updateAlbum()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RESULT_EDIT_ALBUM && resultCode == Activity.RESULT_OK) {
+            onResume()
+        }
+    }
+
     override fun setPhotos() {
         disposable.add(
                 apiService.getPhotosByAlbum(albumId, THUMBNAIL_SIDE_LENGTH, THUMBNAIL_SIDE_LENGTH)
@@ -73,16 +81,10 @@ class AlbumPhotosFragment : PhotosFragment() {
 
     override fun setEditButtonListener() {
         binding.btnEditCollection.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putBoolean(Constants.ARG_IS_CREATING, false)
-            bundle.putString(Constants.ARG_ALBUM_ID, albumId)
-            bundle.putString(Constants.ARG_ALBUM_NAME, albumName)
-
-            val intent = Intent(activity, EditAlbumActivity::class.java).apply {
-                putExtras(bundle)
-            }
-
-            activity.startActivity(intent)
+            val editAlbumDialog = EditAlbumDialogFragment()
+            editAlbumDialog.setTargetFragment(this, RESULT_EDIT_ALBUM)
+            editAlbumDialog.show(activity.supportFragmentManager,
+                    EditAlbumDialogFragment::class.java.simpleName)
         }
     }
 

@@ -16,9 +16,9 @@
     <string name="hint_photo_desc">Description (max 200)</string>
     <!-- Text labels -->
     <string name="label_create_animal">Create Animal</string>
-    <string name="label_update_animal">Update Animal</string>
+    <string name="label_edit_animal">Edit Animal</string>
     <string name="label_create_album">Create Album</string>
-    <string name="label_update_album">Update Album</string>
+    <string name="label_edit_album">Edit Album</string>
     <string name="label_select_category">Category</string>
     <string name="label_select_animals">Select Animals (required)</string>
     <string name="label_select_animals_in_category">Select Animals in %1$s (required)</string>
