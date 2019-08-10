@@ -5,6 +5,7 @@
     <string name="content_desc_album">Album</string>
     <string name="content_desc_animal">Animal</string>
     <string name="content_desc_arrow">Arrow</string>
+    <string name="content_desc_close">Close</string>
     <string name="label_albums">Albums</string>
     <string name="label_animals">Animals</string>
     <string name="text_none">None</string>
@@ -18,7 +19,7 @@
     <string name="label_update_animal">Update Animal</string>
     <string name="label_create_album">Create Album</string>
     <string name="label_update_album">Update Album</string>
-    <string name="label_select_category">Select a category</string>
+    <string name="label_select_category">Category</string>
     <string name="label_select_animals">Select Animals (required)</string>
     <string name="label_select_animals_in_category">Select Animals in %1$s (required)</string>
     <string name="label_select_albums">Select Albums</string>
