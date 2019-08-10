@@ -1,6 +1,7 @@
 package yukitas.animal.collector.view.fragment
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -18,11 +19,11 @@ import yukitas.animal.collector.common.Constants.Companion.ARG_ANIMAL_TAGS
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.Photo
-import yukitas.animal.collector.view.activity.EditAnimalActivity
 import yukitas.animal.collector.view.activity.PhotoActivity
 import yukitas.animal.collector.view.adapter.AnimalsAdapter
 import java.util.*
 import java.util.stream.Collectors
+
 
 class AnimalsFragment : CollectionFragment() {
     private val TAG = AnimalsFragment::class.java.simpleName
@@ -31,6 +32,8 @@ class AnimalsFragment : CollectionFragment() {
     private lateinit var animalsAdapter: AnimalsAdapter
 
     private var shouldUpdateOnResume = false
+
+    private val RESULT_CREATE_ANIMAL = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +73,12 @@ class AnimalsFragment : CollectionFragment() {
     override fun onDestroy() {
         super.onDestroy()
         disposable.clear()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RESULT_CREATE_ANIMAL && resultCode == Activity.RESULT_OK) {
+            onResume()
+        }
     }
 
     private fun setAnimals() {
@@ -139,14 +148,10 @@ class AnimalsFragment : CollectionFragment() {
 
     private fun setAddButtonListener() {
         binding.btnAddAnimal.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString(ARG_CATEGORY_ID, arguments.getString(ARG_CATEGORY_ID))
-
-            val intent = Intent(activity, EditAnimalActivity::class.java).apply {
-                putExtras(bundle)
-            }
-
-            activity.startActivity(intent)
+            val createAnimalDialog = CreateAnimalDialogFragment()
+            createAnimalDialog.setTargetFragment(this, RESULT_CREATE_ANIMAL)
+            createAnimalDialog.show(activity.supportFragmentManager,
+                    CreateAnimalDialogFragment::class.java.simpleName)
         }
     }
 }

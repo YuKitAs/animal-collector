@@ -1,6 +1,7 @@
 package yukitas.animal.collector.view.fragment
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -12,14 +13,12 @@ import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
-import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_NAME
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
 import yukitas.animal.collector.databinding.FragmentAlbumsBinding
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Photo
-import yukitas.animal.collector.view.activity.EditAlbumActivity
 import yukitas.animal.collector.view.activity.PhotoActivity
 import yukitas.animal.collector.view.adapter.AlbumsAdapter
 import java.util.*
@@ -32,6 +31,8 @@ class AlbumsFragment : CollectionFragment() {
     private lateinit var albumsAdapter: AlbumsAdapter
 
     private var shouldUpdateOnResume = false
+
+    val RESULT_CREATE_ALBUM = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +72,12 @@ class AlbumsFragment : CollectionFragment() {
     override fun onDestroy() {
         super.onDestroy()
         disposable.clear()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RESULT_CREATE_ALBUM && resultCode == Activity.RESULT_OK) {
+            onResume()
+        }
     }
 
     private fun setAlbums() {
@@ -139,13 +146,10 @@ class AlbumsFragment : CollectionFragment() {
 
     private fun setAddButtonListener() {
         binding.btnAddAlbum.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString(Constants.ARG_CATEGORY_ID, arguments.getString(ARG_CATEGORY_ID))
-
-            val intent = Intent(activity, EditAlbumActivity::class.java)
-            intent.putExtras(bundle)
-
-            activity.startActivity(intent)
+            val createAlbumDialog = CreateAlbumDialogFragment()
+            createAlbumDialog.setTargetFragment(this, RESULT_CREATE_ALBUM)
+            createAlbumDialog.show(activity.supportFragmentManager,
+                    CreateAlbumDialogFragment::class.java.simpleName)
         }
     }
 }
