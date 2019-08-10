@@ -4,6 +4,7 @@
     <string name="content_desc_photo">Photo</string>
     <string name="content_desc_album">Album</string>
     <string name="content_desc_animal">Animal</string>
+    <string name="content_desc_arrow">Arrow</string>
     <string name="label_albums">Albums</string>
     <string name="label_animals">Animals</string>
     <string name="text_none">None</string>
