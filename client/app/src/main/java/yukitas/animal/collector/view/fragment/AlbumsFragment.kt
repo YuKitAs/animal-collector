@@ -32,7 +32,7 @@ class AlbumsFragment : CollectionFragment() {
 
     private var shouldUpdateOnResume = false
 
-    val RESULT_CREATE_ALBUM = 1
+    private val RESULT_CREATE_ALBUM = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

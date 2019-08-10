@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import yukitas.animal.collector.R
 import yukitas.animal.collector.model.Photo
-import yukitas.animal.collector.utility.toBitmap
+import yukitas.animal.collector.utility.binaryToBitmap
 
 class PhotosAdapter(private val context: Context) : BaseAdapter() {
     private lateinit var binding: yukitas.animal.collector.databinding.ItemPhotoBinding
@@ -33,7 +33,7 @@ class PhotosAdapter(private val context: Context) : BaseAdapter() {
 
         val photo = photos[position]
         binding.photo = photo
-        binding.imagePhotoThumbnail.setImageBitmap(toBitmap(photo.content))
+        binding.imagePhotoThumbnail.setImageBitmap(binaryToBitmap(photo.content))
 
         return binding.root
     }

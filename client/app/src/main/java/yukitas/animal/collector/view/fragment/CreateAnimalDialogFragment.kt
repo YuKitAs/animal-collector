@@ -3,7 +3,6 @@ package yukitas.animal.collector.view.fragment
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +17,7 @@ import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.model.dto.SaveAnimalRequest
 import yukitas.animal.collector.networking.ApiService
+import yukitas.animal.collector.utility.tagsFromText
 
 class CreateAnimalDialogFragment : CreateCollectionDialogFragment() {
     private val TAG = CreateAnimalDialogFragment::class.java.simpleName
@@ -39,7 +39,7 @@ class CreateAnimalDialogFragment : CreateCollectionDialogFragment() {
             disposable.add(
                     apiService.createAnimal(categoryId,
                             SaveAnimalRequest(inputAnimalName.text.toString(),
-                                    parseTagsFromText(inputAnimalTags.text)))
+                                    tagsFromText(inputAnimalTags.text)))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe { animal ->
@@ -59,9 +59,5 @@ class CreateAnimalDialogFragment : CreateCollectionDialogFragment() {
         view.btnCloseDialog.setOnClickListener { dialog.dismiss() }
 
         return view
-    }
-
-    private fun parseTagsFromText(tags: Editable): List<String> {
-        return tags.split("\\s+".toRegex()).map { it.trim() }
     }
 }

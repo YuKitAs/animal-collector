@@ -10,7 +10,7 @@ import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.template_animal_tag.view.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.model.Animal
-import yukitas.animal.collector.utility.toBitmap
+import yukitas.animal.collector.utility.binaryToBitmap
 
 class AnimalsAdapter(private val context: Context) : BaseAdapter() {
     private lateinit var binding: yukitas.animal.collector.databinding.ItemAnimalBinding
@@ -43,7 +43,7 @@ class AnimalsAdapter(private val context: Context) : BaseAdapter() {
 
     private fun setAnimalThumbnail(animal: Animal) {
         if (animal.thumbnail != null) {
-            binding.imageAnimalThumbnail.setImageBitmap(toBitmap(animal.thumbnail!!.content))
+            binding.imageAnimalThumbnail.setImageBitmap(binaryToBitmap(animal.thumbnail!!.content))
         } else {
             binding.imageAnimalThumbnail.setImageResource(R.drawable.ic_test_image_3)
         }

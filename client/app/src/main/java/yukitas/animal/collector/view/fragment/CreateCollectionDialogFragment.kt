@@ -49,4 +49,9 @@ abstract class CreateCollectionDialogFragment : DialogFragment() {
                             Log.e(TAG, "Some errors occurred while fetching all categories: $it")
                         }))
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
+    }
 }

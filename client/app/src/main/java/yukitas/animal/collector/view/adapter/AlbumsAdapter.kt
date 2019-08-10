@@ -10,7 +10,7 @@ import android.widget.BaseAdapter
 import yukitas.animal.collector.R
 import yukitas.animal.collector.databinding.ItemAlbumBinding
 import yukitas.animal.collector.model.Album
-import yukitas.animal.collector.utility.toBitmap
+import yukitas.animal.collector.utility.binaryToBitmap
 
 class AlbumsAdapter(private val context: Context) : BaseAdapter() {
     private lateinit var binding: ItemAlbumBinding
@@ -41,7 +41,7 @@ class AlbumsAdapter(private val context: Context) : BaseAdapter() {
 
     private fun setAlbumThumbnail(album: Album) {
         if (album.thumbnail != null) {
-            binding.imageAlbumThumbnail.setImageBitmap(toBitmap(album.thumbnail!!.content))
+            binding.imageAlbumThumbnail.setImageBitmap(binaryToBitmap(album.thumbnail!!.content))
         } else {
             binding.imageAlbumThumbnail.setImageResource(R.drawable.ic_test_image_3)
         }

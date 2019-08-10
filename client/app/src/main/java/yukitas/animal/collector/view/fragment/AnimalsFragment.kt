@@ -133,11 +133,13 @@ class AnimalsFragment : CollectionFragment() {
 
     private fun setAnimalListener() {
         binding.listAnimals.setOnItemClickListener { _, _, position, _ ->
-            val bundle = Bundle()
             val animal = animalsAdapter.animals[position]
-            bundle.putString(ARG_ANIMAL_ID, animal.id)
-            bundle.putString(ARG_ANIMAL_NAME, animal.name)
-            bundle.putStringArray(ARG_ANIMAL_TAGS, animal.tags.toTypedArray())
+
+            val bundle = Bundle().apply {
+                putString(ARG_ANIMAL_ID, animal.id)
+                putString(ARG_ANIMAL_NAME, animal.name)
+                putStringArray(ARG_ANIMAL_TAGS, animal.tags.toTypedArray())
+            }
 
             val intent = Intent(activity, PhotoActivity::class.java).apply {
                 putExtras(bundle)

@@ -16,7 +16,7 @@ import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_DESC
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
 import yukitas.animal.collector.databinding.FragmentPhotoDetailBinding
-import yukitas.animal.collector.utility.toBitmap
+import yukitas.animal.collector.utility.binaryToBitmap
 import yukitas.animal.collector.view.activity.EditPhotoActivity
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -79,7 +79,7 @@ class PhotoDetailFragment : BaseFragment() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             binding.photo = it
-                            binding.photoContent.setImageBitmap(toBitmap(it.content))
+                            binding.photoContent.setImageBitmap(binaryToBitmap(it.content))
                             binding.photoDate.text = formatDateTime(it.createdAt)
 
                             setAnimals()

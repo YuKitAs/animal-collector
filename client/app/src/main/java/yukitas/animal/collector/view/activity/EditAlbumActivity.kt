@@ -51,7 +51,7 @@ class EditAlbumActivity : AppCompatActivity() {
                                 })
             }
         } else {
-            labelEditAlbum.text = getString(R.string.label_update_album)
+            labelEditAlbum.text = getString(R.string.label_edit_album)
             inputAlbumName.setText(intent.getStringExtra(Constants.ARG_ALBUM_NAME))
 
             btnSaveAlbum.setOnClickListener {

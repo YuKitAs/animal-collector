@@ -58,7 +58,7 @@ class EditAnimalActivity : AppCompatActivity() {
                                 })
             }
         } else {
-            labelEditAnimal.text = getString(R.string.label_update_animal)
+            labelEditAnimal.text = getString(R.string.label_edit_animal)
             inputAnimalName.setText(intent.getStringExtra(Constants.ARG_ANIMAL_NAME))
             inputAnimalTags.setText(
                     intent.getStringArrayListExtra(Constants.ARG_ANIMAL_TAGS).joinToString(" "))
