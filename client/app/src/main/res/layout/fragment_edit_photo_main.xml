@@ -43,7 +43,8 @@
             android:height="30dp"
             android:background="@color/colorPrimary"
             android:minHeight="0dp"
-            android:text="@string/btn_edit" />
+            android:text="@string/btn_edit"
+            android:textColor="#fff" />
     </LinearLayout>
 
     <TextView
@@ -76,7 +77,8 @@
             android:height="30dp"
             android:background="@color/colorPrimary"
             android:minHeight="0dp"
-            android:text="@string/btn_edit" />
+            android:text="@string/btn_edit"
+            android:textColor="#fff" />
     </LinearLayout>
 
     <TextView
@@ -116,7 +118,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:background="@color/colorPrimary"
-            android:text="@android:string/cancel" />
+            android:text="@android:string/cancel"
+            android:textColor="#fff" />
 
         <Button
             android:id="@+id/btnSavePhoto"
@@ -124,6 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:background="@color/colorPrimary"
-            android:text="@string/btn_save" />
+            android:text="@string/btn_save"
+            android:textColor="#fff" />
     </LinearLayout>
 </LinearLayout>

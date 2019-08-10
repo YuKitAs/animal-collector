@@ -11,10 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:background="@color/colorAccent"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="32sp" />
+        android:textColor="#fff"
+        android:textSize="30sp" />
 
 </android.support.v4.view.ViewPager>

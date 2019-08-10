@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.activity.CreateAlbumActivity">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -68,7 +71,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:background="@color/colorPrimary"
-                android:text="@android:string/cancel" />
+                android:text="@android:string/cancel"
+                android:textColor="#fff" />
 
             <Button
                 android:id="@+id/btnSaveAlbum"
@@ -76,8 +80,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:background="@color/colorPrimary"
-                android:text="@string/btn_save" />
+                android:text="@string/btn_save"
+                android:textColor="#fff" />
         </LinearLayout>
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
