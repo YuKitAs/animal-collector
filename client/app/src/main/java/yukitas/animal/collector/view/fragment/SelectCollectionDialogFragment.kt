@@ -2,23 +2,25 @@ package yukitas.animal.collector.view.fragment
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-import kotlinx.android.synthetic.main.fragment_select_collection.*
+import io.reactivex.disposables.CompositeDisposable
 import yukitas.animal.collector.R
-import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.model.Collection
+import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.adapter.CollectionArrayAdapter
 import yukitas.animal.collector.viewmodel.SelectionViewModel
 
-abstract class SelectCollectionFragment : BaseFragment() {
-    private val TAG = SelectCollectionFragment::class.java.simpleName
+abstract class SelectCollectionDialogFragment : DialogFragment() {
+    private val TAG = SelectCollectionDialogFragment::class.java.simpleName
 
-    private lateinit var photoId: String
-    private var isCreating = true
+    protected val apiService by lazy { ApiService.create() }
+    protected val disposable = CompositeDisposable()
+
     protected lateinit var selectionViewModel: SelectionViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,32 +31,10 @@ abstract class SelectCollectionFragment : BaseFragment() {
         } ?: throw Exception("Invalid EditPhotoActivity")
     }
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View {
-        photoId = activity.intent.getStringExtra(Constants.ARG_PHOTO_ID)
-        isCreating = activity.intent.getBooleanExtra(Constants.ARG_IS_CREATING, true)
-
-        return inflater.inflate(R.layout.fragment_select_collection, container, false)
-    }
-
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        btnAddCollection.setOnClickListener {
-            createNewCollection()
-        }
-        btnConfirmSelection.setOnClickListener {
-            confirmSelectedCollections()
-        }
-
-        btnCancelSelection.setOnClickListener {
-            activity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_edit_photo_container, EditPhotoMainFragment())
-                    .commit()
-        }
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        return LayoutInflater.from(context).inflate(R.layout.dialog_select_collection,
+                container, false)
     }
 
     protected fun selectItemByCollectionId(multiSelectList: ListView, id: String) {

@@ -11,8 +11,8 @@ import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_edit_animal.*
 import kotlinx.android.synthetic.main.dialog_create_album.view.btnCloseDialog
+import kotlinx.android.synthetic.main.dialog_edit_animal.*
 import kotlinx.android.synthetic.main.dialog_edit_animal.view.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
@@ -20,6 +20,9 @@ import yukitas.animal.collector.model.dto.SaveAnimalRequest
 import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.utility.tagsFromText
 
+/**
+ * Create or update an animal in a specific category
+ */
 class EditAnimalDialogFragment : DialogFragment() {
     private val TAG = EditAnimalDialogFragment::class.java.simpleName
 

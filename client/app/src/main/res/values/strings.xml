@@ -1,20 +1,22 @@
 <resources>
     <string name="app_name">animal-collector-alpha-0.1.0</string>
-    <string name="action_settings">Settings</string>
+    <!-- Content descriptions -->
     <string name="content_desc_photo">Photo</string>
     <string name="content_desc_album">Album</string>
     <string name="content_desc_animal">Animal</string>
     <string name="content_desc_arrow">Arrow</string>
     <string name="content_desc_close">Close</string>
-    <string name="label_albums">Albums</string>
-    <string name="label_animals">Animals</string>
-    <string name="text_none">None</string>
+    <string name="content_desc_add">Add</string>
     <!-- Input hints -->
     <string name="hint_album_name">Album name</string>
     <string name="hint_animal_name">Animal name</string>
     <string name="hint_animal_tags">Tags (space-separated)</string>
     <string name="hint_photo_desc">Description (max 200)</string>
     <!-- Text labels -->
+    <string name="action_settings">Settings</string>
+    <string name="label_albums">Albums</string>
+    <string name="label_animals">Animals</string>
+    <string name="text_none">None</string>
     <string name="label_create_animal">Create Animal</string>
     <string name="label_edit_animal">Edit Animal</string>
     <string name="label_create_album">Create Album</string>
@@ -25,6 +27,8 @@
     <string name="label_select_albums">Select Albums</string>
     <string name="label_create_photo">Create Photo</string>
     <string name="label_update_photo">Update Photo</string>
+    <string name="label_add_animal">Add animal</string>
+    <string name="label_add_album">Add album</string>
     <!-- Button labels -->
     <string name="btn_save">save</string>
     <string name="btn_confirm_positive">yes</string>
@@ -51,7 +55,9 @@
     <string name="message_create_animal_success">Animal created.</string>
     <string name="message_update_animal_success">Animal updated.</string>
     <string name="message_delete_animal_success">Animal deleted.</string>
-    <string name="message_detected_category_confirm">Detected %1$s in the photo, is it correct?\n</string>
-    <string name="message_detected_category_unknown">Cannot recognize the animal in the photo :(</string>
-    <string name="message_progress">Analysing photo…\nThis will take a few seconds.</string>
+    <string name="title_enable_recognition">Enable Animal Recognition</string>
+    <string name="message_enable_recognition">Do you want to auto-recognize the animal in the photo?</string>
+    <string name="message_recognized_category_confirm">Recognized %1$s in the photo, is it correct?\n</string>
+    <string name="message_recognized_category_unknown">Cannot recognize the animal in the photo :(</string>
+    <string name="message_recognition_progress">Analysing photo…\nThis will take a few seconds.</string>
 </resources>

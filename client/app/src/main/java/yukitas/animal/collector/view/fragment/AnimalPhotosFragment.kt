@@ -14,6 +14,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_photos.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.common.Constants.Companion.RESULT_EDIT_ANIMAL
 import yukitas.animal.collector.view.activity.EditPhotoActivity
 
 class AnimalPhotosFragment : PhotosFragment() {
@@ -22,8 +23,6 @@ class AnimalPhotosFragment : PhotosFragment() {
     private lateinit var animalId: String
     private lateinit var animalName: String
     private lateinit var animalTags: List<String>
-
-    private val RESULT_EDIT_ANIMAL = 1
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -55,6 +54,8 @@ class AnimalPhotosFragment : PhotosFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == RESULT_EDIT_ANIMAL && resultCode == Activity.RESULT_OK) {
             onResume()
         }
@@ -70,11 +71,15 @@ class AnimalPhotosFragment : PhotosFragment() {
                         })
     }
 
-    override fun startEditPhotoActivity(photoId: String, detectedCategory: String) {
-        val bundle = Bundle()
-        bundle.putString(Constants.ARG_PHOTO_ID, photoId)
-        bundle.putString(Constants.ARG_ANIMAL_ID, animalId)
-        bundle.putString(Constants.ARG_DETECTED_CATEGORY, detectedCategory)
+    override fun startEditPhotoActivity(photoId: String, recognizedCategory: String?) {
+        val bundle = Bundle().apply {
+            putString(Constants.ARG_PHOTO_ID, photoId)
+            putString(Constants.ARG_ANIMAL_ID, animalId)
+
+            if (!recognizedCategory.isNullOrBlank()) {
+                putString(Constants.ARG_RECOGNIZED_CATEGORY, recognizedCategory)
+            }
+        }
 
         val intent = Intent(activity, EditPhotoActivity::class.java).apply {
             putExtras(bundle)

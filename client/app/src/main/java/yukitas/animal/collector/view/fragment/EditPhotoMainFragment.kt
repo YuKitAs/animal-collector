@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.fragment_edit_photo_main.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_DESC
+import yukitas.animal.collector.common.Constants.Companion.ARG_RECOGNIZED_CATEGORY
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.dto.SavePhotoRequest
@@ -51,6 +52,15 @@ class EditPhotoMainFragment : BaseFragment() {
         photoId = activity.intent.getStringExtra(Constants.ARG_PHOTO_ID)
         isCreating = activity.intent.getBooleanExtra(Constants.ARG_IS_CREATING, true)
 
+        arguments?.getString(ARG_RECOGNIZED_CATEGORY)?.let {
+            val selectAnimalsDialog = SelectAnimalsDialogFragment()
+            selectAnimalsDialog.arguments = Bundle().apply {
+                putString(ARG_RECOGNIZED_CATEGORY, it)
+            }
+            selectAnimalsDialog.show(activity.supportFragmentManager,
+                    SelectAnimalsDialogFragment::class.java.simpleName)
+        }
+
         return inflater.inflate(R.layout.fragment_edit_photo_main, container, false)
     }
 
@@ -73,15 +83,15 @@ class EditPhotoMainFragment : BaseFragment() {
         }
 
         btnSelectAlbums.setOnClickListener {
-            activity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_edit_photo_container, SelectAlbumsFragment())
-                    .commit()
+            val selectAlbumsDialog = SelectAlbumsDialogFragment()
+            selectAlbumsDialog.show(activity.supportFragmentManager,
+                    SelectAlbumsDialogFragment::class.java.simpleName)
         }
 
         btnSelectAnimals.setOnClickListener {
-            activity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_edit_photo_container, SelectAnimalFragment())
-                    .commit()
+            val selectAnimalsDialog = SelectAnimalsDialogFragment()
+            selectAnimalsDialog.show(activity.supportFragmentManager,
+                    SelectAnimalsDialogFragment::class.java.simpleName)
         }
 
         btnSavePhoto.setOnClickListener {

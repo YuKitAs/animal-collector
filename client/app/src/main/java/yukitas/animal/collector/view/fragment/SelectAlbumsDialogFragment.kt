@@ -8,29 +8,42 @@ import android.view.View
 import android.widget.ListView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_select_collection.*
+import kotlinx.android.synthetic.main.dialog_select_collection.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.common.Constants.Companion.RESULT_CREATE_ALBUM
 import yukitas.animal.collector.model.Album
-import yukitas.animal.collector.view.activity.CreateAlbumActivity
 import yukitas.animal.collector.view.adapter.CollectionArrayAdapter
 
-class SelectAlbumsFragment : SelectCollectionFragment() {
-    private val TAG = SelectAlbumsFragment::class.java.simpleName
+/**
+ * Select from all albums
+ */
+class SelectAlbumsDialogFragment : SelectCollectionDialogFragment() {
+    private val TAG = SelectAlbumsDialogFragment::class.java.simpleName
 
     // all albums
     private var albums: List<Album> = emptyList()
 
     private var newAlbumId: String? = null
 
-    private val RESULT_CREATE_ALBUM = 2
-
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         labelSelectCollection.text = getString(R.string.label_select_albums)
+        labelAddCollection.text = getString(R.string.label_add_album)
 
         setList()
+
+        layoutAddCollection.setOnClickListener {
+            createNewCollection()
+        }
+
+        btnSaveSelection.setOnClickListener {
+            confirmSelectedCollections()
+            dialog.dismiss()
+        }
+
+        btnCloseDialog.setOnClickListener { dialog.dismiss() }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -38,13 +51,13 @@ class SelectAlbumsFragment : SelectCollectionFragment() {
             if (data != null) {
                 newAlbumId = data.getStringExtra(Constants.ARG_ALBUM_ID)
             }
+
+            // update list with new album
             setList()
         }
     }
 
     override fun setList() {
-        val selectedAlbumIds = selectionViewModel.selectedAlbumIds
-
         disposable.add(
                 apiService.getAllAlbums()
                         .subscribeOn(Schedulers.io())
@@ -52,12 +65,15 @@ class SelectAlbumsFragment : SelectCollectionFragment() {
                         .subscribe({ albums ->
                             this.albums = albums
 
+                            val sortedAlbums = albums.sortedBy { it.category.name }.sortedBy { it.name }
+
                             val multiSelectAlbumList = multiSelectListCollection as ListView
                             multiSelectAlbumList.adapter = CollectionArrayAdapter(activity,
                                     android.R.layout.simple_list_item_multiple_choice,
                                     android.R.id.text1,
-                                    ArrayList(albums))
+                                    ArrayList(sortedAlbums))
 
+                            val selectedAlbumIds = selectionViewModel.selectedAlbumIds
                             if (!selectedAlbumIds.isNullOrEmpty()) {
                                 Log.d(TAG, "Selected albums: $selectedAlbumIds")
                                 selectItemsByCollectionIds(multiSelectAlbumList, selectedAlbumIds)
@@ -76,16 +92,14 @@ class SelectAlbumsFragment : SelectCollectionFragment() {
         selectionViewModel.selectAlbums(getSelectedCollections(
                 (multiSelectListCollection as ListView)).filterIsInstance<Album>())
 
-        startActivityForResult(Intent(activity, CreateAlbumActivity::class.java),
-                RESULT_CREATE_ALBUM)
+        val createAlbumDialog = CreateAlbumDialogFragment()
+        createAlbumDialog.setTargetFragment(this, RESULT_CREATE_ALBUM)
+        createAlbumDialog.show(activity.supportFragmentManager,
+                CreateAlbumDialogFragment::class.java.simpleName)
     }
 
     override fun confirmSelectedCollections() {
         selectionViewModel.selectAlbums(getSelectedCollections(
                 (multiSelectListCollection as ListView)).filterIsInstance<Album>())
-
-        activity.supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_edit_photo_container, EditPhotoMainFragment())
-                .commit()
     }
 }

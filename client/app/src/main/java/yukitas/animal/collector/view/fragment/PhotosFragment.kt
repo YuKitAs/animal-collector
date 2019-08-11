@@ -16,6 +16,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.media.ExifInterface
 import android.support.v4.app.ActivityCompat
+import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -28,6 +29,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
+import yukitas.animal.collector.common.Constants.Companion.RESULT_LOAD_IMAGE
 import yukitas.animal.collector.model.Location
 import yukitas.animal.collector.view.adapter.PhotosAdapter
 import java.io.File
@@ -46,7 +48,6 @@ import java.util.*
 abstract class PhotosFragment : BaseFragment() {
     private val TAG = PhotosFragment::class.java.simpleName
 
-    private val RESULT_LOAD_IMAGE = 1
     private val MAX_SIDE_LENGTH = 1080
     protected val THUMBNAIL_SIDE_LENGTH = 400
 
@@ -77,11 +78,9 @@ abstract class PhotosFragment : BaseFragment() {
             setPhotos()
         }
 
+        resetActionMenu()
         setActionButtonListener()
         setAddPhotoButtonListener()
-
-        binding.btnAction.visibility = View.VISIBLE
-        closeActionMenu()
 
         gridView.setOnItemClickListener { _, _, position, _ ->
             val bundle = Bundle()
@@ -107,6 +106,8 @@ abstract class PhotosFragment : BaseFragment() {
         } else {
             shouldUpdateOnResume = true
         }
+
+        resetActionMenu()
     }
 
     override fun onDestroy() {
@@ -252,33 +253,54 @@ abstract class PhotosFragment : BaseFragment() {
         val outputPhotoPath = Uri.parse(file.absolutePath).path
         Log.d(TAG, "Photo to send: $outputPhotoPath")
 
-        uploadPhoto(outputPhotoPath, RequestBody.create(MediaType.parse("image/*"), file),
-                creationTime, location)
+        val builder = AlertDialog.Builder(activity)
+        builder.apply {
+            setTitle(R.string.title_enable_recognition)
+            setMessage(R.string.message_enable_recognition)
+            setPositiveButton(R.string.btn_confirm_positive
+            ) { _, _ ->
+                binding.layoutRecognitionProgress.visibility = View.VISIBLE // TODO create a new layout?
+                closeActionMenu()
+                binding.btnAction.visibility = View.INVISIBLE
+
+                uploadPhoto(outputPhotoPath, RequestBody.create(MediaType.parse("image/*"), file),
+                        creationTime, location, true)
+            }
+            setNegativeButton(R.string.btn_confirm_negative) { _, _ ->
+                uploadPhoto(outputPhotoPath, RequestBody.create(MediaType.parse("image/*"), file),
+                        creationTime, location, false)
+            }
+            setCancelable(false)
+        }
+        builder.show()
     }
 
     private fun uploadPhoto(photoFilePath: String?, requestFile: RequestBody,
-                            creationTime: OffsetDateTime, location: Location) {
-        binding.layoutDetectionProgress.visibility = View.VISIBLE
-
-        closeActionMenu()
-        binding.btnAction.visibility = View.INVISIBLE
-
+                            creationTime: OffsetDateTime, location: Location,
+                            recognitionEnabled: Boolean) {
         disposable.add(
                 apiService.createPhoto(
-                        MultipartBody.Part.createFormData("content", photoFilePath, requestFile),
+                        MultipartBody.Part.createFormData("content", photoFilePath,
+                                requestFile),
                         creationTime.toString(), location.latitude, location.longitude,
-                        location.address)
+                        location.address, recognitionEnabled)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ response ->
                             val photoId = response.id
-                            val detectedCategory = response.detectedCategory
-                            Log.d(TAG,
-                                    "Created photo with id '$photoId' and detected category: $detectedCategory")
 
-                            binding.layoutDetectionProgress.visibility = View.GONE
+                            if (recognitionEnabled) {
+                                binding.layoutRecognitionProgress.visibility = View.GONE
 
-                            startEditPhotoActivity(photoId, detectedCategory)
+                                val recognizedCategory = response.recognizedCategory
+                                Log.d(TAG,
+                                        "Created photo with id '$photoId' and recognized category: $recognizedCategory")
+                                startEditPhotoActivity(photoId, recognizedCategory)
+                            } else {
+                                Log.d(TAG,
+                                        "Created photo with id '$photoId' without recognized category")
+                                startEditPhotoActivity(photoId, null)
+                            }
                         }, {
                             Log.e(TAG, "Some errors occurred: $it")
                         }))
@@ -312,6 +334,11 @@ abstract class PhotosFragment : BaseFragment() {
         }
     }
 
+    private fun resetActionMenu() {
+        binding.btnAction.visibility = View.VISIBLE
+        closeActionMenu()
+    }
+
     private fun closeActionMenu() {
         isActionButtonOpen = false
 
@@ -338,7 +365,7 @@ abstract class PhotosFragment : BaseFragment() {
                 -resources.getDimension(R.dimen.standard_195))
     }
 
-    protected abstract fun startEditPhotoActivity(photoId: String, detectedCategory: String)
+    protected abstract fun startEditPhotoActivity(photoId: String, recognizedCategory: String?)
 
     protected abstract fun setPhotos()
 

@@ -10,9 +10,10 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.common.Constants.Companion.ARG_RECOGNIZED_CATEGORY
+import yukitas.animal.collector.common.Constants.Companion.CATEGORY_UNKNOWN
 import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.fragment.EditPhotoMainFragment
-import yukitas.animal.collector.view.fragment.SelectAnimalFragment
 
 
 /**
@@ -33,10 +34,10 @@ class EditPhotoActivity : AppCompatActivity() {
 
         isCreating = intent.getBooleanExtra(Constants.ARG_IS_CREATING, true)
         if (isCreating) {
-            showDialog(savedInstanceState)
+            attachFragment(savedInstanceState)
         } else {
             if (savedInstanceState == null) {
-                attachEditPhotoFragment()
+                attachEditPhotoFragment(null)
             }
         }
     }
@@ -61,15 +62,23 @@ class EditPhotoActivity : AppCompatActivity() {
         disposable.clear()
     }
 
-    private fun showDialog(savedInstanceState: Bundle?) {
-        val detectedCategory = intent.getStringExtra(Constants.ARG_DETECTED_CATEGORY)
-        if (detectedCategory.isNullOrBlank() || detectedCategory == "UNKNOWN") {
+    private fun attachFragment(savedInstanceState: Bundle?) {
+        val recognizedCategory = intent.getStringExtra(ARG_RECOGNIZED_CATEGORY)
+
+        if (recognizedCategory.isNullOrBlank()) {
+            if (savedInstanceState == null) {
+                attachEditPhotoFragment(null)
+            }
+            return
+        }
+
+        if (recognizedCategory == CATEGORY_UNKNOWN) {
             val builder = AlertDialog.Builder(this)
             builder.apply {
-                setMessage(R.string.message_detected_category_unknown)
+                setMessage(R.string.message_recognized_category_unknown)
                 setPositiveButton(android.R.string.ok) { _, _ ->
                     if (savedInstanceState == null) {
-                        attachEditPhotoFragment()
+                        attachEditPhotoFragment(null)
                     }
                 }
             }
@@ -77,25 +86,17 @@ class EditPhotoActivity : AppCompatActivity() {
         } else {
             val builder = AlertDialog.Builder(this)
             builder.apply {
-                setMessage(String.format(getString(R.string.message_detected_category_confirm),
-                        detectedCategory))
+                setTitle(String.format(getString(R.string.message_recognized_category_confirm),
+                        recognizedCategory))
                 setPositiveButton(R.string.btn_confirm_positive
                 ) { _, _ ->
                     if (savedInstanceState == null) {
-                        val fragment = SelectAnimalFragment()
-                        fragment.arguments = Bundle().apply {
-                            putString(Constants.ARG_DETECTED_CATEGORY, detectedCategory)
-                        }
-                        supportFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_edit_photo_container, fragment)
-                                .commit()
+                        attachEditPhotoFragment(recognizedCategory)
                     }
                 }
                 setNegativeButton(R.string.btn_confirm_negative_no) { _, _ ->
                     if (savedInstanceState == null) {
-                        supportFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_edit_photo_container, SelectAnimalFragment())
-                                .commit()
+                        attachEditPhotoFragment(null)
                     }
                 }
             }
@@ -103,10 +104,15 @@ class EditPhotoActivity : AppCompatActivity() {
         }
     }
 
-    private fun attachEditPhotoFragment() {
+    private fun attachEditPhotoFragment(recognizedCategory: String?) {
+        val fragment = EditPhotoMainFragment()
+        recognizedCategory?.let {
+            fragment.arguments = Bundle().apply {
+                putString(ARG_RECOGNIZED_CATEGORY, recognizedCategory)
+            }
+        }
         supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_edit_photo_container,
-                        EditPhotoMainFragment())
+                .replace(R.id.fragment_edit_photo_container, fragment)
                 .commit()
     }
 }

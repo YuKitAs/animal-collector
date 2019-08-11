@@ -8,16 +8,18 @@ import android.view.View
 import android.widget.ListView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_select_collection.*
+import kotlinx.android.synthetic.main.dialog_select_collection.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.common.Constants.Companion.RESULT_CREATE_ANIMAL
 import yukitas.animal.collector.model.Animal
-import yukitas.animal.collector.view.activity.CreateAnimalActivity
-import yukitas.animal.collector.view.activity.EditAnimalActivity
 import yukitas.animal.collector.view.adapter.CollectionArrayAdapter
 
-class SelectAnimalFragment : SelectCollectionFragment() {
-    private val TAG = SelectAnimalFragment::class.java.simpleName
+/**
+ * Select from all animals or animals in a specific (recognized) category
+ */
+class SelectAnimalsDialogFragment : SelectCollectionDialogFragment() {
+    private val TAG = SelectAnimalsDialogFragment::class.java.simpleName
 
     // all animals
     private var animals: List<Animal> = emptyList()
@@ -27,13 +29,25 @@ class SelectAnimalFragment : SelectCollectionFragment() {
 
     private var newAnimalId: String? = null
 
-    private val RESULT_CREATE_ANIMAL = 3
-
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        labelAddCollection.text = getString(R.string.label_add_animal)
+
+        layoutAddCollection.setOnClickListener {
+            createNewCollection()
+        }
+
+        btnSaveSelection.setOnClickListener {
+            confirmSelectedCollections()
+            dialog.dismiss()
+        }
+
+        btnCloseDialog.setOnClickListener { dialog.dismiss() }
+
         if (arguments == null || arguments.getString(
-                        Constants.ARG_DETECTED_CATEGORY).isNullOrBlank()) {
+                        Constants.ARG_RECOGNIZED_CATEGORY).isNullOrBlank()) {
+            Log.d(TAG, "Selecting from all animals")
             animalsInCategory = false
 
             labelSelectCollection.text = getString(R.string.label_select_animals)
@@ -41,10 +55,13 @@ class SelectAnimalFragment : SelectCollectionFragment() {
         } else {
             animalsInCategory = true
 
-            val categoryName = arguments.getString(Constants.ARG_DETECTED_CATEGORY)!!
+            val categoryName = arguments.getString(Constants.ARG_RECOGNIZED_CATEGORY)!!
+
+            Log.d(TAG, "Selecting from animals in category: $categoryName")
 
             labelSelectCollection.text = String.format(
-                    getString(R.string.label_select_animals_in_category), categoryName)
+                    getString(R.string.label_select_animals_in_category),
+                    categoryName)
             getCategoryAndSetList(categoryName)
         }
     }
@@ -56,8 +73,9 @@ class SelectAnimalFragment : SelectCollectionFragment() {
                 Log.d(TAG, "Newly created animal id: $newAnimalId")
             }
 
+            // update list with new animal
             if (animalsInCategory) {
-                getAnimalsAndSetList(categoryId)
+                getAnimalsByCategoryAndSetList(categoryId)
             } else {
                 setList()
             }
@@ -78,6 +96,31 @@ class SelectAnimalFragment : SelectCollectionFragment() {
                         }))
     }
 
+    override fun createNewCollection() {
+        selectionViewModel.selectAnimals(getSelectedCollections(
+                (multiSelectListCollection as ListView)).filterIsInstance<Animal>())
+
+        if (animalsInCategory) {
+            val createAnimalDialog = CreateAnimalDialogFragment()
+            createAnimalDialog.setTargetFragment(this, RESULT_CREATE_ANIMAL)
+            createAnimalDialog.arguments = Bundle().apply {
+                putString(Constants.ARG_CATEGORY_ID, categoryId)
+            }
+            createAnimalDialog.show(activity.supportFragmentManager,
+                    CreateAnimalDialogFragment::class.java.simpleName)
+        } else {
+            val createAnimalDialog = CreateAnimalDialogFragment()
+            createAnimalDialog.setTargetFragment(this, RESULT_CREATE_ANIMAL)
+            createAnimalDialog.show(activity.supportFragmentManager,
+                    CreateAnimalDialogFragment::class.java.simpleName)
+        }
+    }
+
+    override fun confirmSelectedCollections() {
+        selectionViewModel.selectAnimals(getSelectedCollections(
+                (multiSelectListCollection as ListView)).filterIsInstance<Animal>())
+    }
+
     private fun getCategoryAndSetList(detectedCategory: String) {
         disposable.add(
                 apiService.getCategories()
@@ -88,7 +131,7 @@ class SelectAnimalFragment : SelectCollectionFragment() {
                                 category.name.equals(detectedCategory, ignoreCase = true)
                             }.findAny().ifPresent { category ->
                                 categoryId = category.id
-                                getAnimalsAndSetList(categoryId)
+                                getAnimalsByCategoryAndSetList(categoryId)
                             }
                         }, {
                             Log.e(TAG, "Some errors occurred while fetching all categories: $it")
@@ -97,7 +140,7 @@ class SelectAnimalFragment : SelectCollectionFragment() {
         )
     }
 
-    private fun getAnimalsAndSetList(categoryId: String) {
+    private fun getAnimalsByCategoryAndSetList(categoryId: String) {
         disposable.add(
                 apiService.getAnimalsByCategory(categoryId)
                         .subscribeOn(Schedulers.io())
@@ -130,32 +173,5 @@ class SelectAnimalFragment : SelectCollectionFragment() {
         newAnimalId?.let {
             selectItemByCollectionId(multiSelectAnimalList, it)
         }
-    }
-
-    override fun createNewCollection() {
-        selectionViewModel.selectAnimals(getSelectedCollections(
-                (multiSelectListCollection as ListView)).filterIsInstance<Animal>())
-
-        if (animalsInCategory) {
-            val bundle = Bundle().apply {
-                putString(Constants.ARG_CATEGORY_ID, categoryId)
-            }
-            startActivityForResult(Intent(activity, EditAnimalActivity::class.java).apply {
-                putExtras(bundle)
-            }, RESULT_CREATE_ANIMAL)
-        } else {
-            startActivityForResult(Intent(activity, CreateAnimalActivity::class.java),
-                    RESULT_CREATE_ANIMAL)
-        }
-    }
-
-    override fun confirmSelectedCollections() {
-        selectionViewModel.selectAnimals(getSelectedCollections(
-                (multiSelectListCollection as ListView)).filterIsInstance<Animal>())
-
-        activity.supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_edit_photo_container,
-                        EditPhotoMainFragment())
-                .commit()
     }
 }
