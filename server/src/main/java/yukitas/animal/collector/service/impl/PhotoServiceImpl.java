@@ -31,8 +31,8 @@ import yukitas.animal.collector.service.PhotoService;
 import yukitas.animal.collector.service.exception.EntityNotFoundException;
 import yukitas.animal.collector.service.exception.InvalidDataException;
 import yukitas.animal.collector.service.exception.RequiredDataNotProvidedException;
-import yukitas.animal.collector.service.utility.Category;
-import yukitas.animal.collector.service.utility.PhotoDetector;
+import yukitas.animal.collector.service.utility.AnimalClass;
+import yukitas.animal.collector.service.utility.ImageRecognizer;
 
 @Service
 public class PhotoServiceImpl implements PhotoService {
@@ -122,7 +122,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public CreatePhotoResponse createPhoto(Photo.Builder builder, byte[] content, OffsetDateTime createdAt,
-            Location location) throws IOException {
+            Location location, boolean recognitionEnabled) throws IOException {
         LOGGER.debug("Creating photo with original creation time {}", createdAt);
 
         Photo photo = photoRepository.save(builder.setContent(content)
@@ -130,13 +130,15 @@ public class PhotoServiceImpl implements PhotoService {
                         stripAddress(location.getAddress())))
                 .setCreatedAt(createdAt)
                 .build());
-
         LOGGER.debug("Created photo (id={})", photo.getId());
 
-        Category category = new PhotoDetector().computeCategory(content, 0.7);
-        LOGGER.debug("Detected category: {}", category);
+        if (recognitionEnabled) {
+            AnimalClass category = new ImageRecognizer().classify(content, 0.7);
+            LOGGER.debug("Recognized category: {}", category);
+            return new CreatePhotoResponse.Builder().setId(photo.getId()).setCategory(category).build();
+        }
 
-        return new CreatePhotoResponse.Builder().setId(photo.getId()).setCategory(category).build();
+        return new CreatePhotoResponse.Builder().setId(photo.getId()).build();
     }
 
     @CacheEvict(value = "photo", key = "#id")
@@ -276,7 +278,7 @@ public class PhotoServiceImpl implements PhotoService {
         return address.strip();
     }
 
-    private Category predicateCategory(byte[] photoContent) throws IOException {
-        return new PhotoDetector().computeCategory(photoContent, 0.5);
+    private AnimalClass predicateCategory(byte[] photoContent) throws IOException {
+        return new ImageRecognizer().classify(photoContent, 0.5);
     }
 }

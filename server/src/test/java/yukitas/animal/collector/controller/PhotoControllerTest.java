@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PhotoControllerTest extends AbstractControllerTest {
     @Test
-    public void createPhoto() {
+    public void createPhoto_WithoutRecognition() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -35,7 +35,24 @@ public class PhotoControllerTest extends AbstractControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(Objects.requireNonNull(response.getBody()).getId()).isNotNull();
-        assertThat(response.getBody().getDetectedCategory()).isNotNull();
+        assertThat(response.getBody().getRecognizedCategory()).isNull();
+    }
+
+    @Test
+    public void createPhoto_RecognitionEnabled() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("content", new ClassPathResource("fixtures/images/photo.jpg"));
+        body.add("created_at", OffsetDateTime.now());
+        body.add("recognize", true);
+
+        ResponseEntity<CreatePhotoResponse> response = getTestRestTemplate().postForEntity("/photos",
+                new HttpEntity<>(body, headers), CreatePhotoResponse.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(Objects.requireNonNull(response.getBody()).getId()).isNotNull();
+        assertThat(response.getBody().getRecognizedCategory()).isNotNull();
     }
 
     @Test

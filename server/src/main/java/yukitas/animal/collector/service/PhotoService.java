@@ -30,8 +30,8 @@ public interface PhotoService {
 
     Photo getPhoto(UUID id);
 
-    CreatePhotoResponse createPhoto(Photo.Builder builder, byte[] content, OffsetDateTime createdAt,
-            Location location) throws IOException;
+    CreatePhotoResponse createPhoto(Photo.Builder builder, byte[] content, OffsetDateTime createdAt, Location location,
+            boolean recognitionEnabled) throws IOException;
 
     void updatePhoto(UUID id, Set<UUID> animalIds, Set<UUID> albumIds, String description);
 

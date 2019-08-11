@@ -41,10 +41,11 @@ public class PhotoController {
             @RequestParam("created_at") String createdAt,
             @RequestParam(value = "latitude", required = false) Double latitude,
             @RequestParam(value = "longitude", required = false) Double longitude,
-            @RequestParam(value = "address", required = false) String address) throws IOException {
+            @RequestParam(value = "address", required = false) String address,
+            @RequestParam(value = "recognize", required = false) boolean recognitionEnabled) throws IOException {
         return photoService.createPhoto(CreatePhotoRequest.builder(), content.getBytes(),
                 jacksonConfig.objectMapper().readValue(createdAt, OffsetDateTime.class),
-                new Location(latitude, longitude, address));
+                new Location(latitude, longitude, address), recognitionEnabled);
     }
 
     @GetMapping("/albums/{album_id}/photos")

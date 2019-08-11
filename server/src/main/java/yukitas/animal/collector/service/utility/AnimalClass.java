@@ -1,5 +1,5 @@
 package yukitas.animal.collector.service.utility;
 
-public enum Category {
+public enum AnimalClass {
     CAT, DOG, UNKNOWN
 }

@@ -14,16 +14,19 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * Classify a detected animal into different categories (animal classes).
+ *
  * Trained model source: https://dl.dropboxusercontent.com/s/tqnp49apphpzb40/dataTraining.zip?dl=0 Architecture: VGG-16
+ * (For cats and dogs only)
  */
-public class PhotoDetector {
-    private static final Logger LOGGER = LogManager.getLogger(PhotoDetector.class);
+public class ImageRecognizer {
+    private static final Logger LOGGER = LogManager.getLogger(ImageRecognizer.class);
 
     private static final String MODEL_FILE_PATH = "/model.zip";
 
     private ComputationGraph computationGraph;
 
-    public Category computeCategory(byte[] content, Double threshold) throws IOException {
+    public AnimalClass classify(byte[] content, Double threshold) throws IOException {
         if (computationGraph == null) {
             computationGraph = loadModel();
         }
@@ -38,11 +41,11 @@ public class PhotoDetector {
         scaler.transform(image);
         INDArray output = computationGraph.outputSingle(false, image);
         if (output.getDouble(0) > threshold) {
-            return Category.CAT;
+            return AnimalClass.CAT;
         } else if (output.getDouble(1) > threshold) {
-            return Category.DOG;
+            return AnimalClass.DOG;
         } else {
-            return Category.UNKNOWN;
+            return AnimalClass.UNKNOWN;
         }
     }
 
