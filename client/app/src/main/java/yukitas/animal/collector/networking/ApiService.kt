@@ -5,6 +5,7 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -17,6 +18,7 @@ import yukitas.animal.collector.model.dto.SaveAlbumRequest
 import yukitas.animal.collector.model.dto.SaveAnimalRequest
 import yukitas.animal.collector.model.dto.SavePhotoRequest
 import yukitas.animal.collector.model.dto.SavePhotoResponse
+import java.util.concurrent.TimeUnit
 
 interface ApiService {
     /**
@@ -84,7 +86,8 @@ interface ApiService {
     fun createPhoto(@Part photo: MultipartBody.Part, @Part(
             "created_at") createdAt: String, @Part(
             "latitude") latitude: Double?, @Part("longitude") longitude: Double?, @Part(
-            "address") address: String?): Single<SavePhotoResponse>
+            "address") address: String?, @Part(
+            "recognize") recognitionEnabled: Boolean): Single<SavePhotoResponse>
 
     /**
      * PUT
@@ -114,10 +117,12 @@ interface ApiService {
 
     companion object {
         fun create(): ApiService {
+            val client = OkHttpClient.Builder().connectTimeout(20, TimeUnit.SECONDS).build()
             val retrofit = Retrofit.Builder()
                     .baseUrl("http://192.168.178.51:8080/")
                     .addConverterFactory(MoshiConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .client(client)
                     .build()
 
             return retrofit.create(ApiService::class.java)
