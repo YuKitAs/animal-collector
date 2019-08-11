@@ -15,11 +15,13 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_edit_photo_main.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_NAME
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_DESC
-import yukitas.animal.collector.common.Constants.Companion.ARG_RECOGNIZED_CATEGORY
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.dto.SavePhotoRequest
+import yukitas.animal.collector.view.fragment.dialog.SelectAlbumsDialogFragment
+import yukitas.animal.collector.view.fragment.dialog.SelectAnimalsDialogFragment
 import yukitas.animal.collector.viewmodel.SelectionViewModel
 import java.util.stream.Collectors
 
@@ -52,10 +54,10 @@ class EditPhotoMainFragment : BaseFragment() {
         photoId = activity.intent.getStringExtra(Constants.ARG_PHOTO_ID)
         isCreating = activity.intent.getBooleanExtra(Constants.ARG_IS_CREATING, true)
 
-        arguments?.getString(ARG_RECOGNIZED_CATEGORY)?.let {
+        arguments?.getString(ARG_CATEGORY_NAME)?.let {
             val selectAnimalsDialog = SelectAnimalsDialogFragment()
             selectAnimalsDialog.arguments = Bundle().apply {
-                putString(ARG_RECOGNIZED_CATEGORY, it)
+                putString(ARG_CATEGORY_NAME, it)
             }
             selectAnimalsDialog.show(activity.supportFragmentManager,
                     SelectAnimalsDialogFragment::class.java.simpleName)

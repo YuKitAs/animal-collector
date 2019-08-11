@@ -1,4 +1,4 @@
-package yukitas.animal.collector.view.fragment
+package yukitas.animal.collector.view.fragment.dialog
 
 import android.app.Activity
 import android.os.Bundle
@@ -20,9 +20,6 @@ import yukitas.animal.collector.model.dto.SaveAnimalRequest
 import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.utility.tagsFromText
 
-/**
- * Create or update an animal in a specific category
- */
 class EditAnimalDialogFragment : DialogFragment() {
     private val TAG = EditAnimalDialogFragment::class.java.simpleName
 

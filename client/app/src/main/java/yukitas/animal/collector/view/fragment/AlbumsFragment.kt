@@ -21,6 +21,7 @@ import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Photo
 import yukitas.animal.collector.view.activity.PhotoActivity
 import yukitas.animal.collector.view.adapter.AlbumsAdapter
+import yukitas.animal.collector.view.fragment.dialog.CreateAlbumDialogFragment
 import java.util.*
 import java.util.stream.Collectors
 

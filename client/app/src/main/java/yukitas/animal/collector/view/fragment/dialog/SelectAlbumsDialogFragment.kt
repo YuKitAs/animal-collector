@@ -1,4 +1,4 @@
-package yukitas.animal.collector.view.fragment
+package yukitas.animal.collector.view.fragment.dialog
 
 import android.app.Activity
 import android.content.Intent

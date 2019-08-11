@@ -1,4 +1,4 @@
-package yukitas.animal.collector.view.fragment
+package yukitas.animal.collector.view.fragment.dialog
 
 import android.app.Activity
 import android.os.Bundle
@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.dialog_create_animal.*
 import kotlinx.android.synthetic.main.dialog_create_animal.view.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
+import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_NAME
 import yukitas.animal.collector.model.dto.SaveAnimalRequest
 import yukitas.animal.collector.utility.tagsFromText
 
@@ -24,7 +26,15 @@ class CreateAnimalDialogFragment : CreateCollectionDialogFragment() {
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_create_animal, container,
                 false)
 
-        setCategoryList()
+        if (arguments == null || arguments.getString(ARG_CATEGORY_ID).isNullOrBlank()) {
+            setCategoryList()
+        } else {
+            categoryId = arguments.getString(ARG_CATEGORY_ID)!!
+
+            view.dropdownCategory.visibility = View.GONE
+            view.labelCategory.text = arguments.getString(ARG_CATEGORY_NAME)
+            view.labelCategory.visibility = View.VISIBLE
+        }
 
         view.btnSaveAnimal.setOnClickListener {
             Log.d(TAG,

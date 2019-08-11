@@ -1,4 +1,4 @@
-package yukitas.animal.collector.view.fragment
+package yukitas.animal.collector.view.fragment.dialog
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle

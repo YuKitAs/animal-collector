@@ -10,7 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
-import yukitas.animal.collector.common.Constants.Companion.ARG_RECOGNIZED_CATEGORY
+import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_NAME
 import yukitas.animal.collector.common.Constants.Companion.CATEGORY_UNKNOWN
 import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.fragment.EditPhotoMainFragment
@@ -63,7 +63,7 @@ class EditPhotoActivity : AppCompatActivity() {
     }
 
     private fun attachFragment(savedInstanceState: Bundle?) {
-        val recognizedCategory = intent.getStringExtra(ARG_RECOGNIZED_CATEGORY)
+        val recognizedCategory = intent.getStringExtra(ARG_CATEGORY_NAME)
 
         if (recognizedCategory.isNullOrBlank()) {
             if (savedInstanceState == null) {
@@ -108,7 +108,7 @@ class EditPhotoActivity : AppCompatActivity() {
         val fragment = EditPhotoMainFragment()
         recognizedCategory?.let {
             fragment.arguments = Bundle().apply {
-                putString(ARG_RECOGNIZED_CATEGORY, recognizedCategory)
+                putString(ARG_CATEGORY_NAME, recognizedCategory)
             }
         }
         supportFragmentManager.beginTransaction()

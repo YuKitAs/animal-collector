@@ -1,4 +1,4 @@
-package yukitas.animal.collector.view.fragment
+package yukitas.animal.collector.view.fragment.dialog
 
 import android.app.Activity
 import android.content.Intent
@@ -11,8 +11,11 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_select_collection.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
+import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_NAME
 import yukitas.animal.collector.common.Constants.Companion.RESULT_CREATE_ANIMAL
 import yukitas.animal.collector.model.Animal
+import yukitas.animal.collector.model.Category
 import yukitas.animal.collector.view.adapter.CollectionArrayAdapter
 
 /**
@@ -24,7 +27,7 @@ class SelectAnimalsDialogFragment : SelectCollectionDialogFragment() {
     // all animals
     private var animals: List<Animal> = emptyList()
 
-    private lateinit var categoryId: String
+    private lateinit var category: Category
     private var animalsInCategory = false
 
     private var newAnimalId: String? = null
@@ -46,7 +49,7 @@ class SelectAnimalsDialogFragment : SelectCollectionDialogFragment() {
         btnCloseDialog.setOnClickListener { dialog.dismiss() }
 
         if (arguments == null || arguments.getString(
-                        Constants.ARG_RECOGNIZED_CATEGORY).isNullOrBlank()) {
+                        ARG_CATEGORY_NAME).isNullOrBlank()) {
             Log.d(TAG, "Selecting from all animals")
             animalsInCategory = false
 
@@ -55,7 +58,7 @@ class SelectAnimalsDialogFragment : SelectCollectionDialogFragment() {
         } else {
             animalsInCategory = true
 
-            val categoryName = arguments.getString(Constants.ARG_RECOGNIZED_CATEGORY)!!
+            val categoryName = arguments.getString(ARG_CATEGORY_NAME)!!
 
             Log.d(TAG, "Selecting from animals in category: $categoryName")
 
@@ -75,7 +78,7 @@ class SelectAnimalsDialogFragment : SelectCollectionDialogFragment() {
 
             // update list with new animal
             if (animalsInCategory) {
-                getAnimalsByCategoryAndSetList(categoryId)
+                getAnimalsByCategoryAndSetList(category.id)
             } else {
                 setList()
             }
@@ -104,7 +107,8 @@ class SelectAnimalsDialogFragment : SelectCollectionDialogFragment() {
             val createAnimalDialog = CreateAnimalDialogFragment()
             createAnimalDialog.setTargetFragment(this, RESULT_CREATE_ANIMAL)
             createAnimalDialog.arguments = Bundle().apply {
-                putString(Constants.ARG_CATEGORY_ID, categoryId)
+                putString(ARG_CATEGORY_ID, category.id)
+                putString(ARG_CATEGORY_NAME, category.name)
             }
             createAnimalDialog.show(activity.supportFragmentManager,
                     CreateAnimalDialogFragment::class.java.simpleName)
@@ -121,17 +125,17 @@ class SelectAnimalsDialogFragment : SelectCollectionDialogFragment() {
                 (multiSelectListCollection as ListView)).filterIsInstance<Animal>())
     }
 
-    private fun getCategoryAndSetList(detectedCategory: String) {
+    private fun getCategoryAndSetList(recognizedCategory: String) {
         disposable.add(
                 apiService.getCategories()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ categories ->
                             categories.stream().filter { category ->
-                                category.name.equals(detectedCategory, ignoreCase = true)
+                                category.name.equals(recognizedCategory, ignoreCase = true)
                             }.findAny().ifPresent { category ->
-                                categoryId = category.id
-                                getAnimalsByCategoryAndSetList(categoryId)
+                                this.category = category
+                                getAnimalsByCategoryAndSetList(category.id)
                             }
                         }, {
                             Log.e(TAG, "Some errors occurred while fetching all categories: $it")

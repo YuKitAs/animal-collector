@@ -16,6 +16,7 @@ import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.RESULT_EDIT_ALBUM
 import yukitas.animal.collector.view.activity.EditPhotoActivity
+import yukitas.animal.collector.view.fragment.dialog.EditAlbumDialogFragment
 
 class AlbumPhotosFragment : PhotosFragment() {
     private val TAG = AlbumPhotosFragment::class.java.simpleName
@@ -74,7 +75,7 @@ class AlbumPhotosFragment : PhotosFragment() {
             putString(Constants.ARG_ALBUM_ID, albumId)
 
             if (!recognizedCategory.isNullOrBlank()) {
-                putString(Constants.ARG_RECOGNIZED_CATEGORY, recognizedCategory)
+                putString(Constants.ARG_CATEGORY_NAME, recognizedCategory)
             }
         }
 

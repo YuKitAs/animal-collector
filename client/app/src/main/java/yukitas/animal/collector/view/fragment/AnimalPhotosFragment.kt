@@ -16,6 +16,7 @@ import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.RESULT_EDIT_ANIMAL
 import yukitas.animal.collector.view.activity.EditPhotoActivity
+import yukitas.animal.collector.view.fragment.dialog.EditAnimalDialogFragment
 
 class AnimalPhotosFragment : PhotosFragment() {
     private val TAG = AnimalPhotosFragment::class.java.simpleName
@@ -77,7 +78,7 @@ class AnimalPhotosFragment : PhotosFragment() {
             putString(Constants.ARG_ANIMAL_ID, animalId)
 
             if (!recognizedCategory.isNullOrBlank()) {
-                putString(Constants.ARG_RECOGNIZED_CATEGORY, recognizedCategory)
+                putString(Constants.ARG_CATEGORY_NAME, recognizedCategory)
             }
         }
 
