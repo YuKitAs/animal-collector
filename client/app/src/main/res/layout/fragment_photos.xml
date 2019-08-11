@@ -28,13 +28,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/bg"
-                android:columnWidth="150dp"
                 android:gravity="center"
                 android:horizontalSpacing="10dp"
                 android:numColumns="3"
-                android:padding="5dp"
+                android:padding="10dp"
+                android:stretchColumns=""
                 android:stretchMode="columnWidth"
-                android:verticalSpacing="24dp" />
+                android:verticalSpacing="15dp" />
         </LinearLayout>
 
         <android.support.design.widget.FloatingActionButton
