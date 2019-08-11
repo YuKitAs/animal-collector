@@ -30,7 +30,7 @@
             android:id="@+id/btn_add_album"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|bottom"
+            android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
             android:src="@drawable/ic_add_circle_24dp"
             app:fabSize="normal" />
