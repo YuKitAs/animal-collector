@@ -61,6 +61,15 @@
             android:layout_height="wrap_content"
             android:spinnerMode="dropdown" />
 
+        <TextView
+            android:id="@+id/labelCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/input_layout_animal_name"
             android:layout_width="match_parent"
