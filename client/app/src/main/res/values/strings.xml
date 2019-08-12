@@ -7,6 +7,7 @@
     <string name="content_desc_arrow">Arrow</string>
     <string name="content_desc_close">Close</string>
     <string name="content_desc_add">Add</string>
+    <string name="content_desc_location">Location</string>
     <!-- Input hints -->
     <string name="hint_album_name">Album name</string>
     <string name="hint_animal_name">Animal name</string>

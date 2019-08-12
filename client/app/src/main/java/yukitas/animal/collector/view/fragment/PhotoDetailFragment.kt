@@ -82,6 +82,10 @@ class PhotoDetailFragment : BaseFragment() {
                             binding.photoContent.setImageBitmap(binaryToBitmap(it.content))
                             binding.photoDate.text = formatDateTime(it.createdAt)
 
+                            if (it.description.isBlank()) {
+                                binding.photoDescription.visibility = View.GONE
+                            }
+
                             setAnimals()
                         }, {
                             Log.e(TAG, "Some errors occurred: $it")
