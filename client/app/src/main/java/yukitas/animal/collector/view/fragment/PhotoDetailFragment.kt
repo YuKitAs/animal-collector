@@ -28,6 +28,7 @@ class PhotoDetailFragment : BaseFragment() {
     private lateinit var binding: FragmentPhotoDetailBinding
     private lateinit var photoId: String
 
+    private var isActionButtonOpen = false
     private var shouldUpdateOnResume = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,8 +51,10 @@ class PhotoDetailFragment : BaseFragment() {
             setPhoto()
         }
 
+        resetActionMenu()
         setDeleteButtonListener()
         setEditButtonListener()
+        setActionButtonListener()
 
         return binding.root
     }
@@ -65,6 +68,8 @@ class PhotoDetailFragment : BaseFragment() {
         } else {
             shouldUpdateOnResume = true
         }
+
+        resetActionMenu()
     }
 
     override fun onDestroy() {
@@ -84,6 +89,8 @@ class PhotoDetailFragment : BaseFragment() {
 
                             if (it.description.isBlank()) {
                                 binding.photoDescription.visibility = View.GONE
+                            } else {
+                                binding.photoDescription.visibility = View.VISIBLE
                             }
 
                             setAnimals()
@@ -156,5 +163,41 @@ class PhotoDetailFragment : BaseFragment() {
             }
             builder.show()
         }
+    }
+
+    private fun setActionButtonListener() {
+        binding.btnAction.setOnClickListener {
+            if (!isActionButtonOpen) {
+                openActionMenu()
+            } else {
+                closeActionMenu()
+            }
+        }
+    }
+
+    private fun resetActionMenu() {
+        binding.btnAction.visibility = View.VISIBLE
+        closeActionMenu()
+    }
+
+    private fun closeActionMenu() {
+        isActionButtonOpen = false
+
+        binding.btnEditPhoto.animate().translationY(0f)
+        binding.btnDeletePhoto.animate().translationY(0f)
+
+        binding.btnEditPhoto.visibility = View.INVISIBLE
+        binding.btnDeletePhoto.visibility = View.INVISIBLE
+    }
+
+    private fun openActionMenu() {
+        isActionButtonOpen = true
+
+        binding.btnEditPhoto.visibility = View.VISIBLE
+        binding.btnDeletePhoto.visibility = View.VISIBLE
+
+        binding.btnEditPhoto.animate().translationY(-resources.getDimension(R.dimen.standard_65))
+        binding.btnDeletePhoto.animate().translationY(
+                -resources.getDimension(R.dimen.standard_130))
     }
 }
