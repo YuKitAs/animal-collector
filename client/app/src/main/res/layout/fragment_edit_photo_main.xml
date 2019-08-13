@@ -100,7 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_photo_desc"
-            android:inputType="text"
+            android:inputType="textMultiLine"
             android:maxLength="200"
             android:textSize="18sp" />
     </android.support.design.widget.TextInputLayout>
