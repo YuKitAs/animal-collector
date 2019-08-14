@@ -32,6 +32,7 @@ class AnimalsFragment : CollectionFragment() {
     private lateinit var binding: yukitas.animal.collector.databinding.FragmentAnimalsBinding
     private lateinit var animalsAdapter: AnimalsAdapter
 
+    private var isActionButtonOpen = false
     private var shouldUpdateOnResume = false
 
     private val RESULT_CREATE_ANIMAL = 1
@@ -55,7 +56,9 @@ class AnimalsFragment : CollectionFragment() {
             setAnimals()
         }
 
+        resetActionMenu()
         setAddButtonListener()
+        setActionButtonListener()
 
         return binding.root
     }
@@ -69,6 +72,8 @@ class AnimalsFragment : CollectionFragment() {
         } else {
             shouldUpdateOnResume = true
         }
+
+        resetActionMenu()
     }
 
     override fun onDestroy() {
@@ -156,5 +161,45 @@ class AnimalsFragment : CollectionFragment() {
             createAnimalDialog.show(activity.supportFragmentManager,
                     CreateAnimalDialogFragment::class.java.simpleName)
         }
+    }
+
+    private fun setActionButtonListener() {
+        binding.btnAction.setOnClickListener {
+            if (!isActionButtonOpen) {
+                openActionMenu()
+            } else {
+                closeActionMenu()
+            }
+        }
+    }
+
+    private fun resetActionMenu() {
+        binding.btnAction.visibility = View.VISIBLE
+        closeActionMenu()
+    }
+
+    private fun closeActionMenu() {
+        isActionButtonOpen = false
+
+        binding.btnAddPhoto.animate().translationY(0f)
+        binding.btnAddAnimal.animate().translationY(0f)
+
+        binding.btnAddPhoto.visibility = View.INVISIBLE
+        binding.btnAddAnimal.visibility = View.INVISIBLE
+
+        binding.btnAction.animate().rotation(-90f)
+    }
+
+    private fun openActionMenu() {
+        isActionButtonOpen = true
+
+        binding.btnAddPhoto.visibility = View.VISIBLE
+        binding.btnAddAnimal.visibility = View.VISIBLE
+
+        binding.btnAddPhoto.animate().translationY(-resources.getDimension(R.dimen.standard_65))
+        binding.btnAddAnimal.animate().translationY(
+                -resources.getDimension(R.dimen.standard_130))
+
+        binding.btnAction.animate().rotation(90f)
     }
 }

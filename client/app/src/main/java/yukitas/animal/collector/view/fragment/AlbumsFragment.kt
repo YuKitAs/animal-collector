@@ -31,6 +31,7 @@ class AlbumsFragment : CollectionFragment() {
     private lateinit var binding: FragmentAlbumsBinding
     private lateinit var albumsAdapter: AlbumsAdapter
 
+    private var isActionButtonOpen = false
     private var shouldUpdateOnResume = false
 
     private val RESULT_CREATE_ALBUM = 1
@@ -54,7 +55,9 @@ class AlbumsFragment : CollectionFragment() {
             setAlbums()
         }
 
+        resetActionMenu()
         setAddButtonListener()
+        setActionButtonListener()
 
         return binding.root
     }
@@ -68,6 +71,8 @@ class AlbumsFragment : CollectionFragment() {
         } else {
             shouldUpdateOnResume = true
         }
+
+        resetActionMenu()
     }
 
     override fun onDestroy() {
@@ -152,5 +157,42 @@ class AlbumsFragment : CollectionFragment() {
             createAlbumDialog.show(activity.supportFragmentManager,
                     CreateAlbumDialogFragment::class.java.simpleName)
         }
+    }
+
+
+    private fun setActionButtonListener() {
+        binding.btnAction.setOnClickListener {
+            if (!isActionButtonOpen) {
+                openActionMenu()
+            } else {
+                closeActionMenu()
+            }
+        }
+    }
+
+    private fun resetActionMenu() {
+        binding.btnAction.visibility = View.VISIBLE
+        closeActionMenu()
+    }
+
+    private fun closeActionMenu() {
+        isActionButtonOpen = false
+
+        binding.btnAddPhoto.animate().translationY(0f)
+        binding.btnAddAlbum.animate().translationY(0f)
+
+        binding.btnAddPhoto.visibility = View.INVISIBLE
+        binding.btnAddAlbum.visibility = View.INVISIBLE
+    }
+
+    private fun openActionMenu() {
+        isActionButtonOpen = true
+
+        binding.btnAddPhoto.visibility = View.VISIBLE
+        binding.btnAddAlbum.visibility = View.VISIBLE
+
+        binding.btnAddPhoto.animate().translationY(-resources.getDimension(R.dimen.standard_65))
+        binding.btnAddAlbum.animate().translationY(
+                -resources.getDimension(R.dimen.standard_130))
     }
 }
