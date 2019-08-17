@@ -10,12 +10,12 @@
     <android.support.design.widget.TabItem
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:icon="@drawable/ic_test_image_2"
+        android:icon="@drawable/custom_animal"
         android:text="@string/label_animals" />
 
     <android.support.design.widget.TabItem
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:icon="@drawable/ic_test_image_1"
+        android:icon="@drawable/custom_album"
         android:text="@string/label_albums" />
 </android.support.design.widget.TabLayout>

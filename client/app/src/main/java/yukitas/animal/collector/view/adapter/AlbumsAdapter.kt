@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import yukitas.animal.collector.R
+import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.databinding.ItemAlbumBinding
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.utility.binaryToBitmap
@@ -43,7 +44,11 @@ class AlbumsAdapter(private val context: Context) : BaseAdapter() {
         if (album.thumbnail != null) {
             binding.imageAlbumThumbnail.setImageBitmap(binaryToBitmap(album.thumbnail!!.content))
         } else {
-            binding.imageAlbumThumbnail.setImageResource(R.drawable.ic_test_image_3)
+            if (album.category.name.equals(Constants.ARG_CATEGORY_CAT, ignoreCase = true)) {
+                binding.imageAlbumThumbnail.setImageResource(R.drawable.custom_album_cat_default)
+            } else if (album.category.name.equals(Constants.ARG_CATEGORY_DOG, ignoreCase = true)) {
+                binding.imageAlbumThumbnail.setImageResource(R.drawable.custom_album_dog_default)
+            }
         }
     }
 }

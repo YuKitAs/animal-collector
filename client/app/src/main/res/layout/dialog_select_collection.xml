@@ -33,7 +33,7 @@
             android:layout_marginStart="20dp"
             android:background="@null"
             android:contentDescription="@string/content_desc_close"
-            android:src="@drawable/ic_close" />
+            android:src="@drawable/ic_close_24dp" />
     </RelativeLayout>
 
     <View

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.template_animal_tag.view.*
 import yukitas.animal.collector.R
+import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.utility.binaryToBitmap
 
@@ -45,7 +46,11 @@ class AnimalsAdapter(private val context: Context) : BaseAdapter() {
         if (animal.thumbnail != null) {
             binding.imageAnimalThumbnail.setImageBitmap(binaryToBitmap(animal.thumbnail!!.content))
         } else {
-            binding.imageAnimalThumbnail.setImageResource(R.drawable.ic_test_image_3)
+            if (animal.category.name.equals(Constants.ARG_CATEGORY_CAT, ignoreCase = true)) {
+                binding.imageAnimalThumbnail.setImageResource(R.drawable.custom_cat_default)
+            } else if (animal.category.name.equals(Constants.ARG_CATEGORY_DOG, ignoreCase = true)) {
+                binding.imageAnimalThumbnail.setImageResource(R.drawable.custom_dog_default)
+            }
         }
     }
 
@@ -57,7 +62,8 @@ class AnimalsAdapter(private val context: Context) : BaseAdapter() {
                 tagView.text = it
                 binding.layoutAnimalTags.addView(tagView)
 
-                val spaceView = LayoutInflater.from(context).inflate(R.layout.template_horizontal_space,
+                val spaceView = LayoutInflater.from(context).inflate(
+                        R.layout.template_horizontal_space,
                         parent, false)
                 binding.layoutAnimalTags.addView(spaceView)
             }

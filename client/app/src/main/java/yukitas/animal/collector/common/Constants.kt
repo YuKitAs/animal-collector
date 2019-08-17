@@ -2,6 +2,8 @@ package yukitas.animal.collector.common
 
 class Constants {
     companion object {
+        const val ARG_CATEGORY_CAT = "cat"
+        const val ARG_CATEGORY_DOG = "dog"
         const val ARG_CATEGORY_ID = "category_id"
         const val ARG_CATEGORY_NAME = "category_name"
         const val CATEGORY_UNKNOWN = "unknown"
