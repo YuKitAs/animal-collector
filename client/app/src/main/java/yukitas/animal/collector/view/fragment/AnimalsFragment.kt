@@ -178,6 +178,10 @@ class AnimalsFragment : CollectionFragment() {
     }
 
     private fun closeActionMenu() {
+        if (isActionButtonOpen) {
+            binding.btnAction.animate().rotationBy(-45f)
+        }
+
         isActionButtonOpen = false
 
         binding.btnAddPhoto.animate().translationY(0f)
@@ -185,11 +189,13 @@ class AnimalsFragment : CollectionFragment() {
 
         binding.btnAddPhoto.visibility = View.INVISIBLE
         binding.btnAddAnimal.visibility = View.INVISIBLE
-
-        binding.btnAction.animate().rotation(-90f)
     }
 
     private fun openActionMenu() {
+        if (!isActionButtonOpen) {
+            binding.btnAction.animate().rotationBy(45f)
+        }
+
         isActionButtonOpen = true
 
         binding.btnAddPhoto.visibility = View.VISIBLE
@@ -198,7 +204,5 @@ class AnimalsFragment : CollectionFragment() {
         binding.btnAddPhoto.animate().translationY(-resources.getDimension(R.dimen.standard_65))
         binding.btnAddAnimal.animate().translationY(
                 -resources.getDimension(R.dimen.standard_130))
-
-        binding.btnAction.animate().rotation(90f)
     }
 }

@@ -175,6 +175,10 @@ class AlbumsFragment : CollectionFragment() {
     }
 
     private fun closeActionMenu() {
+        if (isActionButtonOpen) {
+            binding.btnAction.animate().rotationBy(-45f)
+        }
+
         isActionButtonOpen = false
 
         binding.btnAddPhoto.animate().translationY(0f)
@@ -185,6 +189,10 @@ class AlbumsFragment : CollectionFragment() {
     }
 
     private fun openActionMenu() {
+        if (!isActionButtonOpen) {
+            binding.btnAction.animate().rotationBy(45f)
+        }
+
         isActionButtonOpen = true
 
         binding.btnAddPhoto.visibility = View.VISIBLE
