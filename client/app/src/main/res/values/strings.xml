@@ -1,13 +1,15 @@
 <resources>
     <string name="app_name">animal-collector-alpha-0.1.0</string>
     <!-- Content descriptions -->
-    <string name="content_desc_photo">Photo</string>
-    <string name="content_desc_album">Album</string>
-    <string name="content_desc_animal">Animal</string>
-    <string name="content_desc_arrow">Arrow</string>
-    <string name="content_desc_close">Close</string>
-    <string name="content_desc_add">Add</string>
-    <string name="content_desc_location">Location</string>
+    <string name="content_desc_photo_animals">photo-animals</string>
+    <string name="content_desc_album">album</string>
+    <string name="content_desc_animal">animal</string>
+    <string name="content_desc_arrow">right-arrow</string>
+    <string name="content_desc_close">close</string>
+    <string name="content_desc_add">add</string>
+    <string name="content_desc_edit">edit</string>
+    <string name="content_desc_delete">delete</string>
+    <string name="content_desc_location">location</string>
     <!-- Input hints -->
     <string name="hint_album_name">Album name</string>
     <string name="hint_animal_name">Animal name</string>
@@ -41,6 +43,7 @@
     <string name="btn_select">select</string>
     <string name="btn_new">new</string>
     <string name="btn_edit">edit</string>
+    <string name="btn_delete">delete</string>
     <!-- Dialog messages -->
     <string name="message_delete_confirm">Are you sure you want to delete this %1$s?\n</string>
     <string name="message_delete_confirm_animal">Photos which are only associated with this animal would also be removed from other albums.</string>
