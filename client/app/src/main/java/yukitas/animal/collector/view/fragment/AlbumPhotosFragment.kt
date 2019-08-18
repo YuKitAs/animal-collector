@@ -40,9 +40,6 @@ class AlbumPhotosFragment : PhotosFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         textCollectionName.text = albumName.toUpperCase()
-
-        setEditButtonListener()
-        setDeleteButtonListener()
     }
 
     override fun onResume() {
@@ -85,43 +82,39 @@ class AlbumPhotosFragment : PhotosFragment() {
         activity.startActivity(intent)
     }
 
-    override fun setEditButtonListener() {
-        binding.btnEditCollection.setOnClickListener {
-            val editAlbumDialog = EditAlbumDialogFragment()
-            editAlbumDialog.setTargetFragment(this, RESULT_EDIT_ALBUM)
-            editAlbumDialog.show(activity.supportFragmentManager,
-                    EditAlbumDialogFragment::class.java.simpleName)
-        }
+    override fun editCollection() {
+        val editAlbumDialog = EditAlbumDialogFragment()
+        editAlbumDialog.setTargetFragment(this, RESULT_EDIT_ALBUM)
+        editAlbumDialog.show(activity.supportFragmentManager,
+                EditAlbumDialogFragment::class.java.simpleName)
     }
 
-    override fun setDeleteButtonListener() {
-        binding.btnDeleteCollection.setOnClickListener {
-            val builder = AlertDialog.Builder(activity)
-            builder.apply {
-                setTitle(String.format(getString(R.string.message_delete_confirm), "album"))
-                setPositiveButton(R.string.btn_confirm_positive
-                ) { _, _ ->
-                    Log.d(TAG, "Deleting album '$albumId'")
+    override fun deleteCollection() {
+        val builder = AlertDialog.Builder(activity)
+        builder.apply {
+            setTitle(String.format(getString(R.string.message_delete_confirm), "album"))
+            setPositiveButton(R.string.btn_confirm_positive
+            ) { _, _ ->
+                Log.d(TAG, "Deleting album '$albumId'")
 
-                    disposable.add(
-                            apiService.deleteAlbum(albumId)
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe {
-                                        Log.d(TAG, "Deleted album '$albumId'")
-                                        Toast.makeText(activity,
-                                                getString(R.string.message_delete_album_success),
-                                                Toast.LENGTH_SHORT).show()
-                                        activity.onBackPressed()
-                                    })
-                }
-                setNegativeButton(R.string.btn_confirm_negative
-                ) { dialog, _ ->
-                    dialog.cancel()
-                }
+                disposable.add(
+                        apiService.deleteAlbum(albumId)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe {
+                                    Log.d(TAG, "Deleted album '$albumId'")
+                                    Toast.makeText(activity,
+                                            getString(R.string.message_delete_album_success),
+                                            Toast.LENGTH_SHORT).show()
+                                    activity.onBackPressed()
+                                })
             }
-            builder.show()
+            setNegativeButton(R.string.btn_confirm_negative
+            ) { dialog, _ ->
+                dialog.cancel()
+            }
         }
+        builder.show()
     }
 
     private fun updateAlbum() {

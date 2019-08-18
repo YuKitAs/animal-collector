@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -28,7 +29,6 @@ class PhotoDetailFragment : BaseFragment() {
     private lateinit var binding: FragmentPhotoDetailBinding
     private lateinit var photoId: String
 
-    private var isActionButtonOpen = false
     private var shouldUpdateOnResume = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,10 +51,7 @@ class PhotoDetailFragment : BaseFragment() {
             setPhoto()
         }
 
-        resetActionMenu()
-        setDeleteButtonListener()
-        setEditButtonListener()
-        setActionButtonListener()
+        setHasOptionsMenu(true)
 
         return binding.root
     }
@@ -68,13 +65,27 @@ class PhotoDetailFragment : BaseFragment() {
         } else {
             shouldUpdateOnResume = true
         }
-
-        resetActionMenu()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         disposable.clear()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.d(TAG, "selected item ${item.itemId}")
+
+        return when (item.itemId) {
+            R.id.action_edit -> {
+                editPhoto()
+                true
+            }
+            R.id.action_delete -> {
+                deletePhoto()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun setPhoto() {
@@ -122,82 +133,42 @@ class PhotoDetailFragment : BaseFragment() {
         )
     }
 
-    private fun setEditButtonListener() {
-        binding.btnEditPhoto.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putBoolean(Constants.ARG_IS_CREATING, false)
-            bundle.putString(ARG_PHOTO_ID, photoId)
-            bundle.putString(ARG_PHOTO_DESC, binding.photo!!.description)
+    private fun editPhoto() {
+        val bundle = Bundle()
+        bundle.putBoolean(Constants.ARG_IS_CREATING, false)
+        bundle.putString(ARG_PHOTO_ID, photoId)
+        bundle.putString(ARG_PHOTO_DESC, binding.photo!!.description)
 
-            val intent = Intent(activity, EditPhotoActivity::class.java).apply {
-                putExtras(bundle)
-            }
-            activity.startActivity(intent)
+        val intent = Intent(activity, EditPhotoActivity::class.java).apply {
+            putExtras(bundle)
         }
+        activity.startActivity(intent)
     }
 
-    private fun setDeleteButtonListener() {
-        binding.btnDeletePhoto.setOnClickListener {
-            val builder = AlertDialog.Builder(activity)
-            builder.apply {
-                setTitle(R.string.message_delete_confirm_photo)
-                setPositiveButton(R.string.btn_confirm_positive
-                ) { _, _ ->
-                    Log.d(TAG, "Deleting photo '$photoId'")
+    private fun deletePhoto() {
+        val builder = AlertDialog.Builder(activity)
+        builder.apply {
+            setTitle(R.string.message_delete_confirm_photo)
+            setPositiveButton(R.string.btn_confirm_positive
+            ) { _, _ ->
+                Log.d(TAG, "Deleting photo '$photoId'")
 
-                    disposable.add(
-                            apiService.deletePhoto(photoId)
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe {
-                                        Log.d(TAG, "Deleted photo '$photoId'")
-                                        Toast.makeText(activity,
-                                                getString(R.string.message_delete_photo_success),
-                                                Toast.LENGTH_SHORT).show()
-                                        activity.onBackPressed()
-                                    })
-                }
-                setNegativeButton(R.string.btn_confirm_negative) { dialog, _ ->
-                    dialog.cancel()
-                }
+                disposable.add(
+                        apiService.deletePhoto(photoId)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe {
+                                    Log.d(TAG, "Deleted photo '$photoId'")
+                                    Toast.makeText(activity,
+                                            getString(R.string.message_delete_photo_success),
+                                            Toast.LENGTH_SHORT).show()
+                                    activity.onBackPressed()
+                                })
             }
-            builder.show()
-        }
-    }
-
-    private fun setActionButtonListener() {
-        binding.btnAction.setOnClickListener {
-            if (!isActionButtonOpen) {
-                openActionMenu()
-            } else {
-                closeActionMenu()
+            setNegativeButton(R.string.btn_confirm_negative) { dialog, _ ->
+                dialog.cancel()
             }
         }
-    }
-
-    private fun resetActionMenu() {
-        binding.btnAction.visibility = View.VISIBLE
-        closeActionMenu()
-    }
-
-    private fun closeActionMenu() {
-        isActionButtonOpen = false
-
-        binding.btnEditPhoto.animate().translationY(0f)
-        binding.btnDeletePhoto.animate().translationY(0f)
-
-        binding.btnEditPhoto.visibility = View.INVISIBLE
-        binding.btnDeletePhoto.visibility = View.INVISIBLE
-    }
-
-    private fun openActionMenu() {
-        isActionButtonOpen = true
-
-        binding.btnEditPhoto.visibility = View.VISIBLE
-        binding.btnDeletePhoto.visibility = View.VISIBLE
-
-        binding.btnEditPhoto.animate().translationY(-resources.getDimension(R.dimen.standard_65))
-        binding.btnDeletePhoto.animate().translationY(
-                -resources.getDimension(R.dimen.standard_130))
+        builder.show()
     }
 }

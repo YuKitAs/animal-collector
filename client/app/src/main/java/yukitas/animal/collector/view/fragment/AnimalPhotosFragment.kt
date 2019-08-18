@@ -43,9 +43,6 @@ class AnimalPhotosFragment : PhotosFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         textCollectionName.text = animalName.toUpperCase()
-
-        setEditButtonListener()
-        setDeleteButtonListener()
     }
 
     override fun onResume() {
@@ -88,44 +85,40 @@ class AnimalPhotosFragment : PhotosFragment() {
         activity.startActivity(intent)
     }
 
-    override fun setEditButtonListener() {
-        binding.btnEditCollection.setOnClickListener {
-            val editAnimalDialog = EditAnimalDialogFragment()
-            editAnimalDialog.setTargetFragment(this, RESULT_EDIT_ANIMAL)
-            editAnimalDialog.show(activity.supportFragmentManager,
-                    EditAnimalDialogFragment::class.java.simpleName)
-        }
+    override fun editCollection() {
+        val editAnimalDialog = EditAnimalDialogFragment()
+        editAnimalDialog.setTargetFragment(this, RESULT_EDIT_ANIMAL)
+        editAnimalDialog.show(activity.supportFragmentManager,
+                EditAnimalDialogFragment::class.java.simpleName)
     }
 
-    override fun setDeleteButtonListener() {
-        binding.btnDeleteCollection.setOnClickListener {
-            val builder = AlertDialog.Builder(activity)
-            builder.apply {
-                setTitle(String.format(getString(R.string.message_delete_confirm),
-                        "animal"))
-                setMessage(R.string.message_delete_confirm_animal)
-                setPositiveButton(R.string.btn_confirm_positive
-                ) { _, _ ->
-                    Log.d(TAG, "Deleting animal '$animalId'")
+    override fun deleteCollection() {
+        val builder = AlertDialog.Builder(activity)
+        builder.apply {
+            setTitle(String.format(getString(R.string.message_delete_confirm),
+                    "animal"))
+            setMessage(R.string.message_delete_confirm_animal)
+            setPositiveButton(R.string.btn_confirm_positive
+            ) { _, _ ->
+                Log.d(TAG, "Deleting animal '$animalId'")
 
-                    disposable.add(
-                            apiService.deleteAnimal(animalId)
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe {
-                                        Log.d(TAG, "Deleted animal '$animalId'")
-                                        Toast.makeText(activity,
-                                                getString(R.string.message_delete_animal_success),
-                                                Toast.LENGTH_SHORT).show()
-                                        activity.onBackPressed()
-                                    })
-                }
-                setNegativeButton(R.string.btn_confirm_negative) { dialog, _ ->
-                    dialog.cancel()
-                }
+                disposable.add(
+                        apiService.deleteAnimal(animalId)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe {
+                                    Log.d(TAG, "Deleted animal '$animalId'")
+                                    Toast.makeText(activity,
+                                            getString(R.string.message_delete_animal_success),
+                                            Toast.LENGTH_SHORT).show()
+                                    activity.onBackPressed()
+                                })
             }
-            builder.show()
+            setNegativeButton(R.string.btn_confirm_negative) { dialog, _ ->
+                dialog.cancel()
+            }
         }
+        builder.show()
     }
 
     private fun updateAnimal() {
