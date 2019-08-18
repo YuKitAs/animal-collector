@@ -53,6 +53,7 @@
         android:id="@+id/textSelectedAnimals"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:text="@string/text_none"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp" />
@@ -61,7 +62,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:gravity="start"
         android:orientation="horizontal">
@@ -98,8 +98,7 @@
     <android.support.design.widget.TextInputLayout
         android:id="@+id/input_layout_photo_desc"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_height="wrap_content">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/inputPhotoDesc"
@@ -116,27 +115,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:gravity="center">
 
         <Button
             android:id="@+id/btnCancelPhotoEdit"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:background="@color/colorPrimary"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryLight"
             android:text="@android:string/cancel"
-            android:textColor="#fff" />
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/btnSavePhoto"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:layout_weight="1"
             android:background="@color/colorPrimary"
             android:text="@string/btn_save"
-            android:textColor="#fff" />
+            android:textColor="@android:color/white" />
     </LinearLayout>
 </LinearLayout>
