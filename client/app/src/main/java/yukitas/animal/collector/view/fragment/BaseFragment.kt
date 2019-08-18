@@ -7,4 +7,9 @@ import yukitas.animal.collector.networking.ApiService
 open class BaseFragment : Fragment() {
     protected val apiService by lazy { ApiService.create() }
     protected val disposable = CompositeDisposable()
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
+    }
 }

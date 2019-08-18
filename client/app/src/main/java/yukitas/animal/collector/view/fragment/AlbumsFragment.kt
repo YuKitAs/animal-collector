@@ -1,10 +1,14 @@
 package yukitas.animal.collector.view.fragment
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.provider.MediaStore
+import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +17,7 @@ import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
+import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
 import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_NAME
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
@@ -26,7 +31,7 @@ import yukitas.animal.collector.view.fragment.dialog.CreateAlbumDialogFragment
 import java.util.*
 import java.util.stream.Collectors
 
-class AlbumsFragment : CollectionFragment() {
+class AlbumsFragment : CollectionsFragment() {
     private val TAG = AlbumsFragment::class.java.simpleName
 
     private lateinit var binding: FragmentAlbumsBinding
@@ -55,7 +60,8 @@ class AlbumsFragment : CollectionFragment() {
         }
 
         resetActionMenu()
-        setAddButtonListener()
+        setAddAlbumButtonListener()
+        setAddPhotoButtonListener()
         setActionButtonListener()
 
         return binding.root
@@ -80,6 +86,8 @@ class AlbumsFragment : CollectionFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == RESULT_CREATE_ALBUM && resultCode == Activity.RESULT_OK) {
             onResume()
         }
@@ -149,7 +157,7 @@ class AlbumsFragment : CollectionFragment() {
         }
     }
 
-    private fun setAddButtonListener() {
+    private fun setAddAlbumButtonListener() {
         binding.btnAddAlbum.setOnClickListener {
             val createAlbumDialog = CreateAlbumDialogFragment()
             createAlbumDialog.setTargetFragment(this, RESULT_CREATE_ALBUM)
@@ -158,6 +166,25 @@ class AlbumsFragment : CollectionFragment() {
         }
     }
 
+    override fun setAddPhotoButtonListener() {
+        binding.btnAddPhoto.setOnClickListener {
+            try {
+                if (ActivityCompat.checkSelfPermission(activity,
+                                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(activity,
+                            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                            Constants.RESULT_LOAD_IMAGE)
+                } else {
+                    startActivityForResult(Intent(Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
+                            Constants.RESULT_LOAD_IMAGE)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 
     private fun setActionButtonListener() {
         binding.btnAction.setOnClickListener {

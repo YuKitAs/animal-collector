@@ -23,6 +23,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:gravity="start"
@@ -36,15 +37,16 @@
             android:text="@string/label_animals"
             android:textSize="20sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnSelectAnimals"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:height="30dp"
-            android:background="@color/colorPrimary"
-            android:minHeight="0dp"
-            android:text="@string/btn_edit"
-            android:textColor="#fff" />
+            android:layout_gravity="center_vertical"
+            android:background="@null"
+            android:contentDescription="@string/content_desc_edit"
+            android:elevation="4dp"
+            android:src="@drawable/ic_mode_edit_24dp"
+            android:tint="@color/colorPrimaryLight" />
     </LinearLayout>
 
     <TextView
@@ -52,11 +54,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/text_none"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:gravity="start"
@@ -70,15 +74,16 @@
             android:text="@string/label_albums"
             android:textSize="20sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnSelectAlbums"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:height="30dp"
-            android:background="@color/colorPrimary"
-            android:minHeight="0dp"
-            android:text="@string/btn_edit"
-            android:textColor="#fff" />
+            android:layout_gravity="center_vertical"
+            android:background="@null"
+            android:contentDescription="@string/content_desc_edit"
+            android:elevation="4dp"
+            android:src="@drawable/ic_mode_edit_24dp"
+            android:tint="@color/colorPrimaryLight" />
     </LinearLayout>
 
     <TextView
@@ -87,6 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="@string/text_none"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp" />
 
     <android.support.design.widget.TextInputLayout
@@ -106,6 +112,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -114,6 +121,7 @@
 
         <Button
             android:id="@+id/btnCancelPhotoEdit"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -123,6 +131,7 @@
 
         <Button
             android:id="@+id/btnSavePhoto"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"

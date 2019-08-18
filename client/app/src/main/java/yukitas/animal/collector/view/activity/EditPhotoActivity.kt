@@ -13,7 +13,7 @@ import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_NAME
 import yukitas.animal.collector.common.Constants.Companion.CATEGORY_UNKNOWN
 import yukitas.animal.collector.networking.ApiService
-import yukitas.animal.collector.view.fragment.EditPhotoMainFragment
+import yukitas.animal.collector.view.fragment.EditPhotoFragment
 
 
 /**
@@ -105,7 +105,7 @@ class EditPhotoActivity : AppCompatActivity() {
     }
 
     private fun attachEditPhotoFragment(recognizedCategory: String?) {
-        val fragment = EditPhotoMainFragment()
+        val fragment = EditPhotoFragment()
         recognizedCategory?.let {
             fragment.arguments = Bundle().apply {
                 putString(ARG_CATEGORY_NAME, recognizedCategory)

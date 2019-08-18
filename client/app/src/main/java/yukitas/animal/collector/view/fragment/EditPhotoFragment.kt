@@ -12,7 +12,7 @@ import android.widget.Toast
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_edit_photo_main.*
+import kotlinx.android.synthetic.main.fragment_edit_photo.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_NAME
@@ -25,8 +25,8 @@ import yukitas.animal.collector.view.fragment.dialog.SelectAnimalsDialogFragment
 import yukitas.animal.collector.viewmodel.SelectionViewModel
 import java.util.stream.Collectors
 
-class EditPhotoMainFragment : BaseFragment() {
-    private val TAG = EditPhotoMainFragment::class.java.simpleName
+class EditPhotoFragment : BaseFragment() {
+    private val TAG = EditPhotoFragment::class.java.simpleName
 
     private var isCreating = true
     private lateinit var photoId: String
@@ -63,7 +63,7 @@ class EditPhotoMainFragment : BaseFragment() {
                     SelectAnimalsDialogFragment::class.java.simpleName)
         }
 
-        return inflater.inflate(R.layout.fragment_edit_photo_main, container, false)
+        return inflater.inflate(R.layout.fragment_edit_photo, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
