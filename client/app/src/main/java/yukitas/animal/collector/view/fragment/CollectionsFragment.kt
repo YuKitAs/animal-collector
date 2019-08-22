@@ -8,9 +8,10 @@ import yukitas.animal.collector.view.activity.EditPhotoActivity
 abstract class CollectionsFragment : AddPhotoBaseFragment() {
     protected val THUMBNAIL_SIDE_LENGTH = 400
 
-    override fun startEditPhotoActivity(photoId: String, recognizedCategory: String?) {
+    override fun startEditPhotoActivity(photoId: String, recognitionEnabled: Boolean, recognizedCategory: String?) {
         val bundle = Bundle().apply {
             putString(Constants.ARG_PHOTO_ID, photoId)
+            putBoolean(Constants.FLAG_RECOGNITION_ENABLED, recognitionEnabled)
 
             if (!recognizedCategory.isNullOrBlank()) {
                 putString(Constants.ARG_CATEGORY_NAME, recognizedCategory)

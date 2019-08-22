@@ -232,11 +232,11 @@ abstract class AddPhotoBaseFragment : BaseFragment() {
                                 val recognizedCategory = response.recognizedCategory
                                 Log.d(TAG,
                                         "Created photo with id '$photoId' and recognized category: $recognizedCategory")
-                                startEditPhotoActivity(photoId, recognizedCategory)
+                                startEditPhotoActivity(photoId, true, recognizedCategory)
                             } else {
                                 Log.d(TAG,
                                         "Created photo with id '$photoId' without recognized category")
-                                startEditPhotoActivity(photoId, null)
+                                startEditPhotoActivity(photoId, false, null)
                             }
                         }, {
                             Log.e(TAG, "Some errors occurred: $it")
@@ -245,5 +245,6 @@ abstract class AddPhotoBaseFragment : BaseFragment() {
 
     protected abstract fun setAddPhotoButtonListener()
 
-    protected abstract fun startEditPhotoActivity(photoId: String, recognizedCategory: String?)
+    protected abstract fun startEditPhotoActivity(photoId: String, recognitionEnabled: Boolean,
+                                                  recognizedCategory: String?)
 }

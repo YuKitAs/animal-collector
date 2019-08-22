@@ -13,9 +13,9 @@ import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
-import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_DESC
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
+import yukitas.animal.collector.common.Constants.Companion.FLAG_IS_CREATING
 import yukitas.animal.collector.databinding.FragmentPhotoDetailBinding
 import yukitas.animal.collector.utility.binaryToBitmap
 import yukitas.animal.collector.view.activity.EditPhotoActivity
@@ -135,7 +135,7 @@ class PhotoDetailFragment : BaseFragment() {
 
     private fun editPhoto() {
         val bundle = Bundle()
-        bundle.putBoolean(Constants.ARG_IS_CREATING, false)
+        bundle.putBoolean(FLAG_IS_CREATING, false)
         bundle.putString(ARG_PHOTO_ID, photoId)
         bundle.putString(ARG_PHOTO_DESC, binding.photo!!.description)
 

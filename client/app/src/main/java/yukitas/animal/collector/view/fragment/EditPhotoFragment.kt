@@ -17,6 +17,8 @@ import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_NAME
 import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_DESC
+import yukitas.animal.collector.common.Constants.Companion.FLAG_CATEGORY_CONFIRMED
+import yukitas.animal.collector.common.Constants.Companion.FLAG_RECOGNITION_ENABLED
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.dto.SavePhotoRequest
@@ -52,15 +54,22 @@ class EditPhotoFragment : BaseFragment() {
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         photoId = activity.intent.getStringExtra(Constants.ARG_PHOTO_ID)
-        isCreating = activity.intent.getBooleanExtra(Constants.ARG_IS_CREATING, true)
+        isCreating = activity.intent.getBooleanExtra(Constants.FLAG_IS_CREATING, true)
 
-        arguments?.getString(ARG_CATEGORY_NAME)?.let {
-            val selectAnimalsDialog = SelectAnimalsDialogFragment()
-            selectAnimalsDialog.arguments = Bundle().apply {
-                putString(ARG_CATEGORY_NAME, it)
+        val selectAnimalsDialog = SelectAnimalsDialogFragment()
+        if (isCreating) {
+            val recognitionEnabled = arguments?.getBoolean(FLAG_RECOGNITION_ENABLED)
+            if (recognitionEnabled != null && recognitionEnabled) {
+                val categoryConfirmed = arguments?.getBoolean(FLAG_CATEGORY_CONFIRMED)
+                if (categoryConfirmed != null && categoryConfirmed) {
+                    selectAnimalsDialog.arguments = Bundle().apply {
+                        putString(ARG_CATEGORY_NAME, arguments?.getString(ARG_CATEGORY_NAME)!!)
+                    }
+                }
+
+                selectAnimalsDialog.show(activity.supportFragmentManager,
+                        SelectAnimalsDialogFragment::class.java.simpleName)
             }
-            selectAnimalsDialog.show(activity.supportFragmentManager,
-                    SelectAnimalsDialogFragment::class.java.simpleName)
         }
 
         return inflater.inflate(R.layout.fragment_edit_photo, container, false)

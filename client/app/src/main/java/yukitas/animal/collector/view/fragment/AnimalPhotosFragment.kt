@@ -69,10 +69,12 @@ class AnimalPhotosFragment : PhotosFragment() {
                         })
     }
 
-    override fun startEditPhotoActivity(photoId: String, recognizedCategory: String?) {
+    override fun startEditPhotoActivity(photoId: String, recognitionEnabled: Boolean,
+                                        recognizedCategory: String?) {
         val bundle = Bundle().apply {
             putString(Constants.ARG_PHOTO_ID, photoId)
             putString(Constants.ARG_ANIMAL_ID, animalId)
+            putBoolean(Constants.FLAG_RECOGNITION_ENABLED, recognitionEnabled)
 
             if (!recognizedCategory.isNullOrBlank()) {
                 putString(Constants.ARG_CATEGORY_NAME, recognizedCategory)
