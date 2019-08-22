@@ -55,6 +55,8 @@ class AlbumsFragment : CollectionsFragment() {
         albumsAdapter = AlbumsAdapter(context)
         binding.gridAlbums.adapter = albumsAdapter
 
+        progressSpinner = binding.layoutProgress
+
         if (!shouldUpdateOnResume) {
             setAlbums()
         }

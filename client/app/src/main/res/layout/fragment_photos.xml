@@ -49,29 +49,8 @@
             app:borderWidth="0dp"
             app:fabSize="normal" />
 
-        <RelativeLayout
-            android:id="@+id/layout_recognition_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:visibility="gone">
-
-            <ProgressBar
-                android:id="@+id/recognition_progress_spinner"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
-
-            <TextView
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/recognition_progress_spinner"
-                android:layout_marginTop="50dp"
-                android:text="@string/message_recognition_progress"
-                android:textAlignment="center"
-                android:textSize="18sp" />
-        </RelativeLayout>
+        <include
+            android:id="@+id/layout_progress"
+            layout="@layout/progress_bar" />
     </FrameLayout>
 </layout>

@@ -47,6 +47,8 @@ abstract class PhotosFragment : AddPhotoBaseFragment() {
         photosAdapter = PhotosAdapter(context)
         gridView.adapter = photosAdapter
 
+        progressSpinner = binding.layoutProgress
+
         if (!shouldUpdateOnResume) {
             setPhotos()
         }

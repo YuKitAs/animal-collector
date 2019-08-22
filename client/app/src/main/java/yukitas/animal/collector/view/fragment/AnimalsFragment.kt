@@ -56,6 +56,8 @@ class AnimalsFragment : CollectionsFragment() {
         animalsAdapter = AnimalsAdapter(context)
         binding.listAnimals.adapter = animalsAdapter
 
+        progressSpinner = binding.layoutProgress
+
         if (!shouldUpdateOnResume) {
             setAnimals()
         }

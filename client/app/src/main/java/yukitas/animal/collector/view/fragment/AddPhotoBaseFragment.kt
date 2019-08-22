@@ -14,6 +14,8 @@ import android.support.media.ExifInterface
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -37,6 +39,8 @@ abstract class AddPhotoBaseFragment : BaseFragment() {
     private val TAG = AddPhotoBaseFragment::class.java.simpleName
 
     private val MAX_SIDE_LENGTH = 1080
+
+    protected lateinit var progressSpinner: View
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Constants.RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && data != null) {
@@ -190,7 +194,9 @@ abstract class AddPhotoBaseFragment : BaseFragment() {
             setMessage(R.string.message_enable_recognition)
             setPositiveButton(R.string.btn_confirm_positive
             ) { _, _ ->
-                //layoutRecognitionProgress.visibility = View.VISIBLE // TODO create a new layout?
+                progressSpinner.visibility = View.VISIBLE
+                activity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
                 uploadPhoto(outputPhotoPath, RequestBody.create(MediaType.parse("image/*"), file),
                         creationTime, location, true)
@@ -219,7 +225,9 @@ abstract class AddPhotoBaseFragment : BaseFragment() {
                             val photoId = response.id
 
                             if (recognitionEnabled) {
-                                //layoutRecognitionProgress.visibility = View.GONE
+                                progressSpinner.visibility = View.GONE
+                                activity.window.clearFlags(
+                                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
                                 val recognizedCategory = response.recognizedCategory
                                 Log.d(TAG,

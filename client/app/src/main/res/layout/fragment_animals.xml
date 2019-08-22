@@ -59,5 +59,9 @@
             app:backgroundTint="@color/colorAccent"
             app:borderWidth="0dp"
             app:fabSize="normal" />
+
+        <include
+            android:id="@+id/layout_progress"
+            layout="@layout/progress_bar" />
     </FrameLayout>
 </layout>

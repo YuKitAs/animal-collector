@@ -63,5 +63,4 @@
     <string name="message_enable_recognition">Do you want to auto-recognize the animal in the photo?</string>
     <string name="message_recognized_category_confirm">Recognized %1$s in the photo, is it correct?\n</string>
     <string name="message_recognized_category_unknown">Cannot recognize the animal in the photo :(</string>
-    <string name="message_recognition_progress">Analysing photo…\nThis will take a few seconds.</string>
 </resources>
