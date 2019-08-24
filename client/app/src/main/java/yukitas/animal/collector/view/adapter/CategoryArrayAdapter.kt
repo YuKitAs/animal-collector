@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import yukitas.animal.collector.model.Collection
+import yukitas.animal.collector.model.Category
 
-class CollectionArrayAdapter(context: Context, private var resource: Int,
-                             private var textViewResourceId: Int,
-                             private var collections: ArrayList<Collection>) : ArrayAdapter<Collection>(
-        context, resource, textViewResourceId, collections) {
+class CategoryArrayAdapter(context: Context, private var resource: Int,
+                           private var textViewResourceId: Int,
+                           private var categories: ArrayList<Category>) : ArrayAdapter<Category>(
+        context, resource, textViewResourceId, categories) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view: View
@@ -28,9 +28,9 @@ class CollectionArrayAdapter(context: Context, private var resource: Int,
         return view
     }
 
-    override fun getItem(position: Int): Collection = collections[position]
+    override fun getItem(position: Int): Category = categories[position]
 
     override fun getItemId(position: Int): Long = position.toLong()
 
-    override fun getCount(): Int = collections.size
+    override fun getCount(): Int = categories.size
 }

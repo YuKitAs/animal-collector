@@ -163,6 +163,9 @@ class AlbumsFragment : CollectionsFragment() {
         binding.btnAddAlbum.setOnClickListener {
             val createAlbumDialog = CreateAlbumDialogFragment()
             createAlbumDialog.setTargetFragment(this, RESULT_CREATE_ALBUM)
+            createAlbumDialog.arguments = Bundle().apply {
+                putString(ARG_CATEGORY_ID, arguments.getString(ARG_CATEGORY_ID))
+            }
             createAlbumDialog.show(activity.supportFragmentManager,
                     CreateAlbumDialogFragment::class.java.simpleName)
         }

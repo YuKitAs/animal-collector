@@ -167,6 +167,9 @@ class AnimalsFragment : CollectionsFragment() {
         binding.btnAddAnimal.setOnClickListener {
             val createAnimalDialog = CreateAnimalDialogFragment()
             createAnimalDialog.setTargetFragment(this, RESULT_CREATE_ANIMAL)
+            createAnimalDialog.arguments = Bundle().apply {
+                putString(ARG_CATEGORY_ID, arguments.getString(ARG_CATEGORY_ID))
+            }
             createAnimalDialog.show(activity.supportFragmentManager,
                     CreateAnimalDialogFragment::class.java.simpleName)
         }

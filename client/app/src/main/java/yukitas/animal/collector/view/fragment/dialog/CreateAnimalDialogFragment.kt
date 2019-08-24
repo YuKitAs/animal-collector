@@ -26,7 +26,7 @@ class CreateAnimalDialogFragment : CreateCollectionDialogFragment() {
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_create_animal, container,
                 false)
 
-        if (arguments == null || arguments.getString(ARG_CATEGORY_ID).isNullOrBlank()) {
+        if (arguments == null || arguments.getString(ARG_CATEGORY_NAME).isNullOrBlank()) {
             setCategoryList()
         } else {
             categoryId = arguments.getString(ARG_CATEGORY_ID)!!

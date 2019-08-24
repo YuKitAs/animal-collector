@@ -1,16 +1,18 @@
 package yukitas.animal.collector.view.fragment.dialog
 
+import android.R
 import android.support.v4.app.DialogFragment
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
+import android.widget.Spinner
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_create_album.*
+import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.networking.ApiService
-import java.util.stream.Collectors
+import yukitas.animal.collector.view.adapter.CategoryArrayAdapter
 
 abstract class CreateCollectionDialogFragment : DialogFragment() {
     private val TAG = CreateCollectionDialogFragment::class.java.simpleName
@@ -21,17 +23,29 @@ abstract class CreateCollectionDialogFragment : DialogFragment() {
     protected val disposable = CompositeDisposable()
 
     protected fun setCategoryList() {
+        val defaultCategoryId = arguments?.getString(Constants.ARG_CATEGORY_ID)
+
         disposable.add(
                 apiService.getCategories()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ categories ->
-                            dialog.dropdownCategory.adapter = ArrayAdapter<String>(context,
-                                    android.R.layout.simple_spinner_dropdown_item,
-                                    categories.stream().map { category -> category.name.capitalize() }.collect(
-                                            Collectors.toList()).toTypedArray())
+                            val categoryList = dialog.dropdownCategory as Spinner
+                            val categoryAdapter = CategoryArrayAdapter(activity,
+                                    R.layout.simple_spinner_dropdown_item,
+                                    R.id.text1,
+                                    ArrayList(categories))
+                            categoryList.adapter = categoryAdapter
 
-                            dialog.dropdownCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                            for (i in 0 until categoryAdapter.count) {
+                                if (categoryAdapter.getItem(i).id == defaultCategoryId) {
+                                    Log.d(TAG,
+                                            "Default category: ${categoryAdapter.getItem(i).name}")
+                                    categoryList.setSelection(i)
+                                }
+                            }
+
+                            categoryList.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                                 override fun onNothingSelected(parent: AdapterView<*>?) {
                                 }
 
