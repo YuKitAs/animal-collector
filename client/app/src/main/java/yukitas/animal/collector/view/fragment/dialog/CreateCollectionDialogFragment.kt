@@ -1,6 +1,5 @@
 package yukitas.animal.collector.view.fragment.dialog
 
-import android.R
 import android.support.v4.app.DialogFragment
 import android.util.Log
 import android.view.View
@@ -13,6 +12,7 @@ import kotlinx.android.synthetic.main.dialog_create_album.*
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.adapter.CategoryArrayAdapter
+import java.util.stream.Collectors
 
 abstract class CreateCollectionDialogFragment : DialogFragment() {
     private val TAG = CreateCollectionDialogFragment::class.java.simpleName
@@ -30,10 +30,14 @@ abstract class CreateCollectionDialogFragment : DialogFragment() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ categories ->
+                            Log.d(TAG,
+                                    "Fetched categories: ${categories.stream().map { category -> category.name }.collect(
+                                            Collectors.toList())}")
+
                             val categoryList = dialog.dropdownCategory as Spinner
                             val categoryAdapter = CategoryArrayAdapter(activity,
-                                    R.layout.simple_spinner_dropdown_item,
-                                    R.id.text1,
+                                    android.R.layout.simple_spinner_dropdown_item,
+                                    android.R.id.text1,
                                     ArrayList(categories))
                             categoryList.adapter = categoryAdapter
 
