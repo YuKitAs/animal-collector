@@ -53,6 +53,7 @@
                     android:layout_alignStart="@id/text_animal_name"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
+                    android:layout_toStartOf="@+id/arrow"
                     android:orientation="horizontal"
                     app:alignContent="stretch"
                     app:alignItems="stretch"
