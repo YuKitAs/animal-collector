@@ -1,5 +1,8 @@
 package yukitas.animal.collector.common
 
+/**
+ * Top-level constants. Actual values are unimportant.
+ */
 class Constants {
     companion object {
         const val CATEGORY_UNKNOWN = "unknown"

@@ -31,7 +31,6 @@ import yukitas.animal.collector.view.fragment.dialog.CreateAnimalDialogFragment
 import java.util.*
 import java.util.stream.Collectors
 
-
 class AnimalsFragment : CollectionsFragment() {
     private val TAG = AnimalsFragment::class.java.simpleName
 

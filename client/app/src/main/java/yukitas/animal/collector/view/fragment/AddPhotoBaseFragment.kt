@@ -35,10 +35,10 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.util.*
 
+private const val MAX_SIDE_LENGTH = 1080
+
 abstract class AddPhotoBaseFragment : BaseFragment() {
     private val TAG = AddPhotoBaseFragment::class.java.simpleName
-
-    private val MAX_SIDE_LENGTH = 1080
 
     protected lateinit var progressSpinner: View
 
