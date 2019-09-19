@@ -14,7 +14,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_photos.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
-import yukitas.animal.collector.common.Constants.Companion.RESULT_EDIT_ALBUM
+import yukitas.animal.collector.common.Constants.RESULT_EDIT_ALBUM
 import yukitas.animal.collector.view.activity.EditPhotoActivity
 import yukitas.animal.collector.view.fragment.dialog.EditAlbumDialogFragment
 

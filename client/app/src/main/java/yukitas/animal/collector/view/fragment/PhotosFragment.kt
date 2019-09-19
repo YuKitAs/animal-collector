@@ -13,8 +13,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import yukitas.animal.collector.R
-import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
-import yukitas.animal.collector.common.Constants.Companion.RESULT_LOAD_IMAGE
+import yukitas.animal.collector.common.Constants.ARG_PHOTO_ID
+import yukitas.animal.collector.common.Constants.RESULT_LOAD_IMAGE
 import yukitas.animal.collector.view.adapter.PhotosAdapter
 
 /**

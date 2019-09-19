@@ -14,8 +14,8 @@ import kotlinx.android.synthetic.main.dialog_create_animal.*
 import kotlinx.android.synthetic.main.dialog_create_animal.view.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
-import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
-import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_NAME
+import yukitas.animal.collector.common.Constants.ARG_CATEGORY_ID
+import yukitas.animal.collector.common.Constants.ARG_CATEGORY_NAME
 import yukitas.animal.collector.model.dto.SaveAnimalRequest
 import yukitas.animal.collector.utility.tagsFromText
 

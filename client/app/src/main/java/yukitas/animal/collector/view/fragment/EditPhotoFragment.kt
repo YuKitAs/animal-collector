@@ -15,10 +15,10 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_edit_photo.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
-import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_NAME
-import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_DESC
-import yukitas.animal.collector.common.Constants.Companion.FLAG_CATEGORY_CONFIRMED
-import yukitas.animal.collector.common.Constants.Companion.FLAG_RECOGNITION_ENABLED
+import yukitas.animal.collector.common.Constants.ARG_CATEGORY_NAME
+import yukitas.animal.collector.common.Constants.ARG_PHOTO_DESC
+import yukitas.animal.collector.common.Constants.FLAG_CATEGORY_CONFIRMED
+import yukitas.animal.collector.common.Constants.FLAG_RECOGNITION_ENABLED
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.dto.SavePhotoRequest

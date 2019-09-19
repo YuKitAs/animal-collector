@@ -18,10 +18,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
-import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_ID
-import yukitas.animal.collector.common.Constants.Companion.ARG_ALBUM_NAME
-import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
-import yukitas.animal.collector.common.Constants.Companion.RESULT_CREATE_ALBUM
+import yukitas.animal.collector.common.Constants.ARG_ALBUM_ID
+import yukitas.animal.collector.common.Constants.ARG_ALBUM_NAME
+import yukitas.animal.collector.common.Constants.ARG_CATEGORY_ID
+import yukitas.animal.collector.common.Constants.RESULT_CREATE_ALBUM
 import yukitas.animal.collector.databinding.FragmentAlbumsBinding
 import yukitas.animal.collector.model.Album
 import yukitas.animal.collector.model.Photo

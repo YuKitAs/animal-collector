@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import yukitas.animal.collector.AnimalCollectorApplication
-import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
+import yukitas.animal.collector.common.Constants.ARG_CATEGORY_ID
 import yukitas.animal.collector.common.ViewMode
 import yukitas.animal.collector.model.Category
 import yukitas.animal.collector.view.fragment.AlbumsFragment

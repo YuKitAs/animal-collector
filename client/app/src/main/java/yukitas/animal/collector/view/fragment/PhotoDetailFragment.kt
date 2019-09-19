@@ -13,9 +13,9 @@ import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import yukitas.animal.collector.R
-import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_DESC
-import yukitas.animal.collector.common.Constants.Companion.ARG_PHOTO_ID
-import yukitas.animal.collector.common.Constants.Companion.FLAG_IS_CREATING
+import yukitas.animal.collector.common.Constants.ARG_PHOTO_DESC
+import yukitas.animal.collector.common.Constants.ARG_PHOTO_ID
+import yukitas.animal.collector.common.Constants.FLAG_IS_CREATING
 import yukitas.animal.collector.databinding.FragmentPhotoDetailBinding
 import yukitas.animal.collector.utility.binaryToBitmap
 import yukitas.animal.collector.view.activity.EditPhotoActivity

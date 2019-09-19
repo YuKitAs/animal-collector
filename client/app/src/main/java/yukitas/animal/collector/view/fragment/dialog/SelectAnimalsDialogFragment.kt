@@ -11,9 +11,9 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_select_collection.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
-import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_ID
-import yukitas.animal.collector.common.Constants.Companion.ARG_CATEGORY_NAME
-import yukitas.animal.collector.common.Constants.Companion.RESULT_CREATE_ANIMAL
+import yukitas.animal.collector.common.Constants.ARG_CATEGORY_ID
+import yukitas.animal.collector.common.Constants.ARG_CATEGORY_NAME
+import yukitas.animal.collector.common.Constants.RESULT_CREATE_ANIMAL
 import yukitas.animal.collector.model.Animal
 import yukitas.animal.collector.model.Category
 import yukitas.animal.collector.view.adapter.CollectionArrayAdapter
