@@ -61,12 +61,17 @@ class AlbumPhotosFragment : PhotosFragment() {
                 apiService.getPhotosByAlbum(albumId, THUMBNAIL_SIDE_LENGTH, THUMBNAIL_SIDE_LENGTH)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
+                        .subscribe({
                             photosAdapter.photos = it
-                        })
+                        }, {
+                            Log.e(TAG,
+                                    "Cannot get photos by album '$albumId'. Some errors occurred: $it")
+                            it.printStackTrace()
+                        }))
     }
 
-    override fun startEditPhotoActivity(photoId: String, recognitionEnabled: Boolean, recognizedCategory: String?) {
+    override fun startEditPhotoActivity(photoId: String, recognitionEnabled: Boolean,
+                                        recognizedCategory: String?) {
         val bundle = Bundle().apply {
             putString(Constants.ARG_PHOTO_ID, photoId)
             putString(Constants.ARG_ALBUM_ID, albumId)
@@ -102,13 +107,21 @@ class AlbumPhotosFragment : PhotosFragment() {
                         apiService.deleteAlbum(albumId)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe {
+                                .subscribe({
                                     Log.d(TAG, "Deleted album '$albumId'")
                                     Toast.makeText(activity,
                                             getString(R.string.message_delete_album_success),
                                             Toast.LENGTH_SHORT).show()
                                     activity.onBackPressed()
-                                })
+                                }, {
+                                    Log.e(TAG,
+                                            "Cannot delete album '$albumId'. Some errors occurred: $it")
+                                    it.printStackTrace()
+
+                                    Toast.makeText(activity,
+                                            getString(R.string.message_server_error),
+                                            Toast.LENGTH_SHORT).show()
+                                }))
             }
             setNegativeButton(R.string.btn_confirm_negative
             ) { dialog, _ ->
@@ -127,7 +140,8 @@ class AlbumPhotosFragment : PhotosFragment() {
 
                     textCollectionName.text = albumName.toUpperCase()
                 }, {
-                    Log.e(TAG, "Some errors occurred: $it")
+                    Log.e(TAG, "Cannot get album '$albumId'. Some errors occurred: $it")
+                    it.printStackTrace()
                 }))
     }
 }

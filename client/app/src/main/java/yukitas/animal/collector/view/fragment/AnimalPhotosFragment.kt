@@ -64,9 +64,13 @@ class AnimalPhotosFragment : PhotosFragment() {
                 apiService.getPhotosByAnimal(animalId, THUMBNAIL_SIDE_LENGTH, THUMBNAIL_SIDE_LENGTH)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
+                        .subscribe({
                             photosAdapter.photos = it
-                        })
+                        }, {
+                            Log.e(TAG,
+                                    "Cannot get photos by animal '$animalId'. Some errors occurred: $it")
+                            it.printStackTrace()
+                        }))
     }
 
     override fun startEditPhotoActivity(photoId: String, recognitionEnabled: Boolean,
@@ -108,13 +112,21 @@ class AnimalPhotosFragment : PhotosFragment() {
                         apiService.deleteAnimal(animalId)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe {
+                                .subscribe({
                                     Log.d(TAG, "Deleted animal '$animalId'")
                                     Toast.makeText(activity,
                                             getString(R.string.message_delete_animal_success),
                                             Toast.LENGTH_SHORT).show()
                                     activity.onBackPressed()
-                                })
+                                }, {
+                                    Log.e(TAG,
+                                            "Cannot delete animal '$animalId'. Some errors occurred: $it")
+                                    it.printStackTrace()
+
+                                    Toast.makeText(activity,
+                                            getString(R.string.message_server_error),
+                                            Toast.LENGTH_SHORT).show()
+                                }))
             }
             setNegativeButton(R.string.btn_confirm_negative) { dialog, _ ->
                 dialog.cancel()
@@ -133,7 +145,8 @@ class AnimalPhotosFragment : PhotosFragment() {
 
                     textCollectionName.text = animalName.toUpperCase()
                 }, {
-                    Log.e(TAG, "Some errors occurred: $it")
+                    Log.e(TAG, "Cannot get animal '$animalId'. Some errors occurred: $it")
+                    it.printStackTrace()
                 }))
     }
 }

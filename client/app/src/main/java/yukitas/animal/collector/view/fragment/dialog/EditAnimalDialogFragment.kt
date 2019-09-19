@@ -48,7 +48,7 @@ class EditAnimalDialogFragment : DialogFragment() {
                             SaveAnimalRequest(animalName, animalTags))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe {
+                            .subscribe({
                                 Log.d(TAG, "Updated animal")
                                 Toast.makeText(context,
                                         getString(R.string.message_update_animal_success),
@@ -58,7 +58,14 @@ class EditAnimalDialogFragment : DialogFragment() {
 
                                 targetFragment.onActivityResult(targetRequestCode,
                                         Activity.RESULT_OK, activity.intent)
-                            })
+                            }, {
+                                Log.e(TAG, "Cannot update animal. Some errors occurred: $it")
+                                it.printStackTrace()
+
+                                Toast.makeText(activity,
+                                        getString(R.string.message_server_error),
+                                        Toast.LENGTH_SHORT).show()
+                            }))
         }
 
 

@@ -106,7 +106,12 @@ class PhotoDetailFragment : BaseFragment() {
 
                             setAnimals()
                         }, {
-                            Log.e(TAG, "Some errors occurred: $it")
+                            Log.e(TAG, "Cannot get photo '$photoId'. Some errors occurred: $it")
+                            it.printStackTrace()
+
+                            Toast.makeText(activity,
+                                    getString(R.string.message_server_error),
+                                    Toast.LENGTH_SHORT).show()
                         }))
     }
 
@@ -126,10 +131,14 @@ class PhotoDetailFragment : BaseFragment() {
                 apiService.getAnimalsByPhoto(photoId)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
+                        .subscribe({
                             binding.photoAnimals.text = it.joinToString(
                                     ", ") { animal -> animal.name }
-                        }
+                        }, {
+                            Log.e(TAG,
+                                    "Cannot get animals of photo '$photoId'. Some errors occurred: $it")
+                            it.printStackTrace()
+                        })
         )
     }
 
@@ -157,13 +166,21 @@ class PhotoDetailFragment : BaseFragment() {
                         apiService.deletePhoto(photoId)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe {
+                                .subscribe({
                                     Log.d(TAG, "Deleted photo '$photoId'")
                                     Toast.makeText(activity,
                                             getString(R.string.message_delete_photo_success),
                                             Toast.LENGTH_SHORT).show()
                                     activity.onBackPressed()
-                                })
+                                }, {
+                                    Log.e(TAG,
+                                            "Cannot delete photo '$photoId'. Some errors occurred: $it")
+                                    it.printStackTrace()
+
+                                    Toast.makeText(activity,
+                                            getString(R.string.message_server_error),
+                                            Toast.LENGTH_SHORT).show()
+                                }))
             }
             setNegativeButton(R.string.btn_confirm_negative) { dialog, _ ->
                 dialog.cancel()

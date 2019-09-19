@@ -239,7 +239,12 @@ abstract class AddPhotoBaseFragment : BaseFragment() {
                                 startEditPhotoActivity(photoId, false, null)
                             }
                         }, {
-                            Log.e(TAG, "Some errors occurred: $it")
+                            Log.e(TAG, "Cannot create photo. Some errors occurred: $it")
+                            it.printStackTrace()
+
+                            Toast.makeText(activity,
+                                    getString(R.string.message_server_error),
+                                    Toast.LENGTH_SHORT).show()
                         }))
     }
 

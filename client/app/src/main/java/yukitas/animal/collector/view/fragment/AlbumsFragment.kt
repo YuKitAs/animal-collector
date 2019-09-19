@@ -141,7 +141,8 @@ class AlbumsFragment : CollectionsFragment() {
                     // update albums (sorted by last modified)
                     albumsAdapter.albums = albums.reversed()
                 }) {
-                    Log.e(TAG, "Some errors occurred: $it")
+                    Log.e(TAG, "Cannot set thumbnails for albums. Some errors occurred: $it")
+                    it.printStackTrace()
                 }
     }
 

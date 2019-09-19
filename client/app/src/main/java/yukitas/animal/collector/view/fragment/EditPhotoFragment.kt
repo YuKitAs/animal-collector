@@ -126,10 +126,10 @@ class EditPhotoFragment : BaseFragment() {
     private fun initSelectedAlbums() {
         if (isCreating) {
             activity.intent.getStringExtra(Constants.ARG_ALBUM_ID)?.let {
+                val albumId = activity.intent.getStringExtra(Constants.ARG_ALBUM_ID)
                 // show current album
                 disposable.add(
-                        apiService.getAlbumById(
-                                activity.intent.getStringExtra(Constants.ARG_ALBUM_ID))
+                        apiService.getAlbumById(albumId)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({
@@ -138,7 +138,8 @@ class EditPhotoFragment : BaseFragment() {
                                     // update selected albums
                                     selectionViewModel.selectAlbums(arrayListOf(it))
                                 }) {
-                                    Log.e(TAG, "Some errors occurred: $it")
+                                    Log.e(TAG,
+                                            "Cannot get album '$albumId'. Some errors occurred: $it")
                                     it.printStackTrace()
                                 })
             }
@@ -155,7 +156,7 @@ class EditPhotoFragment : BaseFragment() {
                         selectionViewModel.selectAlbums(albums)
                     }, {
                         Log.e(TAG,
-                                "Some errors occurred when fetching albums of photo $photoId: $it")
+                                "Cannot get albums of photo $photoId. Some errors occurred: $it")
                         it.printStackTrace()
                     }))
         }
@@ -164,10 +165,10 @@ class EditPhotoFragment : BaseFragment() {
     private fun initSelectedAnimals() {
         if (isCreating) {
             activity.intent.getStringExtra(Constants.ARG_ANIMAL_ID)?.let {
+                val animalId = activity.intent.getStringExtra(Constants.ARG_ANIMAL_ID)
                 // show current animal
                 disposable.add(
-                        apiService.getAnimalById(
-                                activity.intent.getStringExtra(Constants.ARG_ANIMAL_ID))
+                        apiService.getAnimalById(animalId)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({
@@ -176,7 +177,8 @@ class EditPhotoFragment : BaseFragment() {
                                     // update selected animals
                                     selectionViewModel.selectAnimals(arrayListOf(it))
                                 }) {
-                                    Log.e(TAG, "Some errors occurred: $it")
+                                    Log.e(TAG,
+                                            "Cannot get animal '$animalId'. Some errors occurred: $it")
                                     it.printStackTrace()
                                 })
             }
@@ -193,7 +195,7 @@ class EditPhotoFragment : BaseFragment() {
                         selectionViewModel.selectAnimals(animals)
                     }, {
                         Log.e(TAG,
-                                "Some errors occurred when fetching animals of photo $photoId: $it")
+                                "Cannot get animals of photo $photoId. Some errors occurred: $it")
                         it.printStackTrace()
                     }))
         }
@@ -224,7 +226,7 @@ class EditPhotoFragment : BaseFragment() {
                             R.string.text_none) else selectedAlbums.stream().map { album -> album.name }.collect(
                             Collectors.toList()).joinToString(", ")
                 }) {
-                    Log.e(TAG, "Some errors occurred: $it")
+                    Log.e(TAG, "Cannot get album. Some errors occurred: $it")
                     it.printStackTrace()
                 }
     }
@@ -254,7 +256,7 @@ class EditPhotoFragment : BaseFragment() {
                             R.string.text_none) else selectedAnimals.stream().map { animal -> animal.name }.collect(
                             Collectors.toSet()).joinToString(", ")
                 }) {
-                    Log.e(TAG, "Some errors occurred: $it")
+                    Log.e(TAG, "Cannot get animal. Some errors occurred: $it")
                     it.printStackTrace()
                 }
     }
@@ -314,8 +316,12 @@ class EditPhotoFragment : BaseFragment() {
                                     Toast.LENGTH_SHORT).show()
                             activity.finish()
                         }, {
-                            Log.e(TAG, "Some errors occurred while updating photo '$photoId': $it")
+                            Log.e(TAG, "Cannot update photo '$photoId'. Some errors occurred: $it")
                             it.printStackTrace()
+
+                            Toast.makeText(activity,
+                                    getString(R.string.message_server_error),
+                                    Toast.LENGTH_SHORT).show()
                         }))
     }
 
@@ -323,8 +329,12 @@ class EditPhotoFragment : BaseFragment() {
         disposable.add(apiService.deletePhoto(photoId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     Log.d(TAG, "Deleted unsaved photo '$photoId'")
-                })
+                }, {
+                    Log.e(TAG,
+                            "Cannot delete photo '$photoId'. Some errors occurred: $it")
+                    it.printStackTrace()
+                }))
     }
 }

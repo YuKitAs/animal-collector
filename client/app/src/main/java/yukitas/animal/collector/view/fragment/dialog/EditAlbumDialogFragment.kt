@@ -39,7 +39,7 @@ class EditAlbumDialogFragment : DialogFragment() {
                             SaveAlbumRequest(inputAlbumName.text.toString()))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe {
+                            .subscribe({
                                 Log.d(TAG, "Updated album")
                                 Toast.makeText(context,
                                         getString(R.string.message_update_album_success),
@@ -49,7 +49,14 @@ class EditAlbumDialogFragment : DialogFragment() {
 
                                 targetFragment.onActivityResult(targetRequestCode,
                                         Activity.RESULT_OK, activity.intent)
-                            })
+                            }, {
+                                Log.e(TAG, "Cannot update album. Some errors occurred: $it")
+                                it.printStackTrace()
+
+                                Toast.makeText(activity,
+                                        getString(R.string.message_server_error),
+                                        Toast.LENGTH_SHORT).show()
+                            }))
         }
 
         view.btnCloseDialog.setOnClickListener { dialog.dismiss() }

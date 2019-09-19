@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_create_album.view.btnCloseDialog
@@ -46,7 +47,7 @@ class CreateAnimalDialogFragment : CreateCollectionDialogFragment() {
                                     tagsFromText(inputAnimalTags.text)))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { animal ->
+                            .subscribe({ animal ->
                                 Log.d(TAG, "Created animal: $animal")
 
                                 dialog.dismiss()
@@ -54,7 +55,14 @@ class CreateAnimalDialogFragment : CreateCollectionDialogFragment() {
                                 activity.intent.putExtra(Constants.ARG_ANIMAL_ID, animal.id)
                                 targetFragment.onActivityResult(targetRequestCode,
                                         Activity.RESULT_OK, activity.intent)
-                            })
+                            }, {
+                                Log.e(TAG, "Cannot create animal. Some errors occurred: $it")
+                                it.printStackTrace()
+
+                                Toast.makeText(activity,
+                                        getString(R.string.message_server_error),
+                                        Toast.LENGTH_SHORT).show()
+                            }))
         }
 
         view.btnCloseDialog.setOnClickListener { dialog.dismiss() }

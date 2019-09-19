@@ -142,7 +142,8 @@ class AnimalsFragment : CollectionsFragment() {
                     // update animals (sorted by last modified)
                     animalsAdapter.animals = animals.reversed()
                 }) {
-                    Log.e(TAG, "Some errors occurred: $it")
+                    Log.e(TAG, "Cannot set thumbnails for animals. Some errors occurred: $it")
+                    it.printStackTrace()
                 }
     }
 

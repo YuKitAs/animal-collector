@@ -94,7 +94,7 @@ class SelectAnimalsDialogFragment : SelectCollectionDialogFragment() {
                             this.animals = animals
                             setListForAnimals(animals)
                         }, {
-                            Log.e(TAG, "Some errors occurred while fetching all animals: $it")
+                            Log.e(TAG, "Cannot get all animals. Some errors occurred: $it")
                             it.printStackTrace()
                         }))
     }

@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_create_album.*
@@ -33,7 +34,7 @@ class CreateAlbumDialogFragment : CreateCollectionDialogFragment() {
                             SaveAlbumRequest(inputAlbumName.text.toString()))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe { album ->
+                            .subscribe({ album ->
                                 Log.d(TAG, "Created album: $album")
 
                                 dialog.dismiss()
@@ -41,7 +42,14 @@ class CreateAlbumDialogFragment : CreateCollectionDialogFragment() {
                                 activity.intent.putExtra(Constants.ARG_ALBUM_ID, album.id)
                                 targetFragment.onActivityResult(targetRequestCode,
                                         Activity.RESULT_OK, activity.intent)
-                            })
+                            }, {
+                                Log.e(TAG, "Cannot create album. Some errors occurred: $it")
+                                it.printStackTrace()
+
+                                Toast.makeText(activity,
+                                        getString(R.string.message_server_error),
+                                        Toast.LENGTH_SHORT).show()
+                            }))
         }
 
         view.btnCloseDialog.setOnClickListener { dialog.dismiss() }

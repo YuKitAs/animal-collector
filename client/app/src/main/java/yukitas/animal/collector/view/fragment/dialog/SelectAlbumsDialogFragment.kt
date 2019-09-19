@@ -83,7 +83,7 @@ class SelectAlbumsDialogFragment : SelectCollectionDialogFragment() {
                                 selectItemByCollectionId(multiSelectAlbumList, it)
                             }
                         }, {
-                            Log.e(TAG, "Some errors occurred while fetching all albums: $it")
+                            Log.e(TAG, "Cannot get all albums. Some errors occurred: $it")
                             it.printStackTrace()
                         }))
     }

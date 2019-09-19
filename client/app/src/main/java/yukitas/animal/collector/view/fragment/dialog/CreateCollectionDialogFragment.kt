@@ -64,7 +64,8 @@ abstract class CreateCollectionDialogFragment : DialogFragment() {
                                 }
                             }
                         }, {
-                            Log.e(TAG, "Some errors occurred while fetching all categories: $it")
+                            Log.e(TAG, "Cannot get all categories. Some errors occurred: $it")
+                            it.printStackTrace()
                         }))
     }
 
