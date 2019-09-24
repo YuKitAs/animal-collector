@@ -4,6 +4,8 @@ package yukitas.animal.collector.common
  * Top-level constants. In most cases, the actual values are unimportant.
  */
 object Constants {
+    const val BASE_URL = "http://192.168.178.51:8080/"
+
     const val CATEGORY_UNKNOWN = "unknown"
 
     const val ARG_CATEGORY_CAT = "cat"

@@ -19,7 +19,7 @@ abstract class CreateCollectionDialogFragment : DialogFragment() {
 
     protected lateinit var categoryId: String
 
-    protected val apiService by lazy { ApiService.create() }
+    protected val apiService by lazy { ApiService.create(Constants.BASE_URL) }
     protected val disposable = CompositeDisposable()
 
     protected fun setCategoryList() {

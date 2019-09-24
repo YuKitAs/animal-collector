@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.dialog_edit_animal.*
 import kotlinx.android.synthetic.main.dialog_edit_animal.view.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
+import yukitas.animal.collector.common.Constants.BASE_URL
 import yukitas.animal.collector.model.dto.SaveAnimalRequest
 import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.utility.tagsFromText
@@ -23,7 +24,7 @@ import yukitas.animal.collector.utility.tagsFromText
 class EditAnimalDialogFragment : DialogFragment() {
     private val TAG = EditAnimalDialogFragment::class.java.simpleName
 
-    private val apiService by lazy { ApiService.create() }
+    private val apiService by lazy { ApiService.create(BASE_URL) }
     private val disposable = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,

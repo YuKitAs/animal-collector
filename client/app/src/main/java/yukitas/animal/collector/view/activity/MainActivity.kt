@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.tab_viewmode.*
 import kotlinx.android.synthetic.main.viewpager_category.*
 import yukitas.animal.collector.AnimalCollectorApplication
 import yukitas.animal.collector.R
+import yukitas.animal.collector.common.Constants.BASE_URL
 import yukitas.animal.collector.common.ViewMode
 import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.adapter.CategoryPagerAdapter
@@ -22,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager
     private lateinit var categoryPagerAdapter: CategoryPagerAdapter
     private lateinit var tabs: TabLayout
-    private val apiService by lazy { ApiService.create() }
+    private val apiService by lazy { ApiService.create(BASE_URL) }
     private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {

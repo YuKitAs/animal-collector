@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import yukitas.animal.collector.R
 import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.ARG_CATEGORY_NAME
+import yukitas.animal.collector.common.Constants.BASE_URL
 import yukitas.animal.collector.common.Constants.CATEGORY_UNKNOWN
 import yukitas.animal.collector.common.Constants.FLAG_CATEGORY_CONFIRMED
 import yukitas.animal.collector.common.Constants.FLAG_RECOGNITION_ENABLED
@@ -23,7 +24,7 @@ import yukitas.animal.collector.view.fragment.EditPhotoFragment
 class EditPhotoActivity : AppCompatActivity() {
     private val TAG = EditPhotoActivity::class.java.simpleName
 
-    private val apiService by lazy { ApiService.create() }
+    private val apiService by lazy { ApiService.create(BASE_URL) }
     private val disposable = CompositeDisposable()
 
     private var isCreating = true

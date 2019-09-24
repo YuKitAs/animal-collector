@@ -21,7 +21,7 @@ import yukitas.animal.collector.networking.ApiService
 class EditAlbumDialogFragment : DialogFragment() {
     private val TAG = EditAlbumDialogFragment::class.java.simpleName
 
-    private val apiService by lazy { ApiService.create() }
+    private val apiService by lazy { ApiService.create(Constants.BASE_URL) }
     private val disposable = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,

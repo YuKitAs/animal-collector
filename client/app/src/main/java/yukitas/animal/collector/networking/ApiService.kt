@@ -116,10 +116,10 @@ interface ApiService {
 
 
     companion object {
-        fun create(): ApiService {
+        fun create(baseUrl: String): ApiService {
             val client = OkHttpClient.Builder().connectTimeout(20, TimeUnit.SECONDS).build()
             val retrofit = Retrofit.Builder()
-                    .baseUrl("http://192.168.178.51:8080/")
+                    .baseUrl(baseUrl)
                     .addConverterFactory(MoshiConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(client)

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ListView
 import io.reactivex.disposables.CompositeDisposable
 import yukitas.animal.collector.R
+import yukitas.animal.collector.common.Constants.BASE_URL
 import yukitas.animal.collector.model.Collection
 import yukitas.animal.collector.networking.ApiService
 import yukitas.animal.collector.view.adapter.CollectionArrayAdapter
@@ -18,7 +19,7 @@ import yukitas.animal.collector.viewmodel.SelectionViewModel
 abstract class SelectCollectionDialogFragment : DialogFragment() {
     private val TAG = SelectCollectionDialogFragment::class.java.simpleName
 
-    protected val apiService by lazy { ApiService.create() }
+    protected val apiService by lazy { ApiService.create(BASE_URL) }
     protected val disposable = CompositeDisposable()
 
     protected lateinit var selectionViewModel: SelectionViewModel
