@@ -21,6 +21,7 @@ import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.common.Constants.ARG_ALBUM_ID
 import yukitas.animal.collector.common.Constants.ARG_ALBUM_NAME
 import yukitas.animal.collector.common.Constants.ARG_CATEGORY_ID
+import yukitas.animal.collector.common.Constants.COLLECTION_THUMBNAIL_SIDE_LENGTH
 import yukitas.animal.collector.common.Constants.RESULT_CREATE_ALBUM
 import yukitas.animal.collector.databinding.FragmentAlbumsBinding
 import yukitas.animal.collector.model.Album
@@ -118,8 +119,8 @@ class AlbumsFragment : CollectionsFragment() {
         }
 
         val albumThumbnailMaps: List<Maybe<Map<String, Photo?>>> = albums.stream().map { album ->
-            apiService.getAlbumThumbnail(album.id, THUMBNAIL_SIDE_LENGTH,
-                    THUMBNAIL_SIDE_LENGTH).map { photo ->
+            apiService.getAlbumThumbnail(album.id, COLLECTION_THUMBNAIL_SIDE_LENGTH,
+                    COLLECTION_THUMBNAIL_SIDE_LENGTH).map { photo ->
                 Collections.singletonMap(album.id, photo)
             }.defaultIfEmpty(Collections.singletonMap(album.id, null as Photo?))
         }.collect(Collectors.toList())

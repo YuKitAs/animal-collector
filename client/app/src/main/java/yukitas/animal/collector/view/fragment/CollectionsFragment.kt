@@ -6,8 +6,6 @@ import yukitas.animal.collector.common.Constants
 import yukitas.animal.collector.view.activity.EditPhotoActivity
 
 abstract class CollectionsFragment : AddPhotoBaseFragment() {
-    protected val THUMBNAIL_SIDE_LENGTH = 400
-
     override fun startEditPhotoActivity(photoId: String, recognitionEnabled: Boolean,
                                         recognizedCategory: String?) {
         val bundle = Bundle().apply {

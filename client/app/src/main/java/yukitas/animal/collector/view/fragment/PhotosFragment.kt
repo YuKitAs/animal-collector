@@ -23,8 +23,6 @@ import yukitas.animal.collector.view.adapter.PhotosAdapter
 abstract class PhotosFragment : AddPhotoBaseFragment() {
     private val TAG = PhotosFragment::class.java.simpleName
 
-    protected val THUMBNAIL_SIDE_LENGTH = 400
-
     protected lateinit var binding: yukitas.animal.collector.databinding.FragmentPhotosBinding
     protected lateinit var photosAdapter: PhotosAdapter
 
