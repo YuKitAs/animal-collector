@@ -15,6 +15,7 @@ import java.util.Random;
 import yukitas.animal.collector.controller.dto.CreatePhotoResponse;
 import yukitas.animal.collector.controller.dto.GetPhotoResponse;
 import yukitas.animal.collector.controller.dto.UpdatePhotoRequest;
+import yukitas.animal.collector.service.utility.AnimalClass;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,7 +53,7 @@ public class PhotoControllerTest extends AbstractControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(Objects.requireNonNull(response.getBody()).getId()).isNotNull();
-        assertThat(response.getBody().getRecognizedCategory()).isNotNull();
+        assertThat(AnimalClass.values()).contains(response.getBody().getRecognizedCategory());
     }
 
     @Test
