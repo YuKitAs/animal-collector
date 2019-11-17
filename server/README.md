@@ -1,6 +1,6 @@
 # Animal Collector Server
 
-### Local dev
+### Local development
 
 1. Setup database:
 
@@ -16,14 +16,21 @@
         postgres=# \c ani_co_dev
         ```
 
-2. Download and place pre-trained model zip file under `src/main/resources`
+2. Make sure the pre-trained model zip file is placed under `src/main/resources`
 
 3. Run application with profile `ide`:
 
     ```console
-    $ ./gradlew bootRun
+    $ ./gradlew clean bootRun --args='--spring.profiles.active=ide'
     ```
     
-    For initializing the schema as defined in `src/main/resources/schema.sql`, set `spring.jpa.hibernate.ddl-auto` to `none`.
+    or 
+    
+    ```console
+    $ ./gradlew clean build
+    $ java -jar -Dspring.profiles.active=ide build/libs/animal-collector.jar
+    ```
+    
+For initializing the schema as defined in `src/main/resources/schema.sql`, set `spring.jpa.hibernate.ddl-auto` to `none`.
 
 For running tests, create database `ani_co_test` and run application with profile `test`.
