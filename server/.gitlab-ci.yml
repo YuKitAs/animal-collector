@@ -1,0 +1,11 @@
+image: java:11
+
+stages:
+  - build
+
+build:
+  stage: build
+  script: ./gradlew build
+  artifacts:
+    paths:
+      - build/libs/animal-collector.jar
