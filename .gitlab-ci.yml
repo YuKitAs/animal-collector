@@ -5,6 +5,7 @@ variables:
 
 stages:
   - build
+  - test
 
 build_server:
   stage: build
@@ -16,3 +17,14 @@ build_server:
   artifacts:
     paths:
       - $SERVER_DIR/build/libs/animal-collector.jar
+
+test_server:
+  stage: test
+  services:
+    - postgres:11.6
+  variables:
+    POSTGRES_DB: ani_co_test
+    POSTGRES_USER: postgres
+  script:
+    - psql -c 'CREATE DATABASE ${POSTGRES_DB} OWNER ${POSTGRES_USER};'
+    - $SERVER_DIR/gradlew -p $SERVER_DIR/ test
