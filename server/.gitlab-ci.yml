@@ -1,11 +1,17 @@
-image: openjdk:11-jdk-slim
+image: gradle:6.0-jdk11
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
 
 stages:
   - build
 
 build:
   stage: build
-  script: ./gradlew build
+  script: ./gradlew --build-cache assemble
   artifacts:
     paths:
       - build/libs/animal-collector.jar
