@@ -1,4 +1,4 @@
-package yukitas.animal.collector.service.utility;
+package yukitas.animal.collector.model;
 
 public enum AnimalClass {
     CAT, DOG, UNKNOWN

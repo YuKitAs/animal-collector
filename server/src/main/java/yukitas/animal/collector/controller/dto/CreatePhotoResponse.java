@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.UUID;
 
-import yukitas.animal.collector.service.utility.AnimalClass;
+import yukitas.animal.collector.model.AnimalClass;
 
 public final class CreatePhotoResponse {
     private final UUID id;

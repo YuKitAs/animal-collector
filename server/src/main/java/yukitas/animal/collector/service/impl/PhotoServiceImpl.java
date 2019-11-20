@@ -20,35 +20,34 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 
 import yukitas.animal.collector.controller.dto.CreatePhotoResponse;
-import yukitas.animal.collector.model.Album;
-import yukitas.animal.collector.model.Animal;
-import yukitas.animal.collector.model.Location;
-import yukitas.animal.collector.model.Photo;
+import yukitas.animal.collector.model.*;
 import yukitas.animal.collector.repository.AlbumRepository;
 import yukitas.animal.collector.repository.AnimalRepository;
 import yukitas.animal.collector.repository.PhotoRepository;
+import yukitas.animal.collector.service.ImageRecognitionService;
 import yukitas.animal.collector.service.PhotoService;
 import yukitas.animal.collector.service.exception.EntityNotFoundException;
 import yukitas.animal.collector.service.exception.InvalidDataException;
 import yukitas.animal.collector.service.exception.RequiredDataNotProvidedException;
-import yukitas.animal.collector.service.utility.AnimalClass;
-import yukitas.animal.collector.service.utility.ImageRecognizer;
 
 @Service
 public class PhotoServiceImpl implements PhotoService {
     private static final Logger LOGGER = LogManager.getLogger(PhotoServiceImpl.class);
     private static final String ENTITY_NAME = "photo";
+    private static final double RECOGNITION_THRESHOLD = 0.7;
 
     private final PhotoRepository photoRepository;
     private final AnimalRepository animalRepository;
     private final AlbumRepository albumRepository;
+    private final ImageRecognitionService imageRecognitionService;
 
     @Autowired
     public PhotoServiceImpl(PhotoRepository photoRepository, AnimalRepository animalRepository,
-            AlbumRepository albumRepository) {
+            AlbumRepository albumRepository, ImageRecognitionService imageRecognitionService) {
         this.photoRepository = photoRepository;
         this.animalRepository = animalRepository;
         this.albumRepository = albumRepository;
+        this.imageRecognitionService = imageRecognitionService;
     }
 
     @Override
@@ -133,7 +132,7 @@ public class PhotoServiceImpl implements PhotoService {
         LOGGER.debug("Created photo (id={})", photo.getId());
 
         if (recognitionEnabled) {
-            AnimalClass category = new ImageRecognizer().classify(content, 0.7);
+            AnimalClass category = predicateCategory(content);
             LOGGER.debug("Recognized category: {}", category);
             return new CreatePhotoResponse.Builder().setId(photo.getId()).setCategory(category).build();
         }
@@ -279,6 +278,6 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     private AnimalClass predicateCategory(byte[] photoContent) throws IOException {
-        return new ImageRecognizer().classify(photoContent, 0.5);
+        return imageRecognitionService.classify(photoContent, RECOGNITION_THRESHOLD);
     }
 }
