@@ -1,0 +1,18 @@
+image: gradle:6.0-jdk11
+
+variables:
+  SERVER_DIR: server
+
+stages:
+  - build
+
+build_server:
+  stage: build
+  script: $SERVER_DIR/gradlew -p $SERVER_DIR/ --build-cache assemble
+  cache:
+    paths:
+      - $SERVER_DIR/build
+      - $SERVER_DIR/.gradle
+  artifacts:
+    paths:
+      - $SERVER_DIR/build/libs/animal-collector.jar
