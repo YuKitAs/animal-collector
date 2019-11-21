@@ -20,12 +20,16 @@ build_server:
   artifacts:
     paths:
       - $SERVER_DIR/build/libs/animal-collector.jar
+    expire_in: 1 week
+    only:
+      - master
 
 test_server:
   stage: test
+  image: postgres:11.6
   variables:
     POSTGRES_DB: ani_co_test
     POSTGRES_USER: postgres
   script:
-    - psql -U $POSTGRES_USER -c 'CREATE DATABASE ${POSTGRES_DB} OWNER ${POSTGRES_USER};'
+    - psql -h postgres -U $POSTGRES_USER -c 'CREATE DATABASE ${POSTGRES_DB} OWNER ${POSTGRES_USER};'
     - $SERVER_DIR/gradlew -p $SERVER_DIR/ test
