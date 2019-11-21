@@ -1,5 +1,8 @@
 image: gradle:6.0-jdk11
 
+services:
+  - postgres:11.6
+
 variables:
   SERVER_DIR: server
 
@@ -20,8 +23,6 @@ build_server:
 
 test_server:
   stage: test
-  services:
-    - postgres:11.6
   variables:
     POSTGRES_DB: ani_co_test
     POSTGRES_USER: postgres
