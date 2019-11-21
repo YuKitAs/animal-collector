@@ -31,5 +31,5 @@ test_server:
     POSTGRES_DB: ani_co_test
     POSTGRES_USER: postgres
   script:
-    - psql -h postgres -U $POSTGRES_USER -c 'CREATE DATABASE ${POSTGRES_DB} OWNER ${POSTGRES_USER};'
+    - psql -h postgres -U $POSTGRES_USER -c "CREATE DATABASE $POSTGRES_DB OWNER $POSTGRES_USER;"
     - $SERVER_DIR/gradlew -p $SERVER_DIR/ test
