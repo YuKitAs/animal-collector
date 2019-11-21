@@ -21,8 +21,8 @@ build_server:
     paths:
       - $SERVER_DIR/build/libs/animal-collector.jar
     expire_in: 1 week
-    only:
-      - master
+  only:
+    - master
 
 test_server:
   stage: test
