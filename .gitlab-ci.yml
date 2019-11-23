@@ -1,11 +1,17 @@
 image: gradle:6.0-jdk11
 
+services:
+  - postgres:11.6
+
 variables:
   SERVER_DIR: server
 
 stages:
   - build
   - test
+
+before_script:
+
 
 build_server:
   stage: build
@@ -23,12 +29,8 @@ build_server:
 
 test_server:
   stage: test
-  services:
-    - postgres:11.6
   variables:
-    POSTGRES_HOST: postgres
     POSTGRES_DB: ani_co_test
     POSTGRES_USER: postgres
   script:
-    - psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -c "SELECT 'OK' AS status;"
     - $SERVER_DIR/gradlew -p $SERVER_DIR/ test
