@@ -39,6 +39,7 @@ dependencies {
     implementation('org.deeplearning4j:deeplearning4j-core:0.9.1')
     implementation('org.deeplearning4j:deeplearning4j-zoo:0.9.1')
     implementation('org.nd4j:nd4j-native-platform:0.9.1')
+    implementation("de.codecentric:spring-boot-admin-starter-client:2.2.2")
     runtimeOnly('org.postgresql:postgresql')
     testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
 }
