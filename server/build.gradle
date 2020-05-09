@@ -15,11 +15,7 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
-jar {
-    archiveBaseName = 'animal-collector'
-    archiveVersion = '0.0.1-SNAPSHOT'
-    archiveFileName = "$archiveBaseName.$archiveExtension"
-}
+version = '0.1.0-SNAPSHOT'
 
 sourceCompatibility = 1.11
 targetCompatibility = 1.11

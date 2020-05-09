@@ -28,7 +28,7 @@
     
     ```console
     $ ./gradlew clean build
-    $ java -jar -Dspring.profiles.active=ide build/libs/animal-collector.jar
+    $ java -jar -Dspring.profiles.active=ide build/libs/animal-collector-0.1.0-SNAPSHOT.jar
     ```
     
     or run as docker image:
