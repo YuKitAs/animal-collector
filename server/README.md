@@ -6,8 +6,10 @@
 
     * Run Postgres image and create database with default user `postgres`:
       ```console
-      $ docker run --name postgres-dev -p 5432:5432 -e POSTGRES_DB=ani_co_dev -d postgres
+      $ docker run --name postgres-dev -p 5432:5432 -e POSTGRES_DB=ani_co_dev -e POSTGRES_PASSWORD=<password> -d postgres
       ```
+
+      `POSTGRES_PASSWORD` is required for the default user, which needs to be configured as `spring.datasource.password`.
     
     * Enter database as user `postgres`:
       ```console
@@ -24,10 +26,10 @@
     $ ./gradlew clean bootRun --args='--spring.profiles.active=ide'
     ```
     
-    or 
+    or (skipping tests)
     
     ```console
-    $ ./gradlew clean build
+    $ ./gradlew clean build [-x test]
     $ java -jar -Dspring.profiles.active=ide build/libs/animal-collector-0.1.0-SNAPSHOT.jar
     ```
     
