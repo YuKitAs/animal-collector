@@ -5,7 +5,6 @@ services:
 
 variables:
   SERVER_DIR: server
-  POSTGRES_PASSWORD: $POSTGRES_PASSWORD
 
 stages:
   - build
@@ -30,5 +29,6 @@ test_server:
   variables:
     POSTGRES_DB: ani_co_test
     POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: $POSTGRES_PASSWORD
   script:
     - $SERVER_DIR/gradlew -p $SERVER_DIR/ test
