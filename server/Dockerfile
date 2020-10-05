@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM openjdk:14
 
 ADD build/libs/animal-collector.jar /
 
