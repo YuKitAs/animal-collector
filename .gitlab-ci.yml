@@ -5,13 +5,11 @@ services:
 
 variables:
   SERVER_DIR: server
+  POSTGRES_PASSWORD: $POSTGRES_PASSWORD
 
 stages:
   - build
   - test
-
-before_script:
-
 
 build_server:
   stage: build
