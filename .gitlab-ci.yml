@@ -1,4 +1,4 @@
-image: gradle:6.0-jdk11
+image: gradle:6.6.1-jdk14
 
 services:
   - postgres:11.6
