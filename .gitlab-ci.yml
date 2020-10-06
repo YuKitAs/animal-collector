@@ -5,6 +5,10 @@ services:
 
 variables:
   SERVER_DIR: server
+  POSTGRES_USER: $POSTGRES_USER
+  POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+  SPRING_DATASOURCE_USERNAME: $POSTGRES_USER
+  SPRING_DATASOURCE_PASSWORD: $POSTGRES_PASSWORD
 
 stages:
   - build
@@ -28,7 +32,6 @@ test_server:
   stage: test
   variables:
     POSTGRES_DB: ani_co_test
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/$POSTGRES_DB
   script:
     - $SERVER_DIR/gradlew -p $SERVER_DIR/ test
