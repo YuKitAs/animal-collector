@@ -24,7 +24,6 @@ import yukitas.animal.collector.service.exception.EntityNotFoundException;
 @Service
 public class AnimalServiceImpl implements AnimalService {
     private static final Logger LOGGER = LogManager.getLogger(AnimalServiceImpl.class);
-    private static final String ENTITY_NAME = "animal";
 
     private final CategoryRepository categoryRepository;
     private final AnimalRepository animalRepository;

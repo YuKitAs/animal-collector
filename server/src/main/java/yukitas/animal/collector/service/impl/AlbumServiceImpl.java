@@ -23,7 +23,6 @@ import yukitas.animal.collector.service.exception.EntityNotFoundException;
 @Service
 public class AlbumServiceImpl implements AlbumService {
     private static final Logger LOGGER = LogManager.getLogger(AlbumServiceImpl.class);
-    private static final String ENTITY_NAME = "album";
 
     private final AlbumRepository albumRepository;
     private final CategoryRepository categoryRepository;

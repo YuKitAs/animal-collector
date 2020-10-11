@@ -33,7 +33,6 @@ import yukitas.animal.collector.service.exception.RequiredDataNotProvidedExcepti
 @Service
 public class PhotoServiceImpl implements PhotoService {
     private static final Logger LOGGER = LogManager.getLogger(PhotoServiceImpl.class);
-    private static final String ENTITY_NAME = "photo";
     private static final double RECOGNITION_THRESHOLD = 0.7;
 
     private final PhotoRepository photoRepository;

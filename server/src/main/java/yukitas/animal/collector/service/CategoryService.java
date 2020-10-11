@@ -6,6 +6,8 @@ import java.util.UUID;
 import yukitas.animal.collector.model.Category;
 
 public interface CategoryService {
+    String ENTITY_NAME = "category";
+
     List<Category> getAllCategories();
 
     Category getCategory(UUID id);

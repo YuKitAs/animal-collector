@@ -12,6 +12,8 @@ import yukitas.animal.collector.model.Location;
 import yukitas.animal.collector.model.Photo;
 
 public interface PhotoService {
+    String ENTITY_NAME = "photo";
+
     List<Photo> getPhotosByAlbum(UUID albumId);
 
     List<Photo> getPhotosByAlbum(UUID albumId, int width, int height);
